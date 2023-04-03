@@ -31,7 +31,7 @@ const port =Config.PORT||5000;
 app.get('/',(req,res)=>{
   res.send('Anusaran')
 })
-//require('./Router')(app)
+require('./Router')(app)
 
 io.on('connection', (socket)=>{
   console.log('New user connected');

@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { PORT, mysql_port, database_name, dialect, user,
-    password,host } = process.env;
+    password,host,saltRound ,JWT_SECRET} = process.env;
 
 module.exports = {
   PORT: PORT,
@@ -9,5 +9,7 @@ module.exports = {
   host: host,
   user:user,
   password :password ,
-  dialect:dialect
+  dialect:dialect,
+  saltRound:saltRound,
+  JWT_SECRET:JWT_SECRET
 };
