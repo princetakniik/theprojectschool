@@ -26,7 +26,7 @@ const sendMail = async (req, res) => {
           console.log(err);
           return false;
         } else {
-          console.log("Email sent successfully");
+        res.json({msg:"Email sent successfully"});
           res.send(transporter);
         }
       });

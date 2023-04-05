@@ -21,12 +21,6 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     phone:{
         type: DataTypes.BIGINT,
     },
-    institutionname:{
-        type: DataTypes.STRING,
-    },
-    courseenrolled:{
-        type: DataTypes.STRING,
-    },
     isDelete: {
       type: DataTypes.BOOLEAN,
       allowNull: true,

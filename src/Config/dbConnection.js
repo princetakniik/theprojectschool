@@ -33,9 +33,8 @@ sequelize.sync();
 const db = {};
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-db.register = require("../model/RegisterModel")(
-  sequelize,
-  Sequelize,
-  DataTypes
-);
+db.register = require("../model/RegisterModel")(sequelize,Sequelize,DataTypes);
+db.emailveryfi =require('../model/veryfiEmailModel')(sequelize,Sequelize,DataTypes);
+db.studentdetails=require('../model/DetailsModel')(sequelize,Sequelize,DataTypes);
+db.attendancest =require('../model/AttendanceModel')(sequelize,Sequelize,DataTypes);
 module.exports = db;

@@ -132,6 +132,26 @@ const deleteUserDetails = async (req, res) => {
     res.status(500).json({ msg: "data not get user ..", err });
   }
 };
+const updatePassword = async (req,res) =>{
+  const { ...rest } = req.body;
+  const round = parseInt(Config.saltRound);
+  const salt = bcrypt.genSaltSync(round);
+  const hash = bcrypt.hashSync(rest.password, salt);
+try{
+  const data ={
+    password:hash
+  }
+const update = await register.update(data,{
+  where: {
+    email: rest.email,
+  },
+})
+res.status(200).json({msg:'update password successfully',data:update})
+}catch(err){
+  console.log(err);
+  res.status(500).json({msg:'password not update'})
+}
+}
 
 module.exports = {
   registerUser,
@@ -139,4 +159,5 @@ module.exports = {
   getByIdUserDetail,
   updateUserDetails,
   deleteUserDetails,
+  updatePassword
 };
