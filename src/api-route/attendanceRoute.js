@@ -4,7 +4,10 @@ const {
   getAttendanceByid,
   updateAttendance,
   deleteAttendance,
-  getAttendanceTe
+  getAttendanceTe,
+  getAttendanceCM,
+  getAttendanceSummeryMonthly,
+  getAttendanceBetweenMonth,
 } = require("../controller/attendanceController");
 
 module.exports = (app) => {
@@ -14,4 +17,11 @@ module.exports = (app) => {
   app.get("/getAttendanceByid", (req, res) => getAttendanceByid(req, res));
   app.put("/updateAttendance", (req, res) => updateAttendance(req, res));
   app.delete("/deleteAttendance", (req, res) => deleteAttendance(req, res));
+  app.get("/getAttendanceCM", (req, res) => getAttendanceCM(req, res));
+  app.get("/getAttendanceSummeryMonthly", (req, res) =>
+    getAttendanceSummeryMonthly(req, res)
+  );
+  app.get("/getAttendanceBetweenMonth", (req, res) =>
+    getAttendanceBetweenMonth(req, res)
+  );
 };
