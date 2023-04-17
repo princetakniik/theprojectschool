@@ -40,7 +40,7 @@ const getAttendanceSt = async (req, res) => {
     const getdata = await db.sequelize.query(
       `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.Comment,ad.date,ad.isPersent from school.attendances as ad 
       inner join school.studentdetails as sd on sd.id=ad.userId
-      where ad.role='Student' && cast(ADDTIME(ad.date,"5.30" )as date)=CURRENT_DATE() `,
+      where ad.role='Student' && ad.date = CURRENT_DATE() `,
       {
         //&& ad.date=${date}
         type: QueryTypes.SELECT,
@@ -60,7 +60,7 @@ const getAttendanceTe = async (req, res) => {
     const getdata = await db.sequelize.query(
       `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.Comment,ad.date,ad.isPersent from school.attendances as ad 
       inner join school.studentdetails as sd on sd.id=ad.userId
-      where ad.role='Teacher' && cast(ADDTIME(ad.date,"5.30" )as date)=CURRENT_DATE() `,
+      where ad.role='Teacher' && ad.date =CURRENT_DATE() `,
       {
         type: QueryTypes.SELECT,
       }
@@ -79,7 +79,7 @@ const getAttendanceByid = async (req, res) => {
     const getDataById = await db.sequelize.query(
       `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.Comment,ad.date,ad.isPersent from school.attendances as ad 
         inner join school.studentdetails as sd on sd.id=ad.userId
-        where ad.userId=${userId} && cast(ADDTIME(ad.date,"5.30" ) as date)=CURRENT_DATE()`,
+        where ad.userId=${userId} && ad.date = CURRENT_DATE()`,
       {
         type: QueryTypes.SELECT,
       }
@@ -114,7 +114,7 @@ const getAttendanceSummeryMonthly = async (req, res) => {
   const { userId, date } = req.body;
   try {
     const getdata = await db.sequelize.query(
-      `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.userId,ad.Comment,ad.date,ad.isPersent from school.attendances as ad 
+      `      select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.userId,ad.Comment,ad.date,ad.isPersent from school.attendances as ad 
       inner join school.studentdetails as sd on sd.id=ad.userId
       where ad.userId=${userId} && DATE_FORMAT(ad.date, "%Y-%m") =DATE_FORMAT('${date}', "%Y-%m")`,
       {

@@ -14,7 +14,8 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       allowNull: false,
     },
     date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
+      field:'date'
     },
     isDelete: {
       type: DataTypes.BOOLEAN,

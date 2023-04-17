@@ -1,11 +1,15 @@
 module.exports = (sequelize, Sequelize, DataTypes) => {
   const Register = sequelize.define("register", {
+    user_id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     email: {
-        type: DataTypes.STRING,
+      type: DataTypes.STRING,
+      unique: true,
     },
-    otp: {
-      type: DataTypes.BIGINT,
-    },
+  
     password: {
         type: DataTypes.STRING,
     },
@@ -20,6 +24,9 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     },
     phone:{
         type: DataTypes.BIGINT,
+    },
+    token: {
+      type: DataTypes.STRING(1000),
     },
     isDelete: {
       type: DataTypes.BOOLEAN,

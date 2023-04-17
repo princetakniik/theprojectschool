@@ -1,9 +1,20 @@
 const nodemailer = require("nodemailer");
+const { emailveryfi } = require("../Config/dbConnection");
 
 const sendMail = async (req, res) => {
     try {
       const { email, otp } = req.body;
       console.log("otp", otp, "email", email);
+
+      const user = await emailveryfi.upsert(
+        {
+            email: email,
+            otp: otp
+        },
+        { email: email }
+      )
+      console.log('user',user);
+    
       let transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
@@ -16,7 +27,7 @@ const sendMail = async (req, res) => {
   
       var mailOptions = {
         from: "prince@takniik.com",
-        to: [email],
+        to: email,
         subject: "Email Banking Test Emails ",
         Text: "First Email send from nodejs nodemailer own made Package ( for auto emails of banking)",
         html: `<p>please veryfi your email ${otp}`,

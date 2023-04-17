@@ -22,7 +22,7 @@ const LoginUser = async (req, res) => {
       //  console.log("User is not registered");
       res.send({ msg: "User is not Registered" });
     }
-    bcrypt.compare(rest.password, User.password, function (err, result) {
+    bcrypt.compare(rest.password, User.password, async (err, result)=> {
       if (result) {
         console.log("It matches!");
         const data = {
@@ -34,6 +34,13 @@ const LoginUser = async (req, res) => {
         };
         const token = jwt.sign(data, Config.JWT_SECRET);
         console.log(`${User.role} has login`);
+        const user = await register.upsert(
+          {
+            email: User.email,
+            token: token,
+          },
+          { email: User.email }
+        );
         res.send({ data: token });
       } else {
         console.log("Invalid password!");
