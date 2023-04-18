@@ -8,7 +8,8 @@ const generateOtp = async (req, res) => {
       specialChars: false,
     });
     console.log(OTP);
-    res.send({ msg: "send otp succesfully", data: OTP });
+   // res.send({ msg: "send otp succesfully", data: OTP });
+    return OTP;
   };
 
   module.exports ={
