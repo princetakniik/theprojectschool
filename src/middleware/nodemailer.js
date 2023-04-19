@@ -47,7 +47,7 @@ const sendMail = async (req, res) => {
       console.log(err);
     }
   };
-
+0
 
   module.exports ={
     sendMail
