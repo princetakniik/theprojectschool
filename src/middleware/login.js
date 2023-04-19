@@ -52,27 +52,32 @@ const LoginUser = async (req, res) => {
   }
 };
 
-const verify = async (req, res, next) => {
+const Verify = async (req, res, next) => {
   const authHeader = req.body.token;
-  console.log("authHeader", authHeader);
+  //console.log("authHeader", authHeader);
   if (!authHeader ) {
     return res.json({ message: 'please provide jwt token' });
   }
   const token = authHeader.split(" ")[0];
-  console.log("token", token);
+  //console.log("token", token);
   try {
     const payload = jwt.verify(token, Config.JWT_SECRET);
-    console.log('email',payload.email);
-    let validateUser = await register.findOne({ email: payload.email });
+   // console.log('email',payload.email);
+    let validateUser = await register.findOne({ 
+      where:{
+        email: payload.email
+      }
+     });
+    //console.log('data',validateUser);
     if (validateUser) {
-      req.user = {
+      user = {
         email: validateUser.email,
         fname: validateUser.fname,
         lname: validateUser.lname,
         phone: validateUser.phone
       };
-      console.log(req.user);
-      res.send ({msg:'jwt veryfi successfully',data:req.user})
+      //console.log(user);
+      res.send ({msg:'jwt veryfi successfully',data:user})
     } else {
       return res.json({ message: "Authentication invalid ! Please register" });
     }
@@ -84,5 +89,5 @@ const verify = async (req, res, next) => {
 
 module.exports = {
   LoginUser,
-  verify,
+  Verify,
 };
