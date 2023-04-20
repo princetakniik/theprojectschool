@@ -43,7 +43,8 @@ const LoginUser = async (req, res) => {
         );
         res.send({ data: token });
       } else {
-        console.log("Invalid password!");
+       // console.log("Invalid password!");
+        res.status(400).send({msg:'Invalid password!'})
       }
     });
   } catch (err) {
