@@ -80,7 +80,7 @@ const Verify = async (req, res, next) => {
     // console.log("userRegister", userRegister);
 
     if (userDetails !== null || userDetails !== undefined) {
-      console.log("userDetails");
+      console.log("userDetails",userDetails);
       user = {
         name: userDetails.name,
         fname: userRegister.fname,
@@ -97,6 +97,7 @@ const Verify = async (req, res, next) => {
       };
       data.push({ msg: "user details", user });
     } else if (userRegister !== null || userRegister !== undefined) {
+      console.log('userRegister',userRegister);
       user = {
         email: userRegister.email,
         fname: userRegister.fname,
@@ -109,7 +110,7 @@ const Verify = async (req, res, next) => {
     }
     res.status(200).json(data);
   } catch (error) {
-    console.log("invalid signature");
+   // console.log("invalid signature");
     return res.json({ message: "Authentication invalid" });
   }
 };
