@@ -70,14 +70,14 @@ const Verify = async (req, res, next) => {
         email: payload.email,
       },
     });
-    console.log("userDetail", userDetails);
+    //console.log("userDetail", userDetails);
 
     const userRegister = await register.findOne({
       where: {
         email: payload.email,
       },
     });
-    console.log('userReg',userRegister);
+   // console.log('userReg',userRegister);
 
     if (userDetails != null || userDetails != undefined) {
       console.log("userDetails",userDetails.name);
@@ -95,7 +95,7 @@ const Verify = async (req, res, next) => {
       };
       data.push({ msg: "user details", user });
     } else if (userRegister !== null || userRegister !== undefined) {
-      console.log('userRegister',userRegister);
+     // console.log('userRegister',userRegister);
       user = {
         email: userRegister.email,
         fname: userRegister.fname,
