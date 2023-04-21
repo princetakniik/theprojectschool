@@ -62,53 +62,52 @@ const Verify = async (req, res, next) => {
   const token = authHeader.split(" ")[0];
   //console.log("token", token);
   try {
+    let data = [];
     const payload = jwt.verify(token, Config.JWT_SECRET);
     // console.log('email',payload.email);
-
-    const userDetails = await studentdetails.findOne({
+    let userDetails = await studentdetails.findOne({
       where: {
         email: payload.email,
       },
     });
-    if (userDetails) {
-      const getData =await db.sequelize.query(`select r.email,r.fname,r.lname,r.username,r.phone,
-      s.institutionname,s.courseenrolled,s.class,s.section,s.classteacher,s.teacherId,s.role 
-      from registers r 
-      inner join studentdetails s on s.email =r.email 
-      where s.email=${payload.email} && r.isDelete =false && s.isDelete=false `,
-          {
-              //&& ad.date=${date}
-              type: QueryTypes.SELECT,
-            }
-          );
-          res
-          .status(200)
-          .send({ msg: "user is register but not fill details", data: getData }); 
+    console.log("data", userDetails);
+
+    const userRegister = await register.findOne({
+      where: {
+        email: payload.email,
+      },
+    });
+    // console.log("userRegister", userRegister);
+
+    if (userDetails !== null || userDetails !== undefined) {
+      console.log("userDetails");
+      user = {
+        name: userDetails.name,
+        fname: userRegister.fname,
+        lname: userRegister.lname,
+        email: userDetails.email,
+        phone: userDetails.phone,
+        role: userDetails.role,
+        teacherId: userDetails.teacherId,
+        classteacher: userDetails.classteacher,
+        section: userDetails.section,
+        class: userDetails.class,
+        courseenrolled: userDetails.courseenrolled,
+        institutionname: userDetails.institutionname,
+      };
+      data.push({ msg: "user details", user });
+    } else if (userRegister !== null || userRegister !== undefined) {
+      user = {
+        email: userRegister.email,
+        fname: userRegister.fname,
+        lname: userRegister.lname,
+        phone: userRegister.phone,
+      };
+      data.push({ msg: "user is register but not fill details", user });
     } else {
-      let RegisterUser = await register.findOne({
-        where: {
-          email: payload.email,
-        },
-      });
-      console.log("data......", userDetails);
-      if (RegisterUser) {
-        user = {
-          email: RegisterUser.email,
-          fname: RegisterUser.fname,
-          lname: RegisterUser.lname,
-          phone: RegisterUser.phone,
-          username: RegisterUser.username,
-        };
-        //console.log(user);
-        res
-          .status(200)
-          .send({ msg: "user is register but not fill details", data: user });
-      } else {
-        return res.json({
-          message: "Authentication invalid ! Please register",
-        });
-      }
+      return res.json({ message: "Authentication invalid ! Please register" });
     }
+    res.status(200).json(data);
   } catch (error) {
     console.log("invalid signature");
     return res.json({ message: "Authentication invalid" });
