@@ -79,8 +79,8 @@ const Verify = async (req, res, next) => {
     });
     console.log('userReg',userRegister);
 
-    if (userDetails !== null || userDetails !== undefined) {
-      console.log("userDetails",userDetails);
+    if (userDetails != null || userDetails != undefined) {
+      console.log("userDetails",userDetails.name);
       user = {
         name: userDetails.name,
         email: userDetails.email,
