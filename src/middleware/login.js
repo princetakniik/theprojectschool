@@ -70,21 +70,19 @@ const Verify = async (req, res, next) => {
         email: payload.email,
       },
     });
-    console.log("data", userDetails);
+    console.log("userDetail", userDetails);
 
     const userRegister = await register.findOne({
       where: {
         email: payload.email,
       },
     });
-    // console.log("userRegister", userRegister);
+    console.log('userReg',userRegister);
 
     if (userDetails !== null || userDetails !== undefined) {
       console.log("userDetails",userDetails);
       user = {
         name: userDetails.name,
-        fname: userRegister.fname,
-        lname: userRegister.lname,
         email: userDetails.email,
         phone: userDetails.phone,
         role: userDetails.role,
