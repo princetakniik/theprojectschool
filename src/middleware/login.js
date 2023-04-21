@@ -1,4 +1,4 @@
-const { register } = require("../Config/dbConnection");
+const { register, studentdetails } = require("../Config/dbConnection");
 const Config = require("../Config/config");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -22,7 +22,7 @@ const LoginUser = async (req, res) => {
       //  console.log("User is not registered");
       res.send({ msg: "User is not Registered" });
     }
-    bcrypt.compare(rest.password, User.password, async (err, result)=> {
+    bcrypt.compare(rest.password, User.password, async (err, result) => {
       if (result) {
         console.log("It matches!");
         const data = {
@@ -43,8 +43,8 @@ const LoginUser = async (req, res) => {
         );
         res.send({ data: token });
       } else {
-       // console.log("Invalid password!");
-        res.status(400).send({msg:'Invalid password!'})
+        // console.log("Invalid password!");
+        res.status(400).send({ msg: "Invalid password!" });
       }
     });
   } catch (err) {
@@ -56,31 +56,58 @@ const LoginUser = async (req, res) => {
 const Verify = async (req, res, next) => {
   const authHeader = req.body.token;
   //console.log("authHeader", authHeader);
-  if (!authHeader ) {
-    return res.json({ message: 'please provide jwt token' });
+  if (!authHeader) {
+    return res.json({ message: "please provide jwt token" });
   }
   const token = authHeader.split(" ")[0];
   //console.log("token", token);
   try {
     const payload = jwt.verify(token, Config.JWT_SECRET);
-   // console.log('email',payload.email);
-    let validateUser = await register.findOne({ 
-      where:{
-        email: payload.email
-      }
-     });
-    //console.log('data',validateUser);
-    if (validateUser) {
-      user = {
-        email: validateUser.email,
-        fname: validateUser.fname,
-        lname: validateUser.lname,
-        phone: validateUser.phone
-      };
-      //console.log(user);
-      res.send ({msg:'jwt veryfi successfully',data:user})
+    // console.log('email',payload.email);
+
+    const userDetails = await studentdetails.findOne({
+      where: {
+        email: payload.email,
+      },
+    });
+    if (userDetails) {
+      const getData =await db.sequelize.query(`select r.email,r.fname,r.lname,r.username,r.phone,
+      s.institutionname,s.courseenrolled,s.class,s.section,s.classteacher,s.teacherId,s.role 
+      from registers r 
+      inner join studentdetails s on s.email =r.email 
+      where s.email=${payload.email} && r.isDelete =false && s.isDelete=false `,
+          {
+              //&& ad.date=${date}
+              type: QueryTypes.SELECT,
+            }
+          );
+          res
+          .status(200)
+          .send({ msg: "user is register but not fill details", data: getData }); 
     } else {
-      return res.json({ message: "Authentication invalid ! Please register" });
+      let RegisterUser = await register.findOne({
+        where: {
+          email: payload.email,
+        },
+      });
+      console.log("data......", userDetails);
+      if (RegisterUser) {
+        user = {
+          email: RegisterUser.email,
+          fname: RegisterUser.fname,
+          lname: RegisterUser.lname,
+          phone: RegisterUser.phone,
+          username: RegisterUser.username,
+        };
+        //console.log(user);
+        res
+          .status(200)
+          .send({ msg: "user is register but not fill details", data: user });
+      } else {
+        return res.json({
+          message: "Authentication invalid ! Please register",
+        });
+      }
     }
   } catch (error) {
     console.log("invalid signature");

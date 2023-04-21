@@ -25,14 +25,18 @@ const createStudentsDetails = async (req, res) => {
   }
 };
 
-const getDataAll = async (req, res) => {
+const getDataAllSt = async (req, res) => {
   try {
-    const data = await studentdetails.findAll ({
-      where:{
-        role:'Student',
-        isDelete: false,
-      }
-    })
+    const data = await db.sequelize.query(`select r.email,r.fname,r.lname,r.username,r.phone,
+    s.institutionname,s.courseenrolled,s.class,s.section,s.classteacher,s.teacherId,s.role 
+    from registers r 
+    inner join studentdetails s on s.email =r.email 
+    where s.role='Student' && r.isDelete =false && s.isDelete=false  `,
+        {
+            //&& ad.date=${date}
+            type: QueryTypes.SELECT,
+          }
+        );
     console.log("data", data);
     res.status(200).json({ msg: "student data get successfully", data: data });
   } catch (err) {
@@ -79,7 +83,7 @@ const getDataTeacherWise = async (req, res) => {
   }
 };
 
-const getDetailByIdSt = async (req, res) => {
+const getDetailById = async (req, res) => {
   const { email } = req.body;
   try {
     const getDataById = await studentdetails.findOne({
@@ -138,10 +142,11 @@ res.status(200).json({msg:'students details delete successfully',data:deleteData
         res.status(500).json({msg:'students details not delete ..',err})
     }
 }
+
 module.exports = {
   createStudentsDetails,
-  getDataAll,
-  getDetailByIdSt,
+  getDataAllSt,
+  getDetailById,
   updateDetailsSt,
   deteteDetailsSt,
   getDataClassWise,

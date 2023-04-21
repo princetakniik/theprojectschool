@@ -11,7 +11,7 @@ const registerUser = async (req, res) => {
         email: rest.email,
       },
     });
-    console.log("otp", otpveryfi.otp);
+    //console.log("otp", otpveryfi.otp);
     if (otpveryfi.otp !== rest.otp) {
       res.send("incorrect otp");
     } else {

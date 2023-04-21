@@ -8,10 +8,10 @@ const roleWiseGetDetails = async (req, res) => {
   });
   let details = [];
   if (data.role === "Admin") {
-    const getDataAll = await  register.findOne({
-        where:{
-            email: req.body.email,
-        }
+    const getDataAll = await register.findOne({
+      where: {
+        email: req.body.email,
+      },
     });
     details.push(getDataAll);
     console.log("admin", getDataAll);
@@ -24,7 +24,7 @@ const roleWiseGetDetails = async (req, res) => {
     console.log("user", getDataAll);
     details.push(getDataAll);
   } else if (data.role === "Student") {
-    const getDataAll = await  register.findOne({
+    const getDataAll = await register.findOne({
       where: {
         email: req.body.email,
       },

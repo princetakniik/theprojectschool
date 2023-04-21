@@ -1,7 +1,7 @@
 const {
   createStudentsDetails,
-  getDataAll,
-  getDetailByIdSt,
+  getDataAllSt,
+  getDetailById,
   updateDetailsSt,
   deteteDetailsSt,
   getDataTeacherWise,
@@ -12,10 +12,10 @@ module.exports = (app) => {
   app.post("/createStudentsDetails", (req, res) =>
     createStudentsDetails(req, res)
   );
-  app.get("/getDataAll", (req, res) => getDataAll(req, res));
+  app.get("/getDataAllSt", (req, res) => getDataAllSt(req, res));
   app.get("/getDataClassWise", (req, res) => getDataClassWise(req, res));
   app.get("/getDataTeacherWise", (req, res) => getDataTeacherWise(req, res));
-  app.get("/getDetailByIdSt", (req, res) => getDetailByIdSt(req, res));
+  app.get("/getDetailById", (req, res) => getDetailById(req, res));
   app.put("/updateDetailsSt", (req, res) => updateDetailsSt(req, res));
   app.delete("/deteteDetailsSt", (req, res) => deteteDetailsSt(req, res));
 };
