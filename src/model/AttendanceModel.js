@@ -1,7 +1,7 @@
 module.exports = (sequelize, Sequelize, DataTypes) => {
   const Attendance = sequelize.define("attendance", {
-    userId: {
-      type: DataTypes.STRING,
+    user_id: {
+      type: DataTypes.INTEGER,
     },
     isPersent: {
       type: DataTypes.ENUM('1','2')

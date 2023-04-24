@@ -4,30 +4,46 @@ const db = require("../Config/dbConnection");
 
 const createStudentsDetails = async (req, res) => {
   const { ...rest } = req.body;
-  let data = [];
+  let result = [];
   try {
     const userRegister = await register.findOne({
       where: {
         email: rest.email,
       },
     });
+  
     if (userRegister != null || userRegister != undefined) {
       const getData = await studentdetails.findOne({
         where: {
           email: rest.email,
         },
       });
-      console.log("email", getData);
+  
       if (getData == null || getData.email !== rest.email) {
-        const create = await studentdetails.create(req.body);
-        data.push(create);
+        const data={
+          user_id:userRegister.user_id,
+          email:rest.email,
+          name: rest.name,
+          phone: rest.phone,
+          institutionname: rest.institutionname,
+          courseenrolled: rest.courseenrolled,
+          class: rest.class,
+          section: rest.section,
+          role:rest.role,
+          classteacher: rest.classteacher,
+          teacherId: rest.teacherId
+        }
+     
+        const create = await studentdetails.create(data);
+        result.push(create);
+        console.log('data',result);
       } else {
         res.send({ msg: "this email is already students" });
       }
     } else {
       res.status(400).json({ msg: "user is not register" });
     }
-    res.status(200).json({ msg: "create data successfully", data: data });
+    res.status(200).json({ msg: "create data successfully", data: result });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "students deatils not created ...", err });
@@ -37,7 +53,7 @@ const createStudentsDetails = async (req, res) => {
 const getDataAllSt = async (req, res) => {
   try {
     const data = await db.sequelize.query(
-      `select r.email,r.fname,r.lname,r.username,r.phone,
+      `select r.email,r.fname,r.lname,r.username,r.phone,s.user_id,
     s.institutionname,s.courseenrolled,s.class,s.section,s.classteacher,s.teacherId,s.role 
     from registers r 
     inner join studentdetails s on s.email =r.email 

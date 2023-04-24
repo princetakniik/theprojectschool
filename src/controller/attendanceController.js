@@ -11,7 +11,7 @@ const createAttendance = async (req, res) => {
   try {
     const getData = await studentdetails.findOne({
       where: {
-        id,
+        user_id:id,
       },
     });
     console.log("data", getData.role);
@@ -20,7 +20,7 @@ const createAttendance = async (req, res) => {
     }
     const createData = await attendancest.create({
       role: getData.role,
-      userId: id,
+      user_id:getData.user_id,
       Comment: Comment,
       date: date,
       isPersent: isPersent,
@@ -38,8 +38,10 @@ const getAttendanceSt = async (req, res) => {
   console.log("date", { date });
   try {
     const getdata = await db.sequelize.query(
-      `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.Comment,ad.date,ad.isPersent from school.attendances as ad 
-      inner join school.studentdetails as sd on sd.id=ad.userId
+      `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.Comment,
+      ad.date,ad.isPersent,sd.user_id 
+      from attendances as ad 
+      inner join studentdetails as sd on sd.user_id =ad.user_id 
       where ad.role='Student' && ad.date = CURRENT_DATE() `,
       {
         //&& ad.date=${date}
@@ -58,8 +60,10 @@ const getAttendanceTe = async (req, res) => {
   const { date } = req.body;
   try {
     const getdata = await db.sequelize.query(
-      `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.Comment,ad.date,ad.isPersent from school.attendances as ad 
-      inner join school.studentdetails as sd on sd.id=ad.userId
+      `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.Comment,
+      ad.date,ad.isPersent,sd.user_id 
+      from attendances as ad 
+      inner join studentdetails as sd on sd.user_id =ad.user_id 
       where ad.role='Teacher' && ad.date =CURRENT_DATE() `,
       {
         type: QueryTypes.SELECT,
@@ -77,9 +81,11 @@ const getAttendanceByid = async (req, res) => {
   const { userId, date } = req.body;
   try {
     const getDataById = await db.sequelize.query(
-      `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.Comment,ad.date,ad.isPersent from school.attendances as ad 
-        inner join school.studentdetails as sd on sd.id=ad.userId
-        where ad.userId=${userId} && ad.date = CURRENT_DATE()`,
+      `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.Comment,
+      ad.date,ad.isPersent,sd.user_id 
+      from attendances as ad 
+      inner join studentdetails as sd on sd.user_id =ad.user_id 
+        where ad.user_id =${userId} && ad.date = CURRENT_DATE()`,
       {
         type: QueryTypes.SELECT,
       }
@@ -96,9 +102,11 @@ const getAttendanceCM = async (req, res) => {
   console.log("user", userId);
   try {
     const getdata = await db.sequelize.query(
-      `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.Comment,ad.date,ad.isPersent from school.attendances as ad 
-      inner join school.studentdetails as sd on sd.id=ad.userId
-      where ad.userId=${userId} && DATE_FORMAT(ad.date, "%Y %m") =DATE_FORMAT(CURRENT_DATE(), "%Y %m"); `,
+      `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.Comment,
+      ad.date,ad.isPersent,sd.user_id 
+      from attendances as ad 
+      inner join studentdetails as sd on sd.user_id =ad.user_id 
+      where ad.user_id =${userId} && DATE_FORMAT(ad.date, "%Y %m") =DATE_FORMAT(CURRENT_DATE(), "%Y %m"); `,
       {
         type: QueryTypes.SELECT,
       }
@@ -114,9 +122,11 @@ const getAttendanceSummeryMonthly = async (req, res) => {
   const { userId, date } = req.body;
   try {
     const getdata = await db.sequelize.query(
-      `      select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.userId,ad.Comment,ad.date,ad.isPersent from school.attendances as ad 
-      inner join school.studentdetails as sd on sd.id=ad.userId
-      where ad.userId=${userId} && DATE_FORMAT(ad.date, "%Y-%m") =DATE_FORMAT('${date}', "%Y-%m")`,
+      `      select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,
+      ad.Comment,ad.date,ad.isPersent ,ad.user_id
+      from attendances as ad 
+      inner join studentdetails as sd on sd.user_id =ad.user_id 
+      where ad.user_id =${userId} && DATE_FORMAT(ad.date, "%Y-%m") =DATE_FORMAT('${date}', "%Y-%m")`,
       {
         type: QueryTypes.SELECT,
       }
@@ -133,12 +143,14 @@ const getAttendanceSummeryMonthly = async (req, res) => {
 
 const getAttendanceBetweenMonth = async (req, res) => {
   const { userId, startDate, endDate } = req.body;
-  console.log("user", userId, startDate.toString(), endDate);
+  console.log("user", userId);
   try {
     const getdata = await db.sequelize.query(
-      `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.userId,ad.Comment,ad.date,ad.isPersent from school.attendances as ad 
-      inner join school.studentdetails as sd on sd.id=ad.userId
-      where ad.userId=${userId} && DATE_FORMAT(ad.date, "%Y-%m-%d") BETWEEN '${startDate}' AND '${endDate}'`,
+      `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.user_id,
+      ad.Comment,ad.date,ad.isPersent
+      from attendances as ad 
+      inner join studentdetails as sd on sd.user_id =ad.user_id 
+      where ad.user_id =${userId} && DATE_FORMAT(ad.date, "%Y-%m-%d") BETWEEN '${startDate}' AND '${endDate}'`,
       {
         type: QueryTypes.SELECT,
       }
@@ -163,7 +175,7 @@ const updateAttendance = async (req, res) => {
   try {
     const getData = await studentdetails.findOne({
       where: {
-        id: userId,
+        user_id: userId,
       },
     });
     console.log("data", getData.role);
@@ -172,7 +184,7 @@ const updateAttendance = async (req, res) => {
     }
     const update = await attendancest.update(data, {
       where: {
-        userId: userId,
+        user_id: userId,
       },
     });
     res.status(200).json({ msg: "get attendance all", data: update });
@@ -192,7 +204,7 @@ const deleteAttendance = async (req, res) => {
   try {
     const getData = await studentdetails.findOne({
       where: {
-        id: userId,
+        user_id: userId,
       },
     });
     console.log("data", getData.role);
@@ -201,7 +213,7 @@ const deleteAttendance = async (req, res) => {
     }
     const isDelete = await attendancest.update(data, {
       where: {
-        userId: userId,
+        user_id : userId,
       },
     });
     res.status(200).json({ msg: "get attendance all", data: isDelete });
