@@ -77,11 +77,12 @@ const Verify = async (req, res, next) => {
         email: payload.email,
       },
     });
-   // console.log('userReg',userRegister);
+   //console.log('userReg',userRegister);
 
     if (userDetails != null || userDetails != undefined) {
       console.log("userDetails",userDetails.name);
       user = {
+        user_id:userDetails.user_id,
         name: userDetails.name,
         email: userDetails.email,
         phone: userDetails.phone,
@@ -97,6 +98,7 @@ const Verify = async (req, res, next) => {
     } else if (userRegister !== null || userRegister !== undefined) {
      // console.log('userRegister',userRegister);
       user = {
+        user_id:userRegister.user_id,
         email: userRegister.email,
         fname: userRegister.fname,
         lname: userRegister.lname,
