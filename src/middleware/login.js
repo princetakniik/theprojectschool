@@ -15,8 +15,8 @@ const LoginUser = async (req, res) => {
     const User = await register.findOne({
       where: { email: rest.email },
     });
-    console.log("user", User);
-    console.log("pass", User.password);
+    // console.log("user", User);
+    // console.log("pass", User.password);
     //Throwing an error
     if (!User) {
       //  console.log("User is not registered");
@@ -24,6 +24,7 @@ const LoginUser = async (req, res) => {
     }
     bcrypt.compare(rest.password, User.password, async (err, result) => {
       if (result) {
+        res.send({ msg: "It matches!" });
         console.log("It matches!");
         const data = {
           email: User.email,
@@ -77,12 +78,12 @@ const Verify = async (req, res, next) => {
         email: payload.email,
       },
     });
-   //console.log('userReg',userRegister);
+    //console.log('userReg',userRegister);
 
     if (userDetails != null || userDetails != undefined) {
-      console.log("userDetails",userDetails.name);
+      console.log("userDetails", userDetails.name);
       user = {
-        user_id:userDetails.user_id,
+        user_id: userDetails.user_id,
         name: userDetails.name,
         email: userDetails.email,
         phone: userDetails.phone,
@@ -96,9 +97,9 @@ const Verify = async (req, res, next) => {
       };
       data.push({ msg: "user details", user });
     } else if (userRegister !== null || userRegister !== undefined) {
-     // console.log('userRegister',userRegister);
+      // console.log('userRegister',userRegister);
       user = {
-        user_id:userRegister.user_id,
+        user_id: userRegister.user_id,
         email: userRegister.email,
         fname: userRegister.fname,
         lname: userRegister.lname,
@@ -110,7 +111,7 @@ const Verify = async (req, res, next) => {
     }
     res.status(200).json(data);
   } catch (error) {
-   // console.log("invalid signature");
+    // console.log("invalid signature");
     return res.json({ message: "Authentication invalid" });
   }
 };

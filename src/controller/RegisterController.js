@@ -6,27 +6,27 @@ const registerUser = async (req, res) => {
   console.log("api data user by client ...", req.body);
   const { ...rest } = req.body;
   try {
-    const otpveryfi = await emailveryfi.findOne({
-      where: {
-        email: rest.email,
-      },
-    });
+    // const otpveryfi = await emailveryfi.findOne({
+    //   where: {
+    //     email: rest.email,
+    //   },
+    // });
     //console.log("otp", otpveryfi.otp);
-    if (otpveryfi.otp !== rest.otp) {
-      res.send("incorrect otp");
-    } else {
-      if (!rest.email || !rest.password || !rest.username || !rest.phone) {
-        console.log("Please provide all values");
-        res.send({ msg: "Please provide all values" });
-      }
-      //checking if user exist
-      const userData = await register.findOne({
-        where: {
-          email: rest.email,
-        },
-      });
-      console.log("useremail", userData);
-      if (userData == null || userData == undefined) {
+    // if (otpveryfi.otp !== rest.otp) {
+    //   res.send("incorrect otp");
+    // } else {
+    //   if (!rest.email || !rest.password || !rest.username || !rest.phone) {
+    //     console.log("Please provide all values");
+    //     res.send({ msg: "Please provide all values" });
+    //   }
+    //   //checking if user exist
+    //   const userData = await register.findOne({
+    //     where: {
+    //       email: rest.email,
+    //     },
+    //   });
+    //   console.log("useremail", userData);
+    //   if (userData == null || userData == undefined) {
         //encrypting the password
         const round = parseInt(Config.saltRound);
         const salt = bcrypt.genSaltSync(round);
@@ -46,10 +46,10 @@ const registerUser = async (req, res) => {
         res
           .status(200)
           .json({ msg: "Insert data by client", data: insertData });
-      } else if (userData.email === rest.email) {
-        res.send({ msg: "user already exit" });
-      }
-    }
+      // } else if (userData.email === rest.email) {
+      //   res.send({ msg: "user already exit" });
+      // }
+  //  }
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "Data not insert by client", err });

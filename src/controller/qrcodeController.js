@@ -1,32 +1,36 @@
-const { register } = require("../Config/dbConnection");
+const { register, studentdetails } = require("../Config/dbConnection");
 const { generateQRCode } = require("../middleware/QrCodeGenerate");
 
 const generateQR = async (req, res) => {
   try {
-    const data = await register.findOne({
-      where: {
-        user_id: req.query.user_id,
-      },
-    });
-    if (data == null || data == undefined) {
-      res.json({ msg: "no data found" });
-    }else{
-      let userData={
-        user_id:data.user_id,
-        email:data.email,
-        fname: data.fname,
-        lname:data.lname,
-        username:data.username,
-        phone:data.phone
+      let result = [];
+      let userDetails = await studentdetails.findOne({
+        where: {
+          user_id:req.query.user_id
+        },
+      });
+  // console.log("userDetail", userDetails);
+  
+      if (userDetails !== null || userDetails !== undefined) {
+       // console.log("userDetails", userDetails.name);
+        user = {
+          user_id: userDetails.user_id,
+          section: userDetails.section,
+          class: userDetails.class,
+          courseenrolled: userDetails.courseenrolled,
+          institutionname: userDetails.institutionname,
+        };
+        let strData = JSON.stringify(user);
+        console.log("user", strData);
+        const qrImage = await generateQRCode(strData);
+        console.log(qrImage);
+        res.status(200).json({ msg: `QR code get successfull`, data: qrImage });
+      } else {
+        return res.status(400).json({ message:  "Data not found" });
       }
-      console.log('userData',userData);
-    let strData = JSON.stringify(userData);
-    console.log("user", strData);
-    const qrImage = await generateQRCode(strData);
-    // const qrImage = await QRCode.toString(strData);
-    console.log(qrImage);
-    res.status(200).json({ msg: `QR code get successfull`, data: qrImage });
-    }
+     // console.log('userData',result);
+ 
+
   } catch (err) {
     console.error("err", err);
   }

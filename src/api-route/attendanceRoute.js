@@ -8,11 +8,19 @@ const {
   getAttendanceCM,
   getAttendanceSummeryMonthly,
   getAttendanceBetweenMonth,
+  getAttendanceStClass,
+  getAttendanceStSection,
 } = require("../controller/attendanceController");
 
 module.exports = (app) => {
   app.post("/createAttendance", (req, res) => createAttendance(req, res));
   app.get("/getAttendanceSt", (req, res) => getAttendanceSt(req, res));
+  app.get("/getAttendanceStClass", (req, res) =>
+    getAttendanceStClass(req, res)
+  );
+  app.get("/getAttendanceStSection", (req, res) =>
+    getAttendanceStSection(req, res)
+  );
   app.get("/getAttendanceTe", (req, res) => getAttendanceTe(req, res));
   app.get("/getAttendanceByid", (req, res) => getAttendanceByid(req, res));
   app.put("/updateAttendance", (req, res) => updateAttendance(req, res));
