@@ -9,23 +9,27 @@ const LoginUser = async (req, res) => {
   console.log(" ownerRegister controller ", rest);
   try {
     if (!rest.email) {
-      res.status(400).json({ msg: "Please provide email" });
+      res.send({ msg: "Please provide email" });
     }
     //checking if user exist in DB
     const User = await register.findOne({
       where: { email: rest.email },
     });
 
-    const userDetails = await studentdetails.findOne({
-      where: { email: rest.email },
-    });
 
+    const userDetails=await studentdetails.findOne({
+      where:{ email: rest.email }
+    })
+   // console.log("user", User);
+   // console.log("pass", User.password);
+    //Throwing an error
     if (!User) {
-      res.status(200).json({ msg: "User is not Registered" });
+      //  console.log("User is not registered");
+      res.status(400).send({ msg: "User is not Registered" });
     }
     bcrypt.compare(rest.password, User.password, async (err, result) => {
       if (result) {
-        res.status(200).json({ msg: "It matches!" });
+        console.log("It matches!");
         const data = {
           email: User.email,
           password: User.password,
@@ -33,25 +37,16 @@ const LoginUser = async (req, res) => {
           lname: User.lname,
           phone: User.phone,
         };
-        console.log("data", data);
         const token = jwt.sign(data, Config.JWT_SECRET);
-        if(!token){
-          res.status(400).json({msg:'token not found'})
-        }
-        console.log("token", token);
-        res.status(200).json({msg:'user token',token})
-
-        const user = await studentdetails.upsert(
+       console.log(`${userDetails.role} has login`);
+        const user = await register.upsert(
           {
             email: User.email,
             token: token,
           },
           { email: User.email }
         );
-
-        // res
-        //   .status(200)
-        //   .json({ msg: `${userDetails.role} has login `, data: token });
+        res.status(200).send({msg:`${userDetails.role} has login`, data: token });
       } else {
         // console.log("Invalid password!");
         res.status(400).send({ msg: "Invalid password!" });
