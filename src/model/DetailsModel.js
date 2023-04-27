@@ -7,6 +7,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
+      unique: true,
     },
     name: {
       type: DataTypes.STRING,
@@ -50,6 +51,9 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     },
     teacherId: {
       type: DataTypes.STRING,
+    },
+    token:{
+      type: DataTypes.STRING(5000)
     },
     role: {
       type: DataTypes.ENUM("Admin", "Teacher", "Student"),
