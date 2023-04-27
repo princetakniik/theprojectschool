@@ -176,7 +176,6 @@ const updateAttendance = async (req, res) => {
   const data = {
     isPersent: isPersent,
     Comment: Comment,
-    date: date,
     section:section,
     class:className,
     courseenrolled:courseenrolled,
@@ -195,6 +194,7 @@ const updateAttendance = async (req, res) => {
     const update = await attendancest.update(data, {
       where: {
         user_id: userId,
+        date:date
       },
     });
     res.status(200).json({ msg: "get attendance all", data: update });
@@ -208,7 +208,6 @@ const deleteAttendance = async (req, res) => {
   const data = {
     isPersent: isPersent,
     Comment: Comment,
-    date: date,
     isDelete: "true",
   };
   try {
@@ -219,11 +218,12 @@ const deleteAttendance = async (req, res) => {
     });
     console.log("data", getData.role);
     if (getData.role == "Admin") {
-      res.send({ msg: "Admin id not attendance update" });
+      res.send({ msg: "Admin id not attendance status change" });
     }
     const isDelete = await attendancest.update(data, {
       where: {
         user_id : userId,
+        date:date
       },
     });
     res.status(200).json({ msg: "get attendance all", data: isDelete });

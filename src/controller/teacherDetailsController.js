@@ -4,7 +4,7 @@ const db = require("../Config/dbConnection");
 
 const getAllTeacher = async (req, res) => {
   try {
-    const getTeacher = await db.sequelize.query(`select r.email,r.fname,r.lname,r.username,r.phone,
+    const getTeacher = await db.sequelize.query(`select r.email,r.fname,r.lname,r.username,r.phone,s.user_id,
     s.institutionname,s.courseenrolled,s.class,s.section,s.classteacher,s.teacherId,s.role 
     from registers r 
     inner join studentdetails s on s.email =r.email 
