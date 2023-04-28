@@ -24,14 +24,19 @@ const createStudentsDetails = async (req, res) => {
           user_id:userRegister.user_id,
           email:rest.email,
           name: rest.name,
+          profilePhoto:rest.profilePhoto,
           phone: rest.phone,
           institutionname: rest.institutionname,
-          courseenrolled: rest.courseenrolled,
+          InstituteLogo:rest.InstituteLogo,
+          courses: rest.courses,
+          subCourses:rest.subCourses,
           class: rest.class,
           section: rest.section,
           role:rest.role,
           classteacher: rest.classteacher,
-          teacherId: rest.teacherId
+          teacherId: rest.teacherId,
+          startTime:rest.startTime,
+          endTime:rest.endTime
         }
      
         const create = await studentdetails.create(data);

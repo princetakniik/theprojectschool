@@ -5,4 +5,6 @@ module.exports = (app) => {
   require("./src/api-route/attendanceRoute")(app);
   require("./src/api-route/roleRouter")(app);
   require('./src/api-route/teacherDetailsRoute')(app)
+  require('./src/api-route/CoursesRoute')(app)
+  require('./src/api-route/subcoursesRoute')(app)
 };

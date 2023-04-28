@@ -14,12 +14,23 @@ const createAttendance = async (req, res) => {
         user_id:id,
       },
     });
-   // console.log("data", getData);
+ // console.log("data", getData);
+    const getAttendance = await attendancest.findOne({
+      where: {
+        user_id:id,
+        date:date
+      },
+    })
+  console.log('getAttendance',getAttendance);
     if (getData ==null || getData==undefined) {
       res.status(400).json({msg:"user details is not persent"})
     }else if(getData.role =='Admin'){
       res.status(400).json({ msg: "Admin id not attendance" });
-    }else{
+    }else if(!getAttendance){
+      console.log();
+      res.status(400).json({msg:"user details is not persent"})
+    }
+    else{
     const createData = await attendancest.create({
       user_id:getData.user_id,
       Comment: Comment,

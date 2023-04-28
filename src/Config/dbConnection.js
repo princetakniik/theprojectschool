@@ -37,4 +37,6 @@ db.register = require("../model/RegisterModel")(sequelize,Sequelize,DataTypes);
 db.emailveryfi =require('../model/veryfiEmailModel')(sequelize,Sequelize,DataTypes);
 db.studentdetails=require('../model/DetailsModel')(sequelize,Sequelize,DataTypes);
 db.attendancest =require('../model/AttendanceModel')(sequelize,Sequelize,DataTypes);
+db.courses=require('../model/CoursesModel')(sequelize,Sequelize,DataTypes);
+db.subcourses =require('../model/SubCoursesModel')(sequelize,Sequelize,DataTypes);
 module.exports = db;
