@@ -39,4 +39,5 @@ db.studentdetails=require('../model/DetailsModel')(sequelize,Sequelize,DataTypes
 db.attendancest =require('../model/AttendanceModel')(sequelize,Sequelize,DataTypes);
 db.courses=require('../model/CoursesModel')(sequelize,Sequelize,DataTypes);
 db.subcourses =require('../model/SubCoursesModel')(sequelize,Sequelize,DataTypes);
+db.institute =require('../model/InstituteModel')(sequelize,Sequelize,DataTypes);
 module.exports = db;

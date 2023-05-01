@@ -17,16 +17,16 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     phone: {
       type: DataTypes.BIGINT,
     },
-    institutionname: {
-      type: DataTypes.STRING,
+    institutionId: {
+      type: DataTypes.INTEGER,
     },
     InstituteLogo: {
       type: DataTypes.STRING,
     },
-    courses: {
+    coursesId: {
       type: DataTypes.INTEGER,
     },
-    subCourses: {
+    subCoursesId: {
       type: DataTypes.INTEGER,
     },
     class: {
@@ -75,11 +75,8 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
         "Z"
       ),
     },
-    classteacher: {
-      type: DataTypes.STRING,
-    },
     teacherId: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
     role: {
       type: DataTypes.ENUM("Admin", "Teacher", "Student", "Institute"),
