@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize, DataTypes) => {
   const subCourses = sequelize.define("subcourses", {
-    user_id: {
+    subcourses_id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,

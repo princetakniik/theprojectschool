@@ -26,8 +26,10 @@ const insertsubCourses = async (req, res) => {
 const getsubCourses = async (req, res) => {
   try {
     const getData = await db.sequelize.query(
-        `select s.user_id as subCourseId,c.course,s.subcourses  from courses c 
-        inner join subcourses s on s.course =c.user_id where s.isDelete =false `,
+        `select s.subcourses_id,s.Institute,s.course,s.subcourses,s.startTime,s.endTime 
+        from subcourses s 
+        inner join courses c on c.user_id =s.subcourses_id 
+        where s.isDelete=false `,
         {
           //&& ad.date=${date}
           type: QueryTypes.SELECT,
@@ -45,9 +47,10 @@ const getsubCoursesById = async (req, res) => {
     const id=req.query.id
   try {
     const getData = await db.sequelize.query(
-        `select s.user_id as subCourseId,c.course,s.subcourses  from courses c 
-        inner join subcourses s on s.course =c.user_id
-         where s.user_id=${id} && s.isDelete =false `,
+        `select s.subcourses_id,s.Institute,s.course,s.subcourses,s.startTime,s.endTime 
+        from subcourses s 
+        inner join courses c on c.user_id =s.subcourses_id 
+        where s.subcourses_id=${id} && s.isDelete=false  `,
         {
           //&& ad.date=${date}
           type: QueryTypes.SELECT,
@@ -76,7 +79,7 @@ const updatesubCoursesById = async (req, res) => {
     const updateData = await subcourses.update(rest,{
         where: {
           isDelete: false,
-          user_Id:id
+          subcourses_id:id
         },
       });
       res.status(200).json({ msg: `update courses successfully ${id}`, data: updateData });
@@ -95,7 +98,7 @@ const deletesubCoursesById = async (req, res) => {
     const deleteData = await subcourses.update(data,{
         where: {
           isDelete: false,
-          user_Id:id
+          subcourses_id:id
         },
       });
       res.status(200).json({ msg: `update courses successfully ${id}`, data: deleteData });
