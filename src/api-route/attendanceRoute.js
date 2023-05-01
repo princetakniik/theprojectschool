@@ -8,8 +8,6 @@ const {
   getAttendanceCM,
   getAttendanceSummeryMonthly,
   getAttendanceBetweenMonth,
-  getAttendanceStClass,
-  getAttendanceStSection,
 } = require("../controller/attendanceController");
 
 module.exports = (app) => {

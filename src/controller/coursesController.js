@@ -1,4 +1,4 @@
-const { courses, studentdetails, institute } = require("../Config/dbConnection");
+const { courses, institute } = require("../Config/dbConnection");
 
 const insertCourses = async (req, res) => {
   const { ...rest } = req.body;

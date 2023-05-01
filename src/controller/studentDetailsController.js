@@ -26,17 +26,13 @@ const createStudentsDetails = async (req, res) => {
           name: rest.name,
           profilePhoto:rest.profilePhoto,
           phone: rest.phone,
-          institutionname: rest.institutionname,
-          InstituteLogo:rest.InstituteLogo,
-          courses: rest.courses,
-          subCourses:rest.subCourses,
+          institutionId: rest.institutionId,
+          coursesId: rest.coursesId,
+          subCoursesId:rest.subCoursesId,
           class: rest.class,
           section: rest.section,
           role:rest.role,
-          classteacher: rest.classteacher,
-          teacherId: rest.teacherId,
-          startTime:rest.startTime,
-          endTime:rest.endTime
+          teacherId: rest.teacherId
         }
      
         const create = await studentdetails.create(data);
@@ -58,11 +54,11 @@ const createStudentsDetails = async (req, res) => {
 const getDataAllSt = async (req, res) => {
   try {
     const data = await db.sequelize.query(
-      `select r.email,r.fname,r.lname,r.username,r.phone,s.user_id,
-    s.institutionname,s.courseenrolled,s.class,s.section,s.classteacher,s.teacherId,s.role 
-    from registers r 
-    inner join studentdetails s on s.email =r.email 
-    where s.role='Student' && r.isDelete =false && s.isDelete=false  `,
+      `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
+      s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName 
+      from studentdetails s 
+      inner join institutes i on i.institute_id =s.institutionId 
+      where s.role ='Student' && s.isDelete =false   `,
       {
         //&& ad.date=${date}
         type: QueryTypes.SELECT,
@@ -76,17 +72,41 @@ const getDataAllSt = async (req, res) => {
   }
 };
 
+const getStudentByInstitute =async(req,res)=>{
+  try{
+const data =  await db.sequelize.query(
+  `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
+  s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName 
+  from studentdetails s 
+  inner join institutes i on i.institute_id =s.institutionId 
+  where s.role ='Student' && s.institutionId=${req.query.institutionId} && s.isDelete =false    `,
+  {
+    //&& ad.date=${date}
+    type: QueryTypes.SELECT,
+  }
+);
+console.log("data", data);
+res.status(200).json({ msg: "student data get successfully", data: data });
+  }catch(err){
+    console.log(err);
+    res.status(500).json({msg:`data not get `,err})
+  }
+}
 const getDataClassWise = async (req, res) => {
-  const { clas, classteacher, teacherId } = req.body;
+  const { Class,institutionId } = req.body;
   console.log("apidata....", req.body);
   try {
-    const data = await studentdetails.findAll({
-      where: {
-        role: "Student",
-        class: clas,
-        isDelete: false,
-      },
-    });
+    const data =  await db.sequelize.query(
+      `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
+      s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName 
+      from studentdetails s 
+      inner join institutes i on i.institute_id =s.institutionId 
+      where s.role ='Student' && s.class =${Class} && s.institutionId=${institutionId} && s.isDelete =false     `,
+      {
+        //&& ad.date=${date}
+        type: QueryTypes.SELECT,
+      }
+    );
     console.log("data", data);
     res.status(200).json({ msg: "student data get successfully", data: data });
   } catch (err) {
@@ -96,16 +116,20 @@ const getDataClassWise = async (req, res) => {
 };
 
 const getDataTeacherWise = async (req, res) => {
-  const { clas, classteacher, teacherId } = req.body;
+  const { Class, teacherId,institutionId } = req.body;
   console.log("api..", req.body);
   try {
-    const data = await studentdetails.findAll({
-      where: {
-        role: "Student",
-        classteacher: classteacher,
-        isDelete: false,
-      },
-    });
+    const data =  await db.sequelize.query(
+      `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
+      s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName 
+      from studentdetails s 
+      inner join institutes i on i.institute_id =s.institutionId 
+      where s.role ='Student' && s.class =${Class}&& s.teacherId=${teacherId} && s.institutionId=${institutionId} && s.isDelete =false     `,
+      {
+        //&& ad.date=${date}
+        type: QueryTypes.SELECT,
+      }
+    );
     console.log("data", data);
     res.status(200).json({ msg: "student data get successfully", data: data });
   } catch (err) {
@@ -115,17 +139,21 @@ const getDataTeacherWise = async (req, res) => {
 };
 
 const getDetailById = async (req, res) => {
-  const { email } = req.body;
+  const { user_id } = req.query;
   try {
-    const getDataById = await studentdetails.findOne({
-      where: {
-        email: email,
-        isDelete: false,
-      },
-    });
-    res
-      .status(200)
-      .json({ msg: "students details found by id ", data: getDataById });
+    const data =  await db.sequelize.query(
+      `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
+      s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName 
+      from studentdetails s 
+      inner join institutes i on i.institute_id =s.institutionId 
+      where s.user_id =${user_id}&& s.isDelete =false     `,
+      {
+        //&& ad.date=${date}
+        type: QueryTypes.SELECT,
+      }
+    );
+    console.log("data", data);
+    res.status(200).json({ msg: "student data get successfully", data: data });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "students data not found", err });
@@ -136,18 +164,19 @@ const updateDetailsSt = async (req, res) => {
   try {
     const data = {
       name: rest.name,
+      profilePhoto:rest.profilePhoto,
       phone: rest.phone,
-      institutionname: rest.institutionname,
-      courseenrolled: rest.courseenrolled,
+      institutionId:rest.institutionId,
+      coursesId:rest.coursesId,
+      subCoursesId:rest.subCoursesId,
       class: rest.class,
-      section: rest.section,
-      classteacher: rest.classteacher,
-      teacherId: rest.teacherId,
+    section: rest.section,
+      teacherId: rest.teacherId
     };
     console.log("data", data);
     const updateData = await studentdetails.update(data, {
       where: {
-        email: rest.email,
+        user_id: req.query.user_id,
       },
     });
     res.status(200).json({ msg: "update data successfully", data: updateData });
@@ -157,14 +186,14 @@ const updateDetailsSt = async (req, res) => {
   }
 };
 const deteteDetailsSt = async (req, res) => {
-  const { email } = req.body;
+  const {user_id}=req.query
   try {
     const data = {
       isDelete: true,
     };
     const deleteData = await studentdetails.update(data, {
       where: {
-        email,
+        user_id,
       },
     });
     res
@@ -184,4 +213,5 @@ module.exports = {
   deteteDetailsSt,
   getDataClassWise,
   getDataTeacherWise,
+  getStudentByInstitute
 };

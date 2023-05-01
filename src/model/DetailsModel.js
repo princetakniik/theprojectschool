@@ -20,9 +20,6 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     institutionId: {
       type: DataTypes.INTEGER,
     },
-    InstituteLogo: {
-      type: DataTypes.STRING,
-    },
     coursesId: {
       type: DataTypes.INTEGER,
     },
@@ -79,7 +76,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
     },
     role: {
-      type: DataTypes.ENUM("Admin", "Teacher", "Student", "Institute"),
+      type: DataTypes.ENUM("Admin", "Teacher", "Student"),
       allowNull: false,
     },
     isDelete: {

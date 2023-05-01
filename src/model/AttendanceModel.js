@@ -4,7 +4,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
     },
     isPersent: {
-      type: DataTypes.ENUM('1','2')
+      type: DataTypes.ENUM('0','1')
     },
     Comment: {
       type: DataTypes.STRING,
@@ -34,11 +34,14 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     class:{
       type: DataTypes.ENUM('1','2','3','4','5','6','7','8','9','10','11','12')
     },
-    courseenrolled:{
-      type: DataTypes.STRING,
+    coursesId:{
+      type: DataTypes.INTEGER,
     },
-    institutionname:{
-      type: DataTypes.STRING,
+    institutionId:{
+      type: DataTypes.INTEGER,
+    },
+    subCoursesId:{
+      type: DataTypes.INTEGER,
     },
     date: {
       type: DataTypes.DATEONLY,

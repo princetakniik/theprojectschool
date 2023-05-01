@@ -6,44 +6,54 @@ const moment = require("moment");
 
 const createAttendance = async (req, res) => {
   // console.log("reqApi..data..", req.body);
-  const { id, Comment, date, isPersent,className,section,courseenrolled,institutionname } = req.body;
+  const {
+    user_id,
+    Comment,
+    date,
+    isPersent,
+    Class,
+    section,
+    coursesId,
+    institutionId,
+    subCoursesId,
+  } = req.body;
   console.log("date", date);
   try {
     const getData = await studentdetails.findOne({
       where: {
-        user_id:id,
+        user_id: user_id,
       },
     });
- // console.log("data", getData);
+    console.log("data", getData);
     const getAttendance = await attendancest.findOne({
       where: {
-        user_id:id,
-        date:date
+        user_id: user_id,
+        date: date,
       },
-    })
-  console.log('getAttendance',getAttendance);
-    if (getData ==null || getData==undefined) {
-      res.status(400).json({msg:"user details is not persent"})
-    }else if(getData.role =='Admin'){
-      res.status(400).json({ msg: "Admin id not attendance" });
-    }else if(!getAttendance){
-      console.log();
-      res.status(400).json({msg:"user details is not persent"})
-    }
-    else{
-    const createData = await attendancest.create({
-      user_id:getData.user_id,
-      Comment: Comment,
-      date: date,
-      isPersent: isPersent,
-      section:section,
-      class: className,
-      courseenrolled:courseenrolled,
-      institutionname:institutionname
     });
-    console.log("createData", createData);
-    res.status(200).json({ msg: "persent today", data: createData });
-  }
+    console.log("getAttendance", getAttendance);
+    if (getData == null) {
+      res.status(400).json({ msg: "user details is not persent" });
+    } else if (getData.role == "Admin") {
+      res.status(400).json({ msg: "Admin id not attendance" });
+    } else if (getAttendance !=null) {
+      console.log();
+      res.status(400).json({ msg: "user attendance is  persent" });
+    } else {
+      const createData = await attendancest.create({
+        user_id: user_id,
+        Comment: Comment,
+        isPersent: isPersent,
+        section:section,
+        class: Class,
+        coursesId: coursesId,
+        institutionId: institutionId,
+        subCoursesId:subCoursesId,
+        date: date
+      });
+      console.log("createData", createData);
+      res.status(200).json({ msg: "persent today", data: createData });
+    }
   } catch (err) {
     console.log(err);
     res.status(500).send({ msg: "Absent today ..." });
@@ -95,7 +105,7 @@ const getAttendanceTe = async (req, res) => {
 };
 
 const getAttendanceByid = async (req, res) => {
-  const { userId} = req.body;
+  const { userId } = req.body;
   try {
     const getDataById = await db.sequelize.query(
       `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.Comment,
@@ -183,14 +193,23 @@ const getAttendanceBetweenMonth = async (req, res) => {
 };
 
 const updateAttendance = async (req, res) => {
-  const { userId, isPersent, Comment, date,section,className,courseenrolled,institutionname } = req.body;
+  const {
+    userId,
+    isPersent,
+    Comment,
+    date,
+    section,
+    className,
+    courseenrolled,
+    institutionname,
+  } = req.body;
   const data = {
     isPersent: isPersent,
     Comment: Comment,
-    section:section,
-    class:className,
-    courseenrolled:courseenrolled,
-    institutionname:institutionname
+    section: section,
+    class: className,
+    courseenrolled: courseenrolled,
+    institutionname: institutionname,
   };
   try {
     const getData = await studentdetails.findOne({
@@ -205,7 +224,7 @@ const updateAttendance = async (req, res) => {
     const update = await attendancest.update(data, {
       where: {
         user_id: userId,
-        date:date
+        date: date,
       },
     });
     res.status(200).json({ msg: "get attendance all", data: update });
@@ -233,8 +252,8 @@ const deleteAttendance = async (req, res) => {
     }
     const isDelete = await attendancest.update(data, {
       where: {
-        user_id : userId,
-        date:date
+        user_id: userId,
+        date: date,
       },
     });
     res.status(200).json({ msg: "get attendance all", data: isDelete });

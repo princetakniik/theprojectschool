@@ -7,6 +7,7 @@ const {
   getDataTeacherWise,
   getDataClassWise,
   getDataSectionWise,
+  getStudentByInstitute,
 } = require("../controller/studentDetailsController");
 
 module.exports = (app) => {
@@ -14,6 +15,7 @@ module.exports = (app) => {
     createStudentsDetails(req, res)
   );
   app.get("/getDataAllSt", (req, res) => getDataAllSt(req, res));
+  app.get('/getStudentByInstitute',(req,res)=>getStudentByInstitute(req,res))
   app.get("/getDataClassWise", (req, res) => getDataClassWise(req, res));
   app.get("/getDataTeacherWise", (req, res) => getDataTeacherWise(req, res));
   app.get("/getDetailById", (req, res) => getDetailById(req, res));

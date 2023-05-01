@@ -4,10 +4,11 @@ const db = require("../Config/dbConnection");
 
 const getAllTeacher = async (req, res) => {
   try {
-    const getTeacher = await db.sequelize.query(`select s.user_id ,s.email,s.name ,s.profilePhoto ,s.phone ,s.institutionId ,s.coursesId ,s.subCoursesId 
-    from registers r 
-    inner join studentdetails s on s.email =r.email 
-    where s.role ='Teacher' && s.isDelete =false  `,
+    const getTeacher = await db.sequelize.query(`select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
+    s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName,i.InstituteLogo 
+    from studentdetails s 
+    inner join institutes i on i.institute_id =s.institutionId 
+    where s.role ='Teacher'  && s.isDelete =false    `,
         {
             //&& ad.date=${date}
             type: QueryTypes.SELECT,
@@ -24,10 +25,11 @@ const getAllTeacher = async (req, res) => {
 
 const getTeacherByInstitute =async (req,res)=>{
   try{
-    const getTeacher = await db.sequelize.query(`select s.user_id ,s.email,s.name ,s.profilePhoto ,s.phone ,s.institutionId ,s.coursesId ,s.subCoursesId 
-    from registers r 
-    inner join studentdetails s on s.email =r.email 
-    where s.role ='Teacher' && s.isDelete =false  `,
+    const getTeacher = await db.sequelize.query(`select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
+    s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName,i.InstituteLogo 
+    from studentdetails s 
+    inner join institutes i on i.institute_id =s.institutionId 
+    where s.role ='Teacher' && s.institutionId =${req.query.institutionId} && s.isDelete =false   `,
         {
             //&& ad.date=${date}
             type: QueryTypes.SELECT,
@@ -41,6 +43,9 @@ const getTeacherByInstitute =async (req,res)=>{
     res.status(500).json({ msg: "details not found", err });
   }
 }
+
+
 module.exports = {
   getAllTeacher,
+  getTeacherByInstitute
 };

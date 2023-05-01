@@ -2,6 +2,8 @@ const { register, studentdetails } = require("../Config/dbConnection");
 const Config = require("../Config/config");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { QueryTypes } = require("sequelize");
+const db = require("../Config/dbConnection");
 
 //    Login User
 const LoginUser = async (req, res) => {
@@ -16,13 +18,11 @@ const LoginUser = async (req, res) => {
       where: { email: rest.email },
     });
 
-
+//console.log('user',User);
     const userDetails=await studentdetails.findOne({
       where:{ email: rest.email }
     })
-   // console.log("user", User);
-   // console.log("pass", User.password);
-    //Throwing an error
+    //console.log('UserDetails',userDetails);
     if (!User) {
       //  console.log("User is not registered");
       res.status(400).send({ msg: "User is not Registered" });
@@ -75,7 +75,7 @@ const Verify = async (req, res, next) => {
         email: payload.email,
       },
     });
-    //console.log("userDetail", userDetails);
+  console.log("userDetail", userDetails);
 
     const userRegister = await register.findOne({
       where: {
@@ -84,23 +84,50 @@ const Verify = async (req, res, next) => {
     });
     //console.log('userReg',userRegister);
 
-    if (userDetails != null || userDetails != undefined) {
+    if (userDetails != null || userDetails != undefined ||userDetails.role==='Student') {
       console.log("userDetails", userDetails.name);
-      user = {
-        user_id: userDetails.user_id,
-        name: userDetails.name,
-        email: userDetails.email,
-        phone: userDetails.phone,
-        role: userDetails.role,
-        teacherId: userDetails.teacherId,
-        classteacher: userDetails.classteacher,
-        section: userDetails.section,
-        class: userDetails.class,
-        courseenrolled: userDetails.courseenrolled,
-        institutionname: userDetails.institutionname,
-      };
+      const user = await db.sequelize.query(
+        `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
+        s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName ,
+        s2.name 
+        from studentdetails s 
+        inner join institutes i on i.institute_id =s.institutionId 
+        inner join studentdetails s2  on s2.user_id =s.teacherId 
+        where s.user_id =${userDetails.user_id}  `,
+        {
+          //&& ad.date=${date}
+          type: QueryTypes.SELECT,
+        }
+      );
       data.push({ msg: "user details", user });
-    } else if (userRegister !== null || userRegister !== undefined) {
+    } else if (userDetails != null || userDetails != undefined ||userDetails.role==='Teacher') {
+      console.log("userDetails", userDetails.name);
+      const user = await db.sequelize.query(
+        `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
+        s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName 
+        from studentdetails s 
+        inner join institutes i on i.institute_id =s.institutionId 
+        where s.user_id =${userDetails.user_id}  `,
+        {
+          //&& ad.date=${date}
+          type: QueryTypes.SELECT,
+        }
+      );
+      data.push({ msg: "user details", user });
+    }else if (userDetails != null || userDetails != undefined ||userDetails.role==='Admin') {
+      console.log("userDetails", userDetails.name);
+      const user = await db.sequelize.query(
+        `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone 
+        from studentdetails s
+        where s.user_id =${userDetails.user_id}  `,
+        {
+          //&& ad.date=${date}
+          type: QueryTypes.SELECT,
+        }
+      );
+      data.push({ msg: "user details", user });
+    }
+    else if (userRegister !== null || userRegister !== undefined) {
       // console.log('userRegister',userRegister);
       user = {
         user_id: userRegister.user_id,
