@@ -32,7 +32,7 @@ const getData= await institute.findOne({
         institute_id:req.query.institute_id
     }
 })
-res.status(200).json({msg:`get institute by id ${req,query.institute_id}`,data:getData})
+res.status(200).json({msg:`get institute by id ${req.query.institute_id}`,data:getData})
     }catch(err){
         console.log(err);
         res.status(500).json({msg:`get institute by id `,err})
