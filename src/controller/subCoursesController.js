@@ -7,7 +7,7 @@ const insertsubCourses = async (req, res) => {
   try {
     const courseData = await courses.findOne({
         where:{
-            user_id:rest.course  
+          course_id:rest.courseId  
         }
     })
     console.log('data',courseData);
@@ -26,9 +26,10 @@ const insertsubCourses = async (req, res) => {
 const getsubCourses = async (req, res) => {
   try {
     const getData = await db.sequelize.query(
-        `select s.subcourses_id,s.Institute,s.course,s.subcourses,s.startTime,s.endTime 
+        `select c.course,s.subcourses_id,s.subcourses ,s.startTime ,s.endTime,i.InstituteName 
         from subcourses s 
-        inner join courses c on c.user_id =s.subcourses_id 
+        inner join courses c on c.course_id =s.courseId 
+        inner join institutes i on i.institute_id =s.InstituteId  
         where s.isDelete=false `,
         {
           //&& ad.date=${date}
@@ -44,20 +45,21 @@ const getsubCourses = async (req, res) => {
 };
 
 const getsubCoursesById = async (req, res) => {
-    const id=req.query.id
+    const subcourses_id=req.query.subcourses_id
   try {
     const getData = await db.sequelize.query(
-        `select s.subcourses_id,s.Institute,s.course,s.subcourses,s.startTime,s.endTime 
+        `select c.course,s.subcourses_id,s.subcourses ,s.startTime ,s.endTime,i.InstituteName 
         from subcourses s 
-        inner join courses c on c.user_id =s.subcourses_id 
-        where s.subcourses_id=${id} && s.isDelete=false  `,
+        inner join courses c on c.course_id =s.courseId 
+        inner join institutes i on i.institute_id =s.InstituteId  
+        where s.subcourses_id=${subcourses_id} && s.isDelete=false  `,
         {
           //&& ad.date=${date}
           type: QueryTypes.SELECT,
         }
       );
       console.log("data", getData);
-      res.status(200).json({ msg: `get courses By Id successfully ${id}`, data: getData });
+      res.status(200).json({ msg: `get courses By Id successfully ${subcourses_id}`, data: getData });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "data get successfully By Id", err });
@@ -66,11 +68,11 @@ const getsubCoursesById = async (req, res) => {
 
 const updatesubCoursesById = async (req, res) => {
     const {...rest}=req.body
-    const id=req.query.id
+    const subcourses_id=req.query.subcourses_id
   try {
     const courseData = await courses.findOne({
         where:{
-            user_id:rest.course  
+          course_id:rest.course  
         }
     })
     if(!courseData){
@@ -79,10 +81,10 @@ const updatesubCoursesById = async (req, res) => {
     const updateData = await subcourses.update(rest,{
         where: {
           isDelete: false,
-          subcourses_id:id
+          subcourses_id:subcourses_id
         },
       });
-      res.status(200).json({ msg: `update courses successfully ${id}`, data: updateData });
+      res.status(200).json({ msg: `update courses successfully ${subcourses_id}`, data: updateData });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "data get successfully By Id", err });
@@ -90,7 +92,7 @@ const updatesubCoursesById = async (req, res) => {
 };
 
 const deletesubCoursesById = async (req, res) => {
-    const id=req.query.id
+    const subcourses_id=req.query.subcourses_id
   try {
     const data ={
         isDelete:true
@@ -98,10 +100,10 @@ const deletesubCoursesById = async (req, res) => {
     const deleteData = await subcourses.update(data,{
         where: {
           isDelete: false,
-          subcourses_id:id
+          subcourses_id:subcourses_id
         },
       });
-      res.status(200).json({ msg: `update courses successfully ${id}`, data: deleteData });
+      res.status(200).json({ msg: `update courses successfully ${subcourses_id}`, data: deleteData });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "data get successfully By Id", err });

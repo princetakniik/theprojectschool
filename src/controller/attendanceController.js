@@ -65,11 +65,15 @@ const getAttendanceSt = async (req, res) => {
   console.log("date", { date });
   try {
     const getdata = await db.sequelize.query(
-      `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.Comment,
-      ad.date,ad.isPersent,sd.user_id 
-      from attendances as ad 
-      inner join studentdetails as sd on sd.user_id =ad.user_id 
-      where sd.role='Student' && ad.date = CURRENT_DATE() && ad.isDelete =false`,
+      `select s.name ,s.phone ,s.institutionId ,s.email ,s.coursesId ,s.subCoursesId ,
+      s.class ,s.section ,s.teacherId ,s.profilePhoto,i.InstituteName ,c.course ,
+      s2.subcourses 
+            from attendances as a
+            inner join studentdetails as s on s.user_id =a.user_id 
+            inner join institutes i on i.institute_id =a.institutionId 
+            inner join courses c on c.course_id =a.coursesId 
+            inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
+            where s.role='Student' && a.date = CURRENT_DATE() && a.isDelete =false`,
       {
         //&& ad.date=${date}
         type: QueryTypes.SELECT,
@@ -87,11 +91,15 @@ const getAttendanceTe = async (req, res) => {
   const { date } = req.body;
   try {
     const getdata = await db.sequelize.query(
-      `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.Comment,
-      ad.date,ad.isPersent,sd.user_id 
-      from attendances as ad 
-      inner join studentdetails as sd on sd.user_id =ad.user_id 
-      where sd.role='Teacher' && ad.date =CURRENT_DATE() && ad.isDelete =false`,
+      `select s.name ,s.phone ,s.institutionId ,s.email ,s.coursesId ,s.subCoursesId ,
+      s.teacherId ,s.profilePhoto,i.InstituteName ,c.course ,
+      s2.subcourses 
+            from attendances as a
+            inner join studentdetails as s on s.user_id =a.user_id 
+            inner join institutes i on i.institute_id =a.institutionId 
+            inner join courses c on c.course_id =a.coursesId 
+            inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
+            where s.role='Teacher' && a.date = CURRENT_DATE() && a.isDelete =false`,
       {
         type: QueryTypes.SELECT,
       }
@@ -108,11 +116,15 @@ const getAttendanceByid = async (req, res) => {
   const { userId } = req.body;
   try {
     const getDataById = await db.sequelize.query(
-      `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.Comment,
-      ad.date,ad.isPersent,sd.user_id 
-      from attendances as ad 
-      inner join studentdetails as sd on sd.user_id =ad.user_id 
-        where ad.user_id =${userId} && ad.date = CURRENT_DATE() && ad.isDelete =false`,
+      `select s.name ,s.phone ,s.institutionId ,s.email ,s.coursesId ,s.subCoursesId ,
+      s.teacherId ,s.profilePhoto,i.InstituteName ,c.course ,
+      s2.subcourses 
+            from attendances as a
+            inner join studentdetails as s on s.user_id =a.user_id 
+            inner join institutes i on i.institute_id =a.institutionId 
+            inner join courses c on c.course_id =a.coursesId 
+            inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
+            where a.user_id=${userId} && a.date = CURRENT_DATE() && a.isDelete =false`,
       {
         type: QueryTypes.SELECT,
       }
@@ -129,11 +141,15 @@ const getAttendanceCM = async (req, res) => {
   console.log("user", userId);
   try {
     const getdata = await db.sequelize.query(
-      `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.Comment,
-      ad.date,ad.isPersent,sd.user_id 
-      from attendances as ad 
-      inner join studentdetails as sd on sd.user_id =ad.user_id 
-      where ad.user_id =${userId} && DATE_FORMAT(ad.date, "%Y %m") =DATE_FORMAT(CURRENT_DATE(), "%Y %m") && ad.isDelete =false `,
+      `select s.name ,s.phone ,s.institutionId ,s.email ,s.coursesId ,s.subCoursesId ,
+      s.teacherId ,s.profilePhoto,i.InstituteName ,c.course ,
+      s2.subcourses 
+            from attendances as a
+            inner join studentdetails as s on s.user_id =a.user_id 
+            inner join institutes i on i.institute_id =a.institutionId 
+            inner join courses c on c.course_id =a.coursesId 
+            inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
+            where a.user_id=${userId} && DATE_FORMAT(a.date, "%Y %m") =DATE_FORMAT(CURRENT_DATE(), "%Y %m") && a.isDelete =false `,
       {
         type: QueryTypes.SELECT,
       }
@@ -149,11 +165,15 @@ const getAttendanceSummeryMonthly = async (req, res) => {
   const { userId, date } = req.body;
   try {
     const getdata = await db.sequelize.query(
-      `      select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,
-      ad.Comment,ad.date,ad.isPersent ,ad.user_id
-      from attendances as ad 
-      inner join studentdetails as sd on sd.user_id =ad.user_id 
-      where ad.user_id =${userId} && DATE_FORMAT(ad.date, "%Y-%m") =DATE_FORMAT('${date}', "%Y-%m") && ad.isDelete =false`,
+      `  select s.name ,s.phone ,s.institutionId ,s.email ,s.coursesId ,s.subCoursesId ,
+      s.teacherId ,s.profilePhoto,i.InstituteName ,c.course ,
+      s2.subcourses 
+            from attendances as a
+            inner join studentdetails as s on s.user_id =a.user_id 
+            inner join institutes i on i.institute_id =a.institutionId 
+            inner join courses c on c.course_id =a.coursesId 
+            inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
+            where a.user_id=${userId} && DATE_FORMAT(a.date, "%Y-%m") =DATE_FORMAT('${date}', "%Y-%m") && a.isDelete =false`,
       {
         type: QueryTypes.SELECT,
       }
@@ -173,11 +193,15 @@ const getAttendanceBetweenMonth = async (req, res) => {
   console.log("user", userId);
   try {
     const getdata = await db.sequelize.query(
-      `select sd.name,sd.phone,sd.email,sd.role,sd.class,sd.section,sd.classteacher,ad.user_id,
-      ad.Comment,ad.date,ad.isPersent
-      from attendances as ad 
-      inner join studentdetails as sd on sd.user_id =ad.user_id 
-      where ad.user_id =${userId} && DATE_FORMAT(ad.date, "%Y-%m-%d") BETWEEN '${startDate}' AND '${endDate}' && ad.isDelete =false`,
+      `select s.name ,s.phone ,s.institutionId ,s.email ,s.coursesId ,s.subCoursesId ,
+      s.teacherId ,s.profilePhoto,i.InstituteName ,c.course ,
+      s2.subcourses 
+            from attendances as a
+            inner join studentdetails as s on s.user_id =a.user_id 
+            inner join institutes i on i.institute_id =a.institutionId 
+            inner join courses c on c.course_id =a.coursesId 
+            inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
+            where a.user_id=${userId} && DATE_FORMAT(a.date, "%Y-%m-%d") BETWEEN '${startDate}' AND '${endDate}' && a.isDelete =false`,
       {
         type: QueryTypes.SELECT,
       }
@@ -194,27 +218,29 @@ const getAttendanceBetweenMonth = async (req, res) => {
 
 const updateAttendance = async (req, res) => {
   const {
-    userId,
-    isPersent,
+    user_id,
     Comment,
     date,
+    isPersent,
+    Class,
     section,
-    className,
-    courseenrolled,
-    institutionname,
+    coursesId,
+    institutionId,
+    subCoursesId,
   } = req.body;
   const data = {
     isPersent: isPersent,
     Comment: Comment,
     section: section,
-    class: className,
-    courseenrolled: courseenrolled,
-    institutionname: institutionname,
+    class: Class,
+    coursesId: coursesId,
+    institutionId: institutionId,
+    subCoursesId:subCoursesId
   };
   try {
     const getData = await studentdetails.findOne({
       where: {
-        user_id: userId,
+        user_id: user_id,
       },
     });
     console.log("data", getData.role);
@@ -223,18 +249,18 @@ const updateAttendance = async (req, res) => {
     }
     const update = await attendancest.update(data, {
       where: {
-        user_id: userId,
+        user_id: user_id,
         date: date,
       },
     });
-    res.status(200).json({ msg: "get attendance all", data: update });
+    res.status(200).json({ msg: "update attendance ", data: update });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "attendance update by id ", err });
   }
 };
 const deleteAttendance = async (req, res) => {
-  const { userId, isPersent, Comment, date } = req.body;
+  const {  user_id,date,isPersent ,Comment} = req.body;
   const data = {
     isPersent: isPersent,
     Comment: Comment,
@@ -243,7 +269,7 @@ const deleteAttendance = async (req, res) => {
   try {
     const getData = await studentdetails.findOne({
       where: {
-        user_id: userId,
+        user_id: user_id,
       },
     });
     console.log("data", getData.role);
@@ -252,8 +278,8 @@ const deleteAttendance = async (req, res) => {
     }
     const isDelete = await attendancest.update(data, {
       where: {
-        user_id: userId,
-        date: date,
+        user_id: user_id,
+        date:date,
       },
     });
     res.status(200).json({ msg: "get attendance all", data: isDelete });

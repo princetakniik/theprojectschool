@@ -40,17 +40,17 @@ const getCourses = async (req, res) => {
 };
 
 const getCoursesById = async (req, res) => {
-  const id = req.query.id;
+  const course_id = req.query.course_id;
   try {
     const getData = await courses.findOne({
       where: {
         isDelete: false,
-        user_Id: id,
+        course_id: course_id,
       },
     });
     res
       .status(200)
-      .json({ msg: `get courses By Id successfully ${id}`, data: getData });
+      .json({ msg: `get courses By Id successfully ${course_id}`, data: getData });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "data get successfully By Id", err });
@@ -59,17 +59,17 @@ const getCoursesById = async (req, res) => {
 
 const updateCoursesById = async (req, res) => {
   const { ...rest } = req.body;
-  const id = req.query.id;
+  const course_id = req.query.course_id;
   try {
     const updateData = await courses.update(rest, {
       where: {
         isDelete: false,
-        user_Id: id,
+        course_id: course_id,
       },
     });
     res
       .status(200)
-      .json({ msg: `update courses successfully ${id}`, data: updateData });
+      .json({ msg: `update courses successfully ${course_id}`, data: updateData });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "data get successfully By Id", err });
@@ -77,7 +77,7 @@ const updateCoursesById = async (req, res) => {
 };
 
 const deleteCoursesById = async (req, res) => {
-  const id = req.query.id;
+  const course_id = req.query.course_id;
   try {
     const data = {
       isDelete: true,
@@ -85,12 +85,12 @@ const deleteCoursesById = async (req, res) => {
     const deleteData = await courses.update(data, {
       where: {
         isDelete: false,
-        user_Id: id,
+        course_id: course_id,
       },
     });
     res
       .status(200)
-      .json({ msg: `update courses successfully ${id}`, data: deleteData });
+      .json({ msg: `update courses successfully ${course_id}`, data: deleteData });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "data get successfully By Id", err });
