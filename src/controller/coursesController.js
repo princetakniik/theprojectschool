@@ -1,22 +1,21 @@
-const { courses, studentdetails } = require("../Config/dbConnection");
+const { courses, studentdetails, institute } = require("../Config/dbConnection");
 
 const insertCourses = async (req, res) => {
   const { ...rest } = req.body;
   try {
-    const Institute = await studentdetails.findOne({
+    const Institute = await institute.findOne({
       where: {
-        user_id: rest.Institute,
+        institute_id: rest.Institute,
+        isDelete:false
       },
     });
     if (!Institute) {
       res.status(400).json({msg:`no data found this Institute id ${rest.Institute}`})
-    } else if (Institute.role === "Institute") {
+    } else {
       const insert = await courses.create(req.body);
       res
         .status(200)
         .json({ msg: "create courses successfully", data: insert });
-    } else {
-      res.status(400).json({ msg: `In this user id is ${Institute.role}` });
     }
   } catch (err) {
     console.log(err);
