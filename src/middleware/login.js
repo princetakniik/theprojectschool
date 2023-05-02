@@ -84,8 +84,8 @@ const Verify = async (req, res, next) => {
     });
     //console.log('userReg',userRegister);
 
-    if (userDetails != null || userDetails != undefined ||userDetails.role==='Student') {
-      console.log("userDetails", userDetails.name);
+    if (userDetails != null && userDetails.role==='Student') {
+      console.log("Student", userDetails.name);
       const user = await db.sequelize.query(
         `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
         s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName ,
@@ -100,11 +100,11 @@ const Verify = async (req, res, next) => {
         }
       );
       data.push({ msg: "user details", user });
-    } else if (userDetails != null || userDetails != undefined ||userDetails.role==='Teacher') {
-      console.log("userDetails", userDetails.name);
+    } else if (userDetails != null && userDetails.role==='Teacher') {
+      console.log("Teacher", userDetails.name);
       const user = await db.sequelize.query(
         `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
-        s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName 
+        s.coursesId, s.subCoursesId, s.class,s.section ,i.InstituteName 
         from studentdetails s 
         inner join institutes i on i.institute_id =s.institutionId 
         where s.user_id =${userDetails.user_id}  `,
@@ -114,8 +114,8 @@ const Verify = async (req, res, next) => {
         }
       );
       data.push({ msg: "user details", user });
-    }else if (userDetails != null || userDetails != undefined ||userDetails.role==='Admin') {
-      console.log("userDetails", userDetails.name);
+    }else if (userDetails != null && userDetails.role==='Admin') {
+      console.log("Admin", userDetails.name);
       const user = await db.sequelize.query(
         `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone 
         from studentdetails s
@@ -127,7 +127,7 @@ const Verify = async (req, res, next) => {
       );
       data.push({ msg: "user details", user });
     }
-    else if (userRegister !== null || userRegister !== undefined) {
+    else if (userRegister !== null ) {
       // console.log('userRegister',userRegister);
       user = {
         user_id: userRegister.user_id,

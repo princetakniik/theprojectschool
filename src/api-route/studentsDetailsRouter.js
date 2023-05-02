@@ -8,6 +8,7 @@ const {
   getDataClassWise,
   getDataSectionWise,
   getStudentByInstitute,
+  updateProfilePic,
 } = require("../controller/studentDetailsController");
 
 module.exports = (app) => {
@@ -22,4 +23,5 @@ module.exports = (app) => {
   app.get('/getDataSectionWise',(req,res)=>getDataSectionWise(req,res));
   app.put("/updateDetailsSt", (req, res) => updateDetailsSt(req, res));
   app.delete("/deteteDetailsSt", (req, res) => deteteDetailsSt(req, res));
+  app.put('/updateProfilePic',(req,res)=>updateProfilePic(req,res))
 };

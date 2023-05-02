@@ -185,6 +185,24 @@ const updateDetailsSt = async (req, res) => {
     res.status(500).json({ msg: "students details not update", err });
   }
 };
+
+const updateProfilePic = async(req,res)=>{
+  const { ...rest } = req.body;
+  try{
+    const data={
+      profilePhoto:rest.profilePhoto,
+    }
+const profilePic = await studentdetails.update(data,{
+  where:{
+    user_id: req.query.user_id,
+  }
+})
+res.status(200).json({msg:`update profilePhoto successfully ${req.query.user_id}`,data:profilePic})
+  }catch(err){
+    console.log(err);
+    res.status(500).json({msg:`profile pic not update id ${req.query.user_id}`})
+  }
+}
 const deteteDetailsSt = async (req, res) => {
   const {user_id}=req.query
   try {
@@ -213,5 +231,6 @@ module.exports = {
   deteteDetailsSt,
   getDataClassWise,
   getDataTeacherWise,
-  getStudentByInstitute
+  getStudentByInstitute,
+  updateProfilePic
 };
