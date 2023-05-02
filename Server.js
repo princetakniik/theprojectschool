@@ -22,6 +22,8 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser())
+app.use("/profile", express.static("upload"));
+require('./src/middleware/fileUpload')(app);
 router.use((req, res, next) => {
     console.log('Time:', Date.now())
     next()
