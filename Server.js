@@ -22,8 +22,6 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser())
-app.use("/profile", express.static("upload"));
-require('./src/middleware/fileUpload')(app);
 router.use((req, res, next) => {
     console.log('Time:', Date.now())
     next()
@@ -33,6 +31,8 @@ const port =Config.PORT||5000;
 app.get('/',(req,res)=>{
   res.send('Anusaran')
 })
+app.use("/profile", express.static("upload"));
+require('./src/middleware/fileUpload')(app);
 require('./Router')(app)
 
 io.on('connection', (socket)=>{
