@@ -13,7 +13,7 @@ module.exports = (app) => {
   const upload = multer({ storage: filestorageEngine });
   app.post("/uploads", upload.array("file", 4), async (req, res) => {
     let base_url = Config.basePort;
-    console.log('url',base_url);
+    //console.log('url',base_url);
     let doc_url = req.files
       ? req.files.map((i) => `${base_url}/profile/${i.filename}`)
       : [];

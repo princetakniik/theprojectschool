@@ -89,7 +89,7 @@ const Verify = async (req, res, next) => {
       const user = await db.sequelize.query(
         `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
         s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName ,
-        s2.name 
+        s2.name as teacherName
         from studentdetails s 
         inner join institutes i on i.institute_id =s.institutionId 
         inner join studentdetails s2  on s2.user_id =s.teacherId 
