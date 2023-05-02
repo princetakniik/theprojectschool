@@ -67,7 +67,7 @@ const getAttendanceSt = async (req, res) => {
     const getdata = await db.sequelize.query(
       `select s.name ,s.phone ,s.institutionId ,s.email ,s.coursesId ,s.subCoursesId ,
       s.class ,s.section ,s.teacherId ,s.profilePhoto,i.InstituteName ,c.course ,
-      s2.subcourses ,s3.name as teacherName,a.isPersent ,a.Comment 
+      s2.subcourses ,s3.name as teacherName,a.isPersent ,a.Comment,a.date   
             from attendances as a
             inner join studentdetails as s on s.user_id =a.user_id 
             inner join institutes i on i.institute_id =a.institutionId 
@@ -94,7 +94,7 @@ const getAttendanceTe = async (req, res) => {
     const getdata = await db.sequelize.query(
       `select s.name ,s.phone ,s.institutionId ,s.email ,s.coursesId ,s.subCoursesId ,
       s.teacherId ,s.profilePhoto,i.InstituteName ,c.course ,
-      s2.subcourses ,a.isPersent ,a.Comment,a.section,a.class  
+      s2.subcourses ,a.isPersent ,a.Comment,a.section,a.class,a.date    
             from attendances as a
             inner join studentdetails as s on s.user_id =a.user_id 
             inner join institutes i on i.institute_id =a.institutionId 
@@ -119,7 +119,7 @@ const getAttendanceByid = async (req, res) => {
     const getDataById = await db.sequelize.query(
       `      select s.name ,s.phone ,s.institutionId ,s.email ,s.coursesId ,s.subCoursesId ,
       s.teacherId ,s.profilePhoto,i.InstituteName ,c.course ,
-      s2.subcourses ,a.isPersent ,a.Comment,a.section,a.class  
+      s2.subcourses ,a.isPersent ,a.Comment,a.section,a.class,a.date    
             from attendances as a
             inner join studentdetails as s on s.user_id =a.user_id 
             inner join institutes i on i.institute_id =a.institutionId 
@@ -144,7 +144,7 @@ const getAttendanceCM = async (req, res) => {
     const getdata = await db.sequelize.query(
       `select s.name ,s.phone ,s.institutionId ,s.email ,s.coursesId ,s.subCoursesId ,
       s.teacherId ,s.profilePhoto,i.InstituteName ,c.course ,
-      s2.subcourses,a.isPersent ,a.Comment,a.section,a.class   
+      s2.subcourses,a.isPersent ,a.Comment,a.section,a.class,a.date     
             from attendances as a
             inner join studentdetails as s on s.user_id =a.user_id 
             inner join institutes i on i.institute_id =a.institutionId 
@@ -168,7 +168,7 @@ const getAttendanceSummeryMonthly = async (req, res) => {
     const getdata = await db.sequelize.query(
       `  select s.name ,s.phone ,s.institutionId ,s.email ,s.coursesId ,s.subCoursesId ,
       s.teacherId ,s.profilePhoto,i.InstituteName ,c.course ,
-      s2.subcourses ,a.isPersent ,a.Comment,a.section,a.class  
+      s2.subcourses ,a.isPersent ,a.Comment,a.section,a.class,a.date    
             from attendances as a
             inner join studentdetails as s on s.user_id =a.user_id 
             inner join institutes i on i.institute_id =a.institutionId 
@@ -196,7 +196,7 @@ const getAttendanceBetweenMonth = async (req, res) => {
     const getdata = await db.sequelize.query(
       `select s.name ,s.phone ,s.institutionId ,s.email ,s.coursesId ,s.subCoursesId ,
       s.teacherId ,s.profilePhoto,i.InstituteName ,c.course ,
-      s2.subcourses ,a.isPersent ,a.Comment,a.section,a.class  
+      s2.subcourses ,a.isPersent ,a.Comment,a.section,a.class,a.date    
             from attendances as a
             inner join studentdetails as s on s.user_id =a.user_id 
             inner join institutes i on i.institute_id =a.institutionId 
