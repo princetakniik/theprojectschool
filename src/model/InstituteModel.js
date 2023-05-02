@@ -9,7 +9,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
     InstituteLogo: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(1000),
     },
     isDelete: {
       type: DataTypes.BOOLEAN,

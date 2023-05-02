@@ -12,7 +12,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
     profilePhoto: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(1000),
     },
     phone: {
       type: DataTypes.BIGINT,
