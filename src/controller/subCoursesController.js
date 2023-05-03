@@ -26,7 +26,8 @@ const insertsubCourses = async (req, res) => {
 const getsubCourses = async (req, res) => {
   try {
     const getData = await db.sequelize.query(
-        `select s.subcourses_id,s.subcourses ,s.courseId ,c.course,s.InstituteId,i.InstituteName,s.startTime ,s.endTime 
+        `select s.subcourses_id,s.subcourses ,s.courseId ,c.course,s.InstituteId,i.InstituteName,
+        s.startTime ,s.endTime 
         from subcourses s 
         inner join courses c on c.course_id =s.courseId 
         inner join institutes i on i.institute_id =s.InstituteId  
@@ -48,7 +49,8 @@ const getsubCoursesById = async (req, res) => {
     const subcourses_id=req.query.subcourses_id
   try {
     const getData = await db.sequelize.query(
-        `select s.subcourses_id,s.subcourses ,s.courseId ,c.course,s.InstituteId,i.InstituteName,s.startTime ,s.endTime 
+        `select s.subcourses_id,s.subcourses ,s.courseId ,c.course,s.InstituteId,i.InstituteName,
+        s.startTime ,s.endTime 
         from subcourses s 
         inner join courses c on c.course_id =s.courseId 
         inner join institutes i on i.institute_id =s.InstituteId 
@@ -109,6 +111,7 @@ const deletesubCoursesById = async (req, res) => {
     res.status(500).json({ msg: "data get successfully By Id", err });
   }
 };
+
 module.exports = {
   insertsubCourses,
   getsubCourses,

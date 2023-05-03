@@ -4,7 +4,9 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
     },
     isPersent: {
-      type: DataTypes.ENUM('0','1')
+      type: DataTypes.ENUM('0','1'),
+      allowNull: '0',
+      defaultValue: '1',
     },
     Comment: {
       type: DataTypes.STRING,
