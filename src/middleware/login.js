@@ -107,7 +107,7 @@ const Verify = async (req, res, next) => {
         s.coursesId, s.subCoursesId, s.class,s.section ,i.InstituteName 
         from studentdetails s 
         inner join institutes i on i.institute_id =s.institutionId 
-        where s.user_id =${userDetails.user_id}  `,
+        where s.user_id =${userDetails.user_id} `,
         {
           //&& ad.date=${date}
           type: QueryTypes.SELECT,

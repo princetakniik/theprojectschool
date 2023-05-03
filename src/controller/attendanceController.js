@@ -59,7 +59,7 @@ const createAttendance = async (req, res) => {
         subcourses_id: subCoursesId,
       },
     });
-    if (getData == null) {
+    if (getData === null) {
       res.status(400).json({ msg: "user details is not persent" });
     } else if (getData.role == "Admin") {
       res.status(400).json({ msg: "Admin id not attendance" });
@@ -70,7 +70,7 @@ const createAttendance = async (req, res) => {
     } else if (subcourseData === null) {
       res.status(400).json({ msg: "subcourseData is not persent" });
     } else if (getAttendance !== null) {
-      res.status(400).json({ msg: " Allready  persent" });
+      res.status(400).json({ msg: `user is Allready persent ${user_id}` });
     } else {
       const createData = await attendancest.create({
         user_id: user_id,
@@ -84,7 +84,7 @@ const createAttendance = async (req, res) => {
         date: date,
       });
       console.log("createData", createData);
-      res.status(200).json({ msg: "persent today",data:createData });
+      res.status(200).json({ msg: `user is persent today ${user_id}`,data:createData });
     }
   } catch (err) {
     console.log(err);
