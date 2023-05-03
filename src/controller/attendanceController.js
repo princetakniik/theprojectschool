@@ -23,6 +23,7 @@ const createAttendance = async (req, res) => {
     subCoursesId,
   } = req.body;
   //  console.log("date", date);
+  
   try {
     const getData = await studentdetails.findOne({
       where: {
@@ -30,6 +31,7 @@ const createAttendance = async (req, res) => {
       },
     });
     //console.log("data", getData);
+
     const getAttendance = await attendancest.findOne({
       where: {
         user_id: user_id,
@@ -39,26 +41,38 @@ const createAttendance = async (req, res) => {
         section: section,
         coursesId: coursesId,
         subCoursesId: subCoursesId,
+        isDelete:false
       },
     });
     //console.log("getAttendance", getAttendance);
+
     const instituteData = await institute.findOne({
       where: {
         institute_id: institutionId,
+        isDelete:false
       },
     });
+    //console.log("instituteData", instituteData);
 
     const courseData = await courses.findOne({
       where: {
         course_id: coursesId,
+        Institute: institutionId,
+        isDelete:false
       },
     });
+    // console.log("courseData", courseData);
 
     const subcourseData = await subcourses.findOne({
       where: {
         subcourses_id: subCoursesId,
+        InstituteId: institutionId,
+        courseId: coursesId,
+        isDelete:false
       },
     });
+    //console.log("subcourseData", subcourseData);
+
     if (getData === null) {
       res.status(400).json({ msg: "user details is not persent" });
     } else if (getData.role == "Admin") {
@@ -83,8 +97,10 @@ const createAttendance = async (req, res) => {
         subCoursesId: subCoursesId,
         date: date,
       });
-      console.log("createData", createData);
-      res.status(200).json({ msg: `user is persent today ${user_id}`,data:createData });
+      // console.log("createData", createData);
+      res
+        .status(200)
+        .json({ msg: `user is persent today ${user_id}`, data: createData });
     }
   } catch (err) {
     console.log(err);
@@ -166,6 +182,7 @@ const getAttendanceByid = async (req, res) => {
     res.status(500).json({ msg: "attendance not found found by id ", err });
   }
 };
+
 const getAttendanceCM = async (req, res) => {
   const { userId } = req.query;
   console.log("user", userId);
@@ -191,6 +208,7 @@ const getAttendanceCM = async (req, res) => {
     res.status(500).json({ msg: "monthly attendance not found found ", err });
   }
 };
+
 const getAttendanceSummeryMonthly = async (req, res) => {
   const { userId, date } = req.body;
   try {
@@ -289,6 +307,7 @@ const updateAttendance = async (req, res) => {
     res.status(500).json({ msg: "attendance update by id ", err });
   }
 };
+
 const deleteAttendance = async (req, res) => {
   const { user_id, date, isPersent, Comment } = req.body;
   const data = {
@@ -318,6 +337,7 @@ const deleteAttendance = async (req, res) => {
     res.status(500).json({ msg: "attendance delete by id ", err });
   }
 };
+
 module.exports = {
   createAttendance,
   getAttendanceSt,

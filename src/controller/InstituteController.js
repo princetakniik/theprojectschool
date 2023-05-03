@@ -9,6 +9,7 @@ const insertInstitute = async (req, res) => {
     res.status(500).json({ msg: `data does not insert` });
   }
 };
+
 const getAllInstitute = async (req, res) => {
   try {
     const getInstitute = await institute.findAll({

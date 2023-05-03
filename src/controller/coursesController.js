@@ -96,6 +96,7 @@ const deleteCoursesById = async (req, res) => {
     res.status(500).json({ msg: "data get successfully By Id", err });
   }
 };
+
 module.exports = {
   insertCourses,
   getCourses,
