@@ -23,7 +23,7 @@ const createAttendance = async (req, res) => {
     subCoursesId,
   } = req.body;
   //  console.log("date", date);
-  
+
   try {
     const getData = await studentdetails.findOne({
       where: {
@@ -41,7 +41,7 @@ const createAttendance = async (req, res) => {
         section: section,
         coursesId: coursesId,
         subCoursesId: subCoursesId,
-        isDelete:false
+        isDelete: false,
       },
     });
     //console.log("getAttendance", getAttendance);
@@ -49,7 +49,7 @@ const createAttendance = async (req, res) => {
     const instituteData = await institute.findOne({
       where: {
         institute_id: institutionId,
-        isDelete:false
+        isDelete: false,
       },
     });
     //console.log("instituteData", instituteData);
@@ -58,7 +58,7 @@ const createAttendance = async (req, res) => {
       where: {
         course_id: coursesId,
         Institute: institutionId,
-        isDelete:false
+        isDelete: false,
       },
     });
     // console.log("courseData", courseData);
@@ -68,7 +68,7 @@ const createAttendance = async (req, res) => {
         subcourses_id: subCoursesId,
         InstituteId: institutionId,
         courseId: coursesId,
-        isDelete:false
+        isDelete: false,
       },
     });
     //console.log("subcourseData", subcourseData);

@@ -31,7 +31,7 @@ const getsubCourses = async (req, res) => {
         from subcourses s 
         inner join courses c on c.course_id =s.courseId 
         inner join institutes i on i.institute_id =s.InstituteId  
-        where s.isDelete=false `,
+        where s.InstituteId=${req.query.InstituteId} && s.isDelete=false `,
         {
           //&& ad.date=${date}
           type: QueryTypes.SELECT,

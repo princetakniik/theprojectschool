@@ -28,6 +28,7 @@ const getCourses = async (req, res) => {
     const getData = await courses.findAll({
       where: {
         isDelete: false,
+        Institute:req.query.Institute
       },
     });
     res
@@ -40,12 +41,12 @@ const getCourses = async (req, res) => {
 };
 
 const getCoursesById = async (req, res) => {
-  const course_id = req.query.course_id;
+  const {course_id,Institute} = req.query;
   try {
     const getData = await courses.findOne({
       where: {
         isDelete: false,
-        course_id: course_id,
+        course_id: course_id
       },
     });
     res
