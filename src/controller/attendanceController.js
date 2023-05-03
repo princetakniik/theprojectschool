@@ -93,8 +93,6 @@ const createAttendance = async (req, res) => {
 };
 
 const getAttendanceSt = async (req, res) => {
-  const { date } = req.body;
-  console.log("date", { date });
   try {
     const getdata = await db.sequelize.query(
       `select s.name ,s.phone ,s.institutionId ,s.email ,s.coursesId ,s.subCoursesId ,
@@ -121,7 +119,6 @@ const getAttendanceSt = async (req, res) => {
 };
 
 const getAttendanceTe = async (req, res) => {
-  const { date } = req.body;
   try {
     const getdata = await db.sequelize.query(
       `select s.name ,s.phone ,s.institutionId ,s.email ,s.coursesId ,s.subCoursesId ,
