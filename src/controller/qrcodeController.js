@@ -9,39 +9,38 @@ const generateQR = async (req, res) => {
         user_id: req.query.user_id,
       },
     });
-    console.log("userDetail", userDetails);
+    //  console.log("userDetail", userDetails);
 
-    if (userDetails !== null && userDetails.subCoursesId!== null) {
+    if (userDetails !== null && userDetails.subCoursesId !== null) {
       user = {
         user_id: userDetails.user_id,
         section: userDetails.section,
         class: userDetails.class,
         coursesId: userDetails.coursesId,
         institutionId: userDetails.institutionId,
-        subCoursesId:userDetails.subCoursesId
+        subCoursesId: userDetails.subCoursesId,
       };
       let strData = JSON.stringify(user);
-      console.log("user", strData);
+      // console.log("user", strData);
       const qrImage = await generateQRCode(strData);
       console.log(qrImage);
       res.status(200).json({ msg: `QR code get successfull`, data: qrImage });
-    }else if(userDetails !== null){
+    } else if (userDetails !== null) {
       user = {
         user_id: userDetails.user_id,
         section: userDetails.section,
         class: userDetails.class,
         coursesId: userDetails.coursesId,
-        institutionId: userDetails.institutionId
+        institutionId: userDetails.institutionId,
       };
       let strData = JSON.stringify(user);
-      console.log("user", strData);
+      //  console.log("user", strData);
       const qrImage = await generateQRCode(strData);
       console.log(qrImage);
       res.status(200).json({ msg: `QR code get successfull`, data: qrImage });
     } else {
       return res.status(400).json({ message: "Data not found" });
     }
-    // console.log('userData',result);
   } catch (err) {
     console.error("err", err);
   }
