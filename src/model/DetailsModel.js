@@ -14,6 +14,19 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     profilePhoto: {
       type: DataTypes.STRING(1000),
     },
+    address:{
+      type: DataTypes.STRING(1000)
+    },
+    Additional:{
+      type: DataTypes.STRING,
+    },
+    zipCode:{type: DataTypes.BIGINT},
+    state:{
+      type: DataTypes.STRING,
+    },
+    country:{
+      type: DataTypes.STRING,
+    },
     phone: {
       type: DataTypes.BIGINT,
     },
