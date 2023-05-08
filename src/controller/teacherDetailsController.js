@@ -6,10 +6,11 @@ const getAllTeacher = async (req, res) => {
   try {
     const getTeacher = await db.sequelize.query(
       `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
-    s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName,i.InstituteLogo 
-    from studentdetails s 
-    inner join institutes i on i.institute_id =s.institutionId 
-    where s.role ='Teacher'  && s.isDelete =false    `,
+      s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName,i.InstituteLogo,
+      s.Additional,s.address,s.state,s.country,s.zipCode 
+      from studentdetails s 
+      inner join institutes i on i.institute_id =s.institutionId 
+      where s.role ='Teacher'  && s.isDelete =false    `,
       {
         //&& ad.date=${date}
         type: QueryTypes.SELECT,
@@ -28,7 +29,8 @@ const getTeacherByInstitute = async (req, res) => {
   try {
     const getTeacher = await db.sequelize.query(
       `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
-    s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName,i.InstituteLogo 
+    s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName,i.InstituteLogo,
+    s.Additional,s.address,s.state,s.country,s.zipCode 
     from studentdetails s 
     inner join institutes i on i.institute_id =s.institutionId 
     where s.role ='Teacher' && s.institutionId =${req.query.institutionId} && s.isDelete =false   `,
