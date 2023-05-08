@@ -79,6 +79,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       type: DataTypes.ENUM("Admin", "Teacher", "Student"),
       allowNull: false,
     },
+    
     isDelete: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
