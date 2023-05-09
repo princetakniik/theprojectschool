@@ -19,10 +19,10 @@ const createStudentsDetails = async (req, res) => {
         },
       });
   
-      if (getData == null || getData.email !== rest.email) {
+      if (getData == null || getData.email !== rest.email ) {
         const data={
           user_id:userRegister.user_id,
-          email:rest.email,
+          email:userRegister.email,
           name: rest.name,
           profilePhoto:rest.profilePhoto,
           phone: rest.phone,

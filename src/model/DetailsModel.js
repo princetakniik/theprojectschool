@@ -2,8 +2,6 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
   const studentDetails = sequelize.define("studentdetails", {
     user_id: {
       type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
     },
     email: {
       type: DataTypes.STRING,
@@ -14,17 +12,17 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     profilePhoto: {
       type: DataTypes.STRING(1000),
     },
-    address:{
-      type: DataTypes.STRING(1000)
+    address: {
+      type: DataTypes.STRING(1000),
     },
-    Additional:{
+    Additional: {
       type: DataTypes.STRING,
     },
-    zipCode:{type: DataTypes.BIGINT},
-    state:{
+    zipCode: { type: DataTypes.BIGINT },
+    state: {
       type: DataTypes.STRING,
     },
-    country:{
+    country: {
       type: DataTypes.STRING,
     },
     phone: {
@@ -92,7 +90,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       type: DataTypes.ENUM("Admin", "Teacher", "Student"),
       allowNull: false,
     },
-    
+
     isDelete: {
       type: DataTypes.BOOLEAN,
       allowNull: true,

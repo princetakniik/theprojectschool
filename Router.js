@@ -7,6 +7,7 @@ module.exports = (app) => {
   require('./src/api-route/teacherDetailsRoute')(app)
   require('./src/api-route/CoursesRoute')(app)
   require('./src/api-route/subcoursesRoute')(app)
-  require('./src/api-route/InstituteRoute')(app)
-
+  require('./src/api-route/InstituteRoute')(app);
+  require('./src/api-route/userCoursesRouter')(app);
+require('./src/api-route/userSubcoursesRoute')(app);
 };
