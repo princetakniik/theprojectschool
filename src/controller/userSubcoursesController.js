@@ -10,7 +10,7 @@ const userSubcoursesInsert = async (req, res) => {
         subcourses_id: rest.subcourses_id[i],
         course_id: rest.course_id,
         Institute_id: rest.Institute_id,
-        studentId_id: rest.studentId_id,
+        user_id:rest.user_id,
         teacher_Id: rest.teacher_Id,
       });
       res

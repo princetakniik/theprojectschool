@@ -18,10 +18,10 @@ const LoginUser = async (req, res) => {
       where: { email: rest.email },
     });
 
-//console.log('user',User);
-    const userDetails=await studentdetails.findOne({
-      where:{ email: rest.email }
-    })
+    //console.log('user',User);
+    const userDetails = await studentdetails.findOne({
+      where: { email: rest.email },
+    });
     //console.log('UserDetails',userDetails);
     if (!User) {
       //  console.log("User is not registered");
@@ -38,7 +38,7 @@ const LoginUser = async (req, res) => {
           phone: User.phone,
         };
         const token = jwt.sign(data, Config.JWT_SECRET);
-       console.log(`${userDetails.role} has login`);
+        console.log(`${userDetails.role} has login`);
         const user = await register.upsert(
           {
             email: User.email,
@@ -46,7 +46,9 @@ const LoginUser = async (req, res) => {
           },
           { email: User.email }
         );
-        res.status(200).send({msg:`${userDetails.role} has login`, data: token });
+        res
+          .status(200)
+          .send({ msg: `${userDetails.role} has login`, data: token });
       } else {
         // console.log("Invalid password!");
         res.status(400).send({ msg: "Invalid password!" });
@@ -75,7 +77,7 @@ const Verify = async (req, res, next) => {
         email: payload.email,
       },
     });
-  console.log("userDetail", userDetails);
+    console.log("userDetail", userDetails);
 
     const userRegister = await register.findOne({
       where: {
@@ -84,15 +86,15 @@ const Verify = async (req, res, next) => {
     });
     //console.log('userReg',userRegister);
 
-    if (userDetails != null && userDetails.role==='Student') {
+    if (userDetails != null && userDetails.role === "Student") {
       console.log("Student", userDetails.name);
       const user = await db.sequelize.query(
-        `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
+        `   select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
         s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName ,
         s2.name as teacherName
         from studentdetails s 
         inner join institutes i on i.institute_id =s.institutionId 
-        inner join studentdetails s2  on s2.user_id =s.teacherId 
+        inner join studentdetails s2  on s2.user_id =s.teacherId   
         where s.user_id =${userDetails.user_id}  `,
         {
           //&& ad.date=${date}
@@ -100,7 +102,7 @@ const Verify = async (req, res, next) => {
         }
       );
       data.push({ msg: "user details", user });
-    } else if (userDetails != null && userDetails.role==='Teacher') {
+    } else if (userDetails != null && userDetails.role === "Teacher") {
       console.log("Teacher", userDetails.name);
       const user = await db.sequelize.query(
         `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
@@ -114,7 +116,7 @@ const Verify = async (req, res, next) => {
         }
       );
       data.push({ msg: "user details", user });
-    }else if (userDetails != null && userDetails.role==='Admin') {
+    } else if (userDetails != null && userDetails.role === "Admin") {
       console.log("Admin", userDetails.name);
       const user = await db.sequelize.query(
         `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone 
@@ -126,8 +128,7 @@ const Verify = async (req, res, next) => {
         }
       );
       data.push({ msg: "user details", user });
-    }
-    else if (userRegister !== null ) {
+    } else if (userRegister !== null) {
       // console.log('userRegister',userRegister);
       user = {
         user_id: userRegister.user_id,
