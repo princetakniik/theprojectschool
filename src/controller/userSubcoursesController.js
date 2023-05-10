@@ -10,7 +10,7 @@ const userSubcoursesInsert = async (req, res) => {
         subcourses_id: rest.subcourses_id[i],
         course_id: rest.course_id,
         Institute_id: rest.Institute_id,
-        user_id:rest.user_id,
+        user_id: rest.user_id,
         teacher_Id: rest.teacher_Id,
       });
       res
@@ -26,31 +26,21 @@ const userSubcoursesInsert = async (req, res) => {
 const userSubcoursesUpdate = async (req, res) => {
   const { ...rest } = req.body;
   try {
-    // const isDelete = {
-    //   isDelete: true,
-    // };
-    // const userCorseDelete = await userCourses.update(isDelete, {
-    //   where: {
-    //     user_id: req.query.user_id,
-    //   },
-    // });
-    for (let i = 0; i < rest.subcourses_id.length; i++) {
-      const data = {
-        subcourses_id: rest.subcourses_id[i],
-        course_id: rest.course_id,
-        Institute_id: rest.Institute_id,
-        studentId_id: rest.studentId_id,
-        teacher_Id: rest.teacher_Id,
-      };
-      const updateCourses = await usersubcourses.update(data, {
-        where: {
-          id: req.query.id,
-        },
-      });
-      res
-        .status(200)
-        .json({ msg: `update courses successfully`, data: updateCourses });
-    }
+    const data = {
+      subcourses_id: rest.subcourses_id,
+      course_id: rest.course_id,
+      Institute_id: rest.Institute_id,
+      studentId_id: rest.studentId_id,
+      teacher_Id: rest.teacher_Id,
+    };
+    const updateCourses = await usersubcourses.update(data, {
+      where: {
+        id: req.query.id,
+      },
+    });
+    res
+      .status(200)
+      .json({ msg: `update courses successfully`, data: updateCourses });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `Student Courses not update`, err });
@@ -60,13 +50,13 @@ const userSubcoursesUpdate = async (req, res) => {
 const getSubcoursesUser = async (req, res) => {
   try {
     const getdata = await db.sequelize.query(
-      ` select group_concat(us.subcourses_id) as subcourse_id,group_concat(s.subcourses) as subcourses,
-      group_concat(us.course_id) as course_id,group_concat(s.subcourses) as subcourses,us.user_id,us.Institute_id,us.teacher_id
-      from usersubcourses as us
-      inner join courses c on c.course_id=us.course_id
-      inner join subcourses s on s.subcourses_id =us.subcourses_id
-      where us.isDelete=false 
-      group by us.user_id`,
+      `select JSON_ARRAYAGG(us.subcourses_id) as subcourse_id,JSON_ARRAYAGG(s.subcourses) as subcourses,
+      JSON_ARRAYAGG(us.course_id) as course_id,JSON_ARRAYAGG(s.subcourses) as subcourses,us.user_id,us.Institute_id,us.teacher_id
+       from usersubcourses as us
+       inner join courses c on c.course_id=us.course_id
+       inner join subcourses s on s.subcourses_id =us.subcourses_id
+       where us.isDelete=false 
+       group by us.user_id`,
       {
         type: QueryTypes.SELECT,
       }
@@ -82,11 +72,11 @@ const getSubcoursesUser = async (req, res) => {
 const getUserSubcoursesByuser_id = async (req, res) => {
   try {
     const getdata = await db.sequelize.query(
-      ` select group_concat(us.subcourses_id) as subcourse_id,group_concat(s.subcourses) as subcourses,
-      group_concat(us.course_id) as course_id,group_concat(s.subcourses) as subcourses,us.user_id,us.Institute_id,us.teacher_id
-      from usersubcourses as us
-      inner join courses c on c.course_id=us.course_id
-      inner join subcourses s on s.subcourses_id =us.subcourses_id
+      ` select JSON_ARRAYAGG(us.subcourses_id) as subcourse_id,JSON_ARRAYAGG(s.subcourses) as subcourses,
+      JSON_ARRAYAGG(us.course_id) as course_id,JSON_ARRAYAGG(s.subcourses) as subcourses,us.user_id,us.Institute_id,us.teacher_id
+       from usersubcourses as us
+       inner join courses c on c.course_id=us.course_id
+       inner join subcourses s on s.subcourses_id =us.subcourses_id
       where us.isDelete=false && us.user_id=${req.query.user_id}
       group by us.user_id`,
       {
@@ -101,23 +91,42 @@ const getUserSubcoursesByuser_id = async (req, res) => {
   }
 };
 
-
+const getUserSubcourse = async (req, res) => {
+  try {
+    const userSubcourseDetails = await db.sequelize.query(
+      `select JSON_ARRAYAGG(us.subcourses_id) as subcourse_id,JSON_ARRAYAGG(s.subcourses) as subcourses,
+      JSON_ARRAYAGG(us.course_id) as course_id,JSON_ARRAYAGG(s.subcourses) as subcourses,us.user_id,us.Institute_id,us.teacher_id
+       from usersubcourses as us
+       inner join courses c on c.course_id=us.course_id
+       inner join subcourses s on s.subcourses_id =us.subcourses_id
+       where us.isDelete=false 
+       group by us.user_id`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({
+      msg: `user Subcourse details are..`,
+      data: userSubcourseDetails,
+    });
+  } catch (err) {
+    res.status(500).json({ msg: `user subCourse details not found`, err });
+  }
+};
 const userSubcoursesdelete = async (req, res) => {
-  const { ...rest } = req.body;
   try {
     const data = {
       isDelete: true,
     };
-    for (let i = 0; i < rest.id.length; i++) {
-      const deleteCourse = await usersubcourses.update(data, {
-        where: {
-          id: rest.id[i],
-        },
-      });
-      res
-        .status(200)
-        .json({ msg: `delete successfully ...`, data: deleteCourse });
-    }
+    console.log("id", req.query.id);
+    const deleteCourse = await usersubcourses.update(data, {
+      where: {
+        id: req.query.id,
+      },
+    });
+    res
+      .status(200)
+      .json({ msg: `delete successfully ...`, data: deleteCourse });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `Student Courses is not delete`, err });
@@ -130,4 +139,5 @@ module.exports = {
   userSubcoursesdelete,
   getSubcoursesUser,
   getUserSubcoursesByuser_id,
+  getUserSubcourse,
 };
