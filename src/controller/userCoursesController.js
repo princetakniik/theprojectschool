@@ -1,4 +1,4 @@
-const { userCourses } = require("../Config/dbConnection");
+const { usercourses } = require("../Config/dbConnection");
 const { QueryTypes } = require("sequelize");
 const db = require("../Config/dbConnection");
 
@@ -6,7 +6,7 @@ const userCoursesInsert = async (req, res) => {
   const { ...rest } = req.body;
   try {
     for (let i = 0; i <= rest.course_id.length; i++) {
-      const insertCourses = await userCourses.create({
+      const insertCourses = await usercourses.create({
         course_id: rest.course_id[i],
         Institute_id: rest.Institute_id,
         user_id: rest.user_id,
@@ -39,7 +39,7 @@ const userCoursesUpdate = async (req, res) => {
         Institute_id: rest.Institute_id,
         teacher_id: rest.teacher_id,
       };
-      const updateCourses = await userCourses.update(data, {
+      const updateCourses = await usercourses.update(data, {
         where: {
           id: req.query.id,
         },
@@ -103,7 +103,7 @@ const userCoursesdelete = async (req, res) => {
       isDelete: true,
     };
     for (let i = 0; i < rest.id.length; i++) {
-      const deleteCourse = await studentCourses.update(data, {
+      const deleteCourse = await usercourses.update(data, {
         where: {
           id: rest.id[i],
         },
