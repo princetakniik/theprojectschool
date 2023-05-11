@@ -90,7 +90,7 @@ const Verify = async (req, res, next) => {
       console.log("Student", userDetails.name);
       const userDetail = await db.sequelize.query(
         ` select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
-        s.class,s.section ,s.teacherId,i.InstituteName ,
+        s.class,s.section ,s.teacherId,i.InstituteName ,i.InstituteLogo,
         s2.name as teacherName
         from studentdetails s 
         inner join institutes i on i.institute_id =s.institutionId 
