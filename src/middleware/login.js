@@ -118,7 +118,7 @@ const course_enrolled=await db.sequelize.query(
       data.push({ msg: "user details", userDetail,course_enrolled});
     } else if (userDetails != null && userDetails.role === "Teacher") {
       console.log("Teacher", userDetails.name);
-      const user = await db.sequelize.query(
+      const userDetail = await db.sequelize.query(
         `  select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
         s.coursesId, s.subCoursesId, s.class,s.section ,i.InstituteName ,i.InstituteLogo 
         from studentdetails s 
@@ -145,7 +145,7 @@ const course_enrolled=await db.sequelize.query(
         }
       );
 
-      data.push({ msg: "user details", user,course_enrolled });
+      data.push({ msg: "user details",userDetail,course_enrolled });
     } else if (userDetails != null && userDetails.role === "Admin") {
       console.log("Admin", userDetails.name);
       const user = await db.sequelize.query(
