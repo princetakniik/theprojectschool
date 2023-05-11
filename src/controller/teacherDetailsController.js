@@ -7,7 +7,7 @@ const getAllTeacher = async (req, res) => {
     const getTeacher = await db.sequelize.query(
       `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
       s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName,i.InstituteLogo,
-      s.Additional,s.address,s.state,s.country,s.zipCode 
+      s.Additional,s.address,s.city,s.state,s.country,s.zipCode 
       from studentdetails s 
       inner join institutes i on i.institute_id =s.institutionId 
       where s.role ='Teacher'  && s.isDelete =false    `,
@@ -29,10 +29,10 @@ const getTeacherByInstitute = async (req, res) => {
   try {
     const getTeacher = await db.sequelize.query(
       `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
-    s.coursesId, s.subCoursesId, s.class,s.section ,s.teacherId,i.InstituteName,i.InstituteLogo,
-    s.Additional,s.address,s.state,s.country,s.zipCode 
-    from studentdetails s 
-    inner join institutes i on i.institute_id =s.institutionId 
+      s.coursesId, s.subCoursesId,s.class,s.section ,s.teacherId,i.InstituteName,i.InstituteLogo,
+      s.Additional,s.address,s.city ,s.state,s.country,s.zipCode
+      from studentdetails s 
+      inner join institutes i on i.institute_id =s.institutionId 
     where s.role ='Teacher' && s.institutionId =${req.query.institutionId} && s.isDelete =false   `,
       {
         //&& ad.date=${date}
@@ -58,6 +58,7 @@ const updateTeacherProfile= async (req, res) => {
       Additional: rest.Additional,
       zipCode: rest.zipCode,
       state: rest.state,
+      city:rest.city,
       country: rest.country,
     }
     const teacherDetail = await studentdetails.update(data,{

@@ -89,7 +89,7 @@ const Verify = async (req, res, next) => {
     if (userDetails != null && userDetails.role === "Student") {
       console.log("Student", userDetails.name);
       const userDetail = await db.sequelize.query(
-        `     select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
+        ` select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
         s.class,s.section ,s.teacherId,i.InstituteName ,
         s2.name as teacherName
         from studentdetails s 
@@ -119,8 +119,8 @@ const course_enrolled=await db.sequelize.query(
     } else if (userDetails != null && userDetails.role === "Teacher") {
       console.log("Teacher", userDetails.name);
       const user = await db.sequelize.query(
-        `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
-        s.coursesId, s.subCoursesId, s.class,s.section ,i.InstituteName 
+        `  select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId, 
+        s.coursesId, s.subCoursesId, s.class,s.section ,i.InstituteName ,i.InstituteLogo 
         from studentdetails s 
         inner join institutes i on i.institute_id =s.institutionId 
         where s.user_id =${userDetails.user_id} `,
@@ -129,7 +129,23 @@ const course_enrolled=await db.sequelize.query(
           type: QueryTypes.SELECT,
         }
       );
-      data.push({ msg: "user details", user });
+
+      const course_enrolled=await db.sequelize.query(
+        `select u.course_id,c.course ,JSON_ARRAYAGG( u2.subcourses_id) as subcourses_id,
+        JSON_ARRAYAGG(s.subcourses) as subcourses 
+        from usercourses u 
+        inner join usersubcourses u2 on u2.course_id =u.course_id 
+        inner join courses c on c.course_id =u.course_id
+        inner join subcourses s on s.subcourses_id =u2.subcourses_id 
+        where u.user_id =${userDetails.user_id} && u.isDelete =false && u2.isDelete =false
+        group by u.course_id  `,
+        {
+          //&& ad.date=${date}
+          type: QueryTypes.SELECT,
+        }
+      );
+
+      data.push({ msg: "user details", user,course_enrolled });
     } else if (userDetails != null && userDetails.role === "Admin") {
       console.log("Admin", userDetails.name);
       const user = await db.sequelize.query(
