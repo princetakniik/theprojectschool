@@ -1,4 +1,4 @@
-const { studentdetails } = require("../Config/dbConnection");
+const { studentdetails, register } = require("../Config/dbConnection");
 const { QueryTypes } = require("sequelize");
 const db = require("../Config/dbConnection");
 
@@ -11,6 +11,7 @@ const createTeacher = async (req, res) => {
         email: rest.email,
       },
     });
+    console.log("user", userRegister);
 
     if (userRegister != null || userRegister != undefined) {
       const getData = await studentdetails.findOne({
@@ -18,7 +19,7 @@ const createTeacher = async (req, res) => {
           email: rest.email,
         },
       });
-
+      console.log("get", getData);
       if (getData == null || getData.email !== rest.email) {
         const data = {
           user_id: userRegister.user_id,

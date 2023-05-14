@@ -6,7 +6,7 @@ const {
 } = require("../controller/teacherDetailsController");
 
 module.exports = (app) => {
-  app.post('createTeacher',(req,res)=>createTeacher(req,res))
+  app.post('/createTeacher',(req,res)=>createTeacher(req,res))
   app.get("/getAllTeacher", (req, res) => getAllTeacher(req, res));
   app.get("/getTeacherByInstitute", (req, res) =>
     getTeacherByInstitute(req, res)

@@ -103,8 +103,20 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
     },
     Semester: {
-      type: DataTypes.ENUM('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'),
-      allowNull: false,
+      type: DataTypes.ENUM(
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ),
     },
     eContactName: {
       type: DataTypes.STRING,
