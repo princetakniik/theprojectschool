@@ -1,21 +1,36 @@
 const { usercourses } = require("../Config/dbConnection");
 const { QueryTypes } = require("sequelize");
 const db = require("../Config/dbConnection");
+const { courses, institute } = require("../Config/dbConnection");
 
 const userCoursesInsert = async (req, res) => {
   const { ...rest } = req.body;
   try {
-   
     for (let i = 0; i <= rest.course_id.length; i++) {
-      const insertCourses = await usercourses.create({
-        course_id: rest.course_id[i],
-        Institute_id: rest.Institute_id,
-        user_id: rest.user_id,
-        teacher_id: rest.teacher_id,
+      console.log("rest", rest.course_id[i]);
+      const getData = await courses.findOne({
+        where: {
+          isDelete: false,
+          course_id: rest.course_id[i],
+        },
       });
-      res
-        .status(200)
-        .json({ msg: `insert data successfully`, data: insertCourses });
+
+      for (let i = 0; i <= rest.course_id.length; i++) {
+        if (getData.course_id == rest.course_id[i] ) {
+          console.log("i", rest.course_id[i]);
+        }else{
+        console.log('ijj',rest.course_id[i]);
+        }
+        // const insertCourses = await usercourses.create({
+        //   course_id: rest.course_id[i],
+        //   Institute_id: rest.Institute_id,
+        //   user_id: rest.user_id,
+        //   teacher_id: rest.teacher_id,
+        // });
+        // res
+        //   .status(200)
+        //   .json({ msg: `insert data successfully`, data: insertCourses });
+      }
     }
   } catch (err) {
     console.log(err);

@@ -33,13 +33,61 @@ sequelize.sync();
 const db = {};
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-db.register = require("../model/RegisterModel")(sequelize,Sequelize,DataTypes);
-db.emailveryfi =require('../model/veryfiEmailModel')(sequelize,Sequelize,DataTypes);
-db.studentdetails=require('../model/DetailsModel')(sequelize,Sequelize,DataTypes);
-db.attendancest =require('../model/AttendanceModel')(sequelize,Sequelize,DataTypes);
-db.courses=require('../model/CoursesModel')(sequelize,Sequelize,DataTypes);
-db.subcourses =require('../model/SubCoursesModel')(sequelize,Sequelize,DataTypes);
-db.institute =require('../model/InstituteModel')(sequelize,Sequelize,DataTypes);
-db.usercourses=require('../model/userCoursesModel')(sequelize,Sequelize,DataTypes);
-db.usersubcourses=require('../model/userSubcoursesModel')(sequelize,Sequelize,DataTypes);
+db.register = require("../model/RegisterModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
+db.emailveryfi = require("../model/veryfiEmailModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
+db.studentdetails = require("../model/DetailsModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
+db.attendancest = require("../model/AttendanceModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
+db.courses = require("../model/CoursesModel")(sequelize, Sequelize, DataTypes);
+db.subcourses = require("../model/SubCoursesModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
+db.institute = require("../model/InstituteModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
+db.usercourses = require("../model/userCoursesModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
+db.usersubcourses = require("../model/userSubcoursesModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
+db.qualifications = require("../model/QualificationsModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
+db.department = require("../model/DepartmentModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
+db.skill = require("../model/SkillModel")(sequelize, Sequelize, DataTypes);
+db.userskill = require("../model/userSkillModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
 module.exports = db;

@@ -14,7 +14,8 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     },
     address: {
       type: DataTypes.STRING(1000),
-    },city:{
+    },
+    city: {
       type: DataTypes.STRING,
     },
     Additional: {
@@ -85,6 +86,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
         "Z"
       ),
     },
+
     teacherId: {
       type: DataTypes.INTEGER,
     },
@@ -92,7 +94,44 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       type: DataTypes.ENUM("Admin", "Teacher", "Student"),
       allowNull: false,
     },
-
+    gender: {
+      type: DataTypes.ENUM("Male", "Female", "etc"),
+      allowNull: false,
+    },
+    dob: { type: DataTypes.DATEONLY, field: "date" },
+    Department_Id: {
+      type: DataTypes.INTEGER,
+    },
+    Semester: {
+      type: DataTypes.ENUM(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+      allowNull: false,
+    },
+    eContactName: {
+      type: DataTypes.STRING,
+    },
+    eContactNum: {
+      type: DataTypes.INTEGER,
+    },
+    eContactRela: {
+      type: DataTypes.STRING,
+    },
+    Employee_ID: {
+      type: DataTypes.STRING,
+    },
+    TIWExperience: {
+      type: DataTypes.INTEGER,
+    },
+    TTWExperience: {
+      type: DataTypes.INTEGER,
+    },
+    Title: {
+      type: DataTypes.ENUM(
+        "Professor",
+        "Associate Professor",
+        "Assistant Professor",
+        "etc"
+      ),
+    },
     isDelete: {
       type: DataTypes.BOOLEAN,
       allowNull: true,

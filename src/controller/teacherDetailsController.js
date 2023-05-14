@@ -2,6 +2,70 @@ const { studentdetails } = require("../Config/dbConnection");
 const { QueryTypes } = require("sequelize");
 const db = require("../Config/dbConnection");
 
+const createTeacher = async (req, res) => {
+  const { ...rest } = req.body;
+  let result = [];
+  try {
+    const userRegister = await register.findOne({
+      where: {
+        email: rest.email,
+      },
+    });
+
+    if (userRegister != null || userRegister != undefined) {
+      const getData = await studentdetails.findOne({
+        where: {
+          email: rest.email,
+        },
+      });
+
+      if (getData == null || getData.email !== rest.email) {
+        const data = {
+          user_id: userRegister.user_id,
+          email: userRegister.email,
+          name: userRegister.fname + userRegister.lname,
+          profilePhoto: rest.profilePhoto,
+          phone: rest.phone,
+          institutionId: rest.institutionId,
+          coursesId: rest.coursesId,
+          subCoursesId: rest.subCoursesId,
+          role: "Teacher",
+          teacherId: rest.teacherId,
+          address: rest.address,
+          Additional: rest.Additional,
+          zipCode: rest.zipCode,
+          city: rest.city,
+          state: rest.state,
+          country: rest.country,
+          gender: rest.gender,
+          dob: rest.dob,
+          Department_Id: rest.Department_Id,
+          Semester: rest.Semester,
+          eContactName: rest.eContactNume,
+          eContactNum: rest.eContactNum,
+          eContactRela: rest.eContactRela,
+          Employee_ID: rest.Employee_ID,
+          TIWExperience: rest.TIWExperience,
+          TTWExperience: rest.TTWExperience,
+          Title: rest.Title,
+        };
+
+        const create = await studentdetails.create(data);
+        result.push(create);
+        console.log("data", result);
+      } else {
+        res.send({ msg: "this email is already filled details" });
+      }
+    } else {
+      res.status(400).json({ msg: "user is not register" });
+    }
+    res.status(200).json({ msg: "create data successfully", data: result });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "students deatils not created ...", err });
+  }
+};
+
 const getAllTeacher = async (req, res) => {
   try {
     const getTeacher = await db.sequelize.query(
@@ -48,23 +112,40 @@ const getTeacherByInstitute = async (req, res) => {
   }
 };
 
-const updateTeacherProfile= async (req, res) => {
+const updateTeacherProfile = async (req, res) => {
   const { ...rest } = req.body;
   try {
-    const data=  {
-      profilePhoto:rest.profilePhoto,
-      email: rest.email,
+    const data = {
+      profilePhoto: rest.profilePhoto,
+      phone: rest.phone,
+      institutionId: rest.institutionId,
+      coursesId: rest.coursesId,
+      subCoursesId: rest.subCoursesId,
+      teacherId: rest.teacherId,
       address: rest.address,
       Additional: rest.Additional,
       zipCode: rest.zipCode,
+      city: rest.city,
       state: rest.state,
-      city:rest.city,
       country: rest.country,
-    }
-    const teacherDetail = await studentdetails.update(data,{
-    where:{ email: rest.email }
-  });
-    res.status(200).json({msg:`teacher details update`,data:teacherDetail})
+      gender: rest.gender,
+      dob: rest.dob,
+      Department_Id: rest.Department_Id,
+      Semester: rest.Semester,
+      eContactName: rest.eContactNume,
+      eContactNum: rest.eContactNum,
+      eContactRela: rest.eContactRela,
+      Employee_ID: rest.Employee_ID,
+      TIWExperience: rest.TIWExperience,
+      TTWExperience: rest.TTWExperience,
+      Title: rest.Title,
+    };
+    const teacherDetail = await studentdetails.update(data, {
+      where: { email: rest.email },
+    });
+    res
+      .status(200)
+      .json({ msg: `teacher details update`, data: teacherDetail });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `teacher details is not register`, err });
@@ -74,5 +155,6 @@ const updateTeacherProfile= async (req, res) => {
 module.exports = {
   getAllTeacher,
   getTeacherByInstitute,
-  updateTeacherProfile
+  updateTeacherProfile,
+  createTeacher,
 };

@@ -31,8 +31,21 @@ const createStudentsDetails = async (req, res) => {
           subCoursesId: rest.subCoursesId,
           class: rest.class,
           section: rest.section,
-          role: rest.role,
+          role: "Student",
           teacherId: rest.teacherId,
+          address: rest.address,
+          Additional: rest.Additional,
+          zipCode: rest.zipCode,
+          city: rest.city,
+          state: rest.state,
+          country: rest.country,
+          gender: rest.gender,
+          dob: rest.dob,
+          Department_Id: rest.Department_Id,
+          Semester: rest.Semester,
+          eContactName: rest.eContactNume,
+          eContactNum: rest.eContactNum,
+          eContactRela: rest.eContactRela,
         };
 
         const create = await studentdetails.create(data);
@@ -177,6 +190,19 @@ const updateDetailsSt = async (req, res) => {
       class: rest.class,
       section: rest.section,
       teacherId: rest.teacherId,
+      address: rest.address,
+      Additional: rest.Additional,
+      zipCode: rest.zipCode,
+      city: rest.city,
+      state: rest.state,
+      country: rest.country,
+      gender: rest.gender,
+      dob: rest.dob,
+      Department_Id: rest.Department_Id,
+      Semester: rest.Semester,
+      eContactName: rest.eContactNume,
+      eContactNum: rest.eContactNum,
+      eContactRela: rest.eContactRela,
     };
     console.log("data", data);
     const updateData = await studentdetails.update(data, {

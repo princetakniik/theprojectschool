@@ -6,7 +6,6 @@ const {
   deteteDetailsSt,
   getDataTeacherWise,
   getDataClassWise,
-  getDataSectionWise,
   getStudentByInstitute,
   updateProfilePic,
 } = require("../controller/studentDetailsController");
