@@ -14,4 +14,5 @@ module.exports = (app) => {
   require("./src/api-route/QualificationsRoute")(app);
   require("./src/api-route/SkillRoute")(app);
   require("./src/api-route/userSkillRoute")(app);
+  require('./src/api-route/principalRouter')(app);
 };

@@ -91,7 +91,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
     },
     role: {
-      type: DataTypes.ENUM("Admin", "Teacher", "Student"),
+      type: DataTypes.ENUM("Admin", "Teacher", "Student","Principal"),
       allowNull: false,
     },
     gender: {
