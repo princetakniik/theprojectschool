@@ -34,7 +34,6 @@ const registerUser = async (req, res) => {
         console.log("hash", hash);
         const insertData = await register.create({
           email: rest.email,
-          otp: rest.otp,
           password: hash,
           fname: rest.fname,
           lname: rest.lname,
@@ -99,7 +98,6 @@ const updateUserDetails = async (req, res) => {
 
   const data = {
     // email:rest.email,
-    otp: rest.otp,
     password: hash,
     fname: rest.fname,
     lname: rest.lname,
