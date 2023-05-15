@@ -14,9 +14,10 @@ const insertPrincipal = async (req, res) => {
     const details = await studentdetails.findOne({
       where: { email: rest.email }
     });
+   
     if (registerData === null) {
       res.status(401).json({ msg: `please register` });
-    } else if (details != null && details.email !== rest.email) {
+    } else if (details === null ) {
       const insertData = await studentdetails.create({
         user_id: registerData.user_id,
         email: registerData.email,
