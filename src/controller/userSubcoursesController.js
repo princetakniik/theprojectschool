@@ -5,9 +5,8 @@ const db = require("../Config/dbConnection");
 const userSubcoursesInsert = async (req, res) => {
   const { ...rest } = req.body;
   try {
-    for (let i = 0; i <= rest.subcourses_id.length; i++) {
       const insertCourses = await usersubcourses.create({
-        subcourses_id: rest.subcourses_id[i],
+        subcourses_id: rest.subcourses_id,
         course_id: rest.course_id,
         Institute_id: rest.Institute_id,
         user_id: rest.user_id,
@@ -16,7 +15,6 @@ const userSubcoursesInsert = async (req, res) => {
       res
         .status(200)
         .json({ msg: `insert data successfully`, data: insertCourses });
-    }
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `Student Courses not Insert` });
