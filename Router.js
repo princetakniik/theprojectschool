@@ -15,4 +15,5 @@ module.exports = (app) => {
   require("./src/api-route/SkillRoute")(app);
   require("./src/api-route/userSkillRoute")(app);
   require('./src/api-route/principalRouter')(app);
+  require('./src/api-route/absentRoute')(app)
 };
