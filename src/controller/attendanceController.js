@@ -1,6 +1,6 @@
 const {
   studentdetails,
-  attendancest,
+  attendance,
   institute,
   usercourses,
   usersubcourses,
@@ -33,7 +33,7 @@ const createAttendance = async (req, res) => {
     });
     //console.log("data", getData);
 
-    const getAttendance = await attendancest.findOne({
+    const getAttendance = await attendance.findOne({
       where: {
         user_id: user_id,
         date: date,

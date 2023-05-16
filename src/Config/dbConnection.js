@@ -48,7 +48,7 @@ db.studentdetails = require("../model/DetailsModel")(
   Sequelize,
   DataTypes
 );
-db.attendancest = require("../model/AttendanceModel")(
+db.attendance = require("../model/AttendanceModel")(
   sequelize,
   Sequelize,
   DataTypes
