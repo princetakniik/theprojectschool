@@ -19,7 +19,7 @@ const createStudentsDetails = async (req, res) => {
         },
       });
 
-      if (getData == null || getData.email !== rest.email) {
+      if (getData === null) {
         const data = {
           user_id: userRegister.user_id,
           email: userRegister.email,
@@ -52,7 +52,7 @@ const createStudentsDetails = async (req, res) => {
         result.push(create);
         console.log("data", result);
       } else {
-        res.send({ msg: "this email is already students" });
+        res.send({ msg: "this email is already fill details" });
       }
     } else {
       res.status(400).json({ msg: "user is not register" });
@@ -208,6 +208,8 @@ const updateDetailsSt = async (req, res) => {
     const updateData = await studentdetails.update(data, {
       where: {
         user_id: req.query.user_id,
+        role: "Student",
+        isDelete:false
       },
     });
     res.status(200).json({ msg: "update data successfully", data: updateData });
@@ -226,6 +228,7 @@ const updateProfilePic = async (req, res) => {
     const profilePic = await studentdetails.update(data, {
       where: {
         user_id: req.query.user_id,
+        isDelete:false
       },
     });
     res.status(200).json({
@@ -248,6 +251,8 @@ const deteteDetailsSt = async (req, res) => {
     const deleteData = await studentdetails.update(data, {
       where: {
         user_id,
+        role: "Student",
+        isDelete:false
       },
     });
     res

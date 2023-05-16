@@ -9,6 +9,7 @@ const createTeacher = async (req, res) => {
     const userRegister = await register.findOne({
       where: {
         email: rest.email,
+      isDelete:false
       },
     });
     console.log("user", userRegister);
@@ -17,10 +18,11 @@ const createTeacher = async (req, res) => {
       const getData = await studentdetails.findOne({
         where: {
           email: rest.email,
+          isDelete:false
         },
       });
       console.log("get", getData);
-      if (getData == null || getData.email !== rest.email) {
+      if (getData === null) {
         const data = {
           user_id: userRegister.user_id,
           email: userRegister.email,
@@ -142,7 +144,7 @@ const updateTeacherProfile = async (req, res) => {
       Title: rest.Title,
     };
     const teacherDetail = await studentdetails.update(data, {
-      where: { email: rest.email },
+      where: { email: rest.email, role: "Teacher", isDelete: false },
     });
     res
       .status(200)

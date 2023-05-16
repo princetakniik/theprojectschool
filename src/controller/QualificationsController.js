@@ -8,6 +8,7 @@ const studentQualification = async (req, res) => {
     const qualification = await qualifications.findOne({
       where: {
         user_id: rest.user_id,
+        isDelete:false
       },
     });
     console.log("qualification", qualification);

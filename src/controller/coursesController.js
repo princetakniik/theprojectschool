@@ -6,11 +6,24 @@ const insertCourses = async (req, res) => {
     const Institute = await institute.findOne({
       where: {
         institute_id: rest.Institute,
-        isDelete:false
+        isDelete: false,
       },
     });
-    if (!Institute) {
-      res.status(400).json({msg:`no data found this Institute id ${rest.Institute}`})
+    const courseName = await courses.findOne({
+      where: {
+        course: rest.course,
+        Institute: rest.Institute,
+        isDelete: false,
+      },
+    });
+    if (Institute == null) {
+      res
+        .status(400)
+        .json({ msg: `no data found this Institute id ${rest.Institute}` });
+    } else if (courseName != null) {
+      res
+        .status(400)
+        .json({ msg: `all ready data found this course ${rest.Institute}` });
     } else {
       const insert = await courses.create(req.body);
       res
@@ -28,7 +41,7 @@ const getCourses = async (req, res) => {
     const getData = await courses.findAll({
       where: {
         isDelete: false,
-        Institute:req.query.Institute
+        Institute: req.query.Institute,
       },
     });
     res
@@ -41,17 +54,18 @@ const getCourses = async (req, res) => {
 };
 
 const getCoursesById = async (req, res) => {
-  const {course_id,Institute} = req.query;
+  const { course_id, Institute } = req.query;
   try {
     const getData = await courses.findOne({
       where: {
         isDelete: false,
-        course_id: course_id
+        course_id: course_id,
       },
     });
-    res
-      .status(200)
-      .json({ msg: `get courses By Id successfully ${course_id}`, data: getData });
+    res.status(200).json({
+      msg: `get courses By Id successfully ${course_id}`,
+      data: getData,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "data get successfully By Id", err });
@@ -68,9 +82,10 @@ const updateCoursesById = async (req, res) => {
         course_id: course_id,
       },
     });
-    res
-      .status(200)
-      .json({ msg: `update courses successfully ${course_id}`, data: updateData });
+    res.status(200).json({
+      msg: `update courses successfully ${course_id}`,
+      data: updateData,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "data get successfully By Id", err });
@@ -89,9 +104,10 @@ const deleteCoursesById = async (req, res) => {
         course_id: course_id,
       },
     });
-    res
-      .status(200)
-      .json({ msg: `update courses successfully ${course_id}`, data: deleteData });
+    res.status(200).json({
+      msg: `update courses successfully ${course_id}`,
+      data: deleteData,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "data get successfully By Id", err });

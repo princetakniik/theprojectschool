@@ -3,8 +3,18 @@ const { studentdetails, institute } = require("../Config/dbConnection");
 const insertInstitute = async (req, res) => {
   console.log("data", req.body);
   try {
-    const insert = await institute.create(req.body);
-    res.status(200).json({ msg: `resgister Institute `, data: insert });
+    const instituteName = await institute.findOne({
+      where: {
+        InstituteName: req.body.InstituteName,
+        isDelete: false,
+      },
+    });
+    if (instituteName != null) {
+      res.status(400).json({ msg: `allready persent in this institute name` });
+    } else {
+      const insert = await institute.create(req.body);
+      res.status(200).json({ msg: `resgister Institute `, data: insert });
+    }
   } catch (err) {
     res.status(500).json({ msg: `data does not insert` });
   }
@@ -34,12 +44,10 @@ const getInstituteById = async (req, res) => {
         institute_id: req.query.institute_id,
       },
     });
-    res
-      .status(200)
-      .json({
-        msg: `get institute by id ${req.query.institute_id}`,
-        data: getData,
-      });
+    res.status(200).json({
+      msg: `get institute by id ${req.query.institute_id}`,
+      data: getData,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `get institute by id `, err });
@@ -51,14 +59,13 @@ const updateInstitute = async (req, res) => {
     const update = await institute.update(req.body, {
       where: {
         institute_id: req.query.institute_id,
+        isDelete: false,
       },
     });
-    res
-      .status(200)
-      .json({
-        msg: `update institute successfully ${req.query.institute_id}`,
-        data: update,
-      });
+    res.status(200).json({
+      msg: `update institute successfully ${req.query.institute_id}`,
+      data: update,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `update not data`, err });
@@ -73,6 +80,7 @@ const deleteInstitute = async (req, res) => {
     const updateData = await institute.update(data, {
       where: {
         institute_id: req.query.institute_id,
+        isDelete: false,
       },
     });
     res

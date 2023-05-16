@@ -62,7 +62,7 @@ console.log('rest',rest);
   try {
     const updateData = await skill.update(rest, {
       where: {
-        //isDelete: false,
+        isDelete: false,
        id: req.query.id,
       },
     });

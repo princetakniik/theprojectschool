@@ -2,8 +2,8 @@ const {
   studentdetails,
   attendancest,
   institute,
-  courses,
-  subcourses,
+  usercourses,
+  usersubcourses,
 } = require("../Config/dbConnection");
 const { QueryTypes } = require("sequelize");
 const db = require("../Config/dbConnection");
@@ -28,6 +28,7 @@ const createAttendance = async (req, res) => {
     const getData = await studentdetails.findOne({
       where: {
         user_id: user_id,
+        isDelete: false,
       },
     });
     //console.log("data", getData);
@@ -54,20 +55,22 @@ const createAttendance = async (req, res) => {
     });
     //console.log("instituteData", instituteData);
 
-    const courseData = await courses.findOne({
+    const courseData = await usercourses.findOne({
       where: {
+        user_id: user_id,
         course_id: coursesId,
-        Institute: institutionId,
+        Institute_id: institutionId,
         isDelete: false,
       },
     });
     // console.log("courseData", courseData);
 
-    const subcourseData = await subcourses.findOne({
+    const subcourseData = await usersubcourses.findOne({
       where: {
+        user_id: user_id,
         subcourses_id: subCoursesId,
-        InstituteId: institutionId,
-        courseId: coursesId,
+        Institute_id: institutionId,
+        course_id: coursesId,
         isDelete: false,
       },
     });
@@ -77,6 +80,8 @@ const createAttendance = async (req, res) => {
       res.status(400).json({ msg: "user details is not persent" });
     } else if (getData.role == "Admin") {
       res.status(400).json({ msg: "Admin id not attendance" });
+    } else if (getData.role == "Principal") {
+      res.status(400).json({ msg: "Principal id not attendance" });
     } else if (instituteData === null) {
       res.status(400).json({ msg: "Institute is not persent" });
     } else if (courseData === null) {

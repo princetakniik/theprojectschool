@@ -11,6 +11,7 @@ const generateQR = async (req, res) => {
     let userDetails = await studentdetails.findOne({
       where: {
         user_id: req.query.user_id,
+        isDelete:false
       },
     });
     //  console.log("userDetail", userDetails);
@@ -55,6 +56,7 @@ const instituteQr = async (req, res) => {
     const instituteDetails = await institute.findOne({
       where: {
         institute_id: req.query.institute_id,
+        isDelete:false
       },
     });
     if (instituteDetails !== null) {
