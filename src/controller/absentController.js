@@ -25,11 +25,11 @@ const absent = async (req, res) => {
     for (let Data of getData) {
       console.log('data',Data);
       const todayAbsent = await attendancest.create({
-        user_id: Data.user_id[0],
+        user_id: Data.user_id,
         isPersent: "0",
-        coursesId: Data.course_id[0],
-        institutionId: Data.Institute_id[0],
-        subCoursesId: Data.subcourses_id[0],
+        coursesId: Data.course_id,
+        institutionId: Data.Institute_id,
+        subCoursesId: Data.subcourses_id,
         date: CURRENT_DATE,
     })
     res.status(200).json({msg:`all absent today`,data:todayAbsent})
