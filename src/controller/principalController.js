@@ -29,7 +29,7 @@ const insertPrincipal = async (req, res) => {
         zipCode: rest.zipCode,
         state: rest.state,
         country: rest.country,
-        phone: rest.phone,
+        phone: registerData.phone,
         institutionId: rest.institutionId,
         role: "Principal",
         gender: rest.gender,

@@ -9,7 +9,7 @@ const createTeacher = async (req, res) => {
     const userRegister = await register.findOne({
       where: {
         email: rest.email,
-      isDelete:false
+        isDelete: false,
       },
     });
     console.log("user", userRegister);
@@ -18,7 +18,7 @@ const createTeacher = async (req, res) => {
       const getData = await studentdetails.findOne({
         where: {
           email: rest.email,
-          isDelete:false
+          isDelete: false,
         },
       });
       console.log("get", getData);
@@ -28,12 +28,9 @@ const createTeacher = async (req, res) => {
           email: userRegister.email,
           name: userRegister.fname + userRegister.lname,
           profilePhoto: rest.profilePhoto,
-          phone: rest.phone,
+          phone: userRegister.phone,
           institutionId: rest.institutionId,
-          coursesId: rest.coursesId,
-          subCoursesId: rest.subCoursesId,
           role: "Teacher",
-          teacherId: rest.teacherId,
           address: rest.address,
           Additional: rest.Additional,
           zipCode: rest.zipCode,
@@ -122,8 +119,6 @@ const updateTeacherProfile = async (req, res) => {
       profilePhoto: rest.profilePhoto,
       phone: rest.phone,
       institutionId: rest.institutionId,
-      coursesId: rest.coursesId,
-      subCoursesId: rest.subCoursesId,
       teacherId: rest.teacherId,
       address: rest.address,
       Additional: rest.Additional,

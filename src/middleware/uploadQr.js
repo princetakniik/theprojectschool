@@ -15,7 +15,7 @@ module.exports = (app) => {
   
   
   
-  app.post("/uploads", upload.array("file", 4), async (req, res) => {
+  app.get("/uploadqr", upload.array("file", 4), async (req, res) => {
     let base_url = Config.basePort;
     //console.log('url',base_url);
     let doc_url = req.files
@@ -25,16 +25,3 @@ module.exports = (app) => {
    return res.json({ status: "suceess",message:"data upload sucessfully", url: doc_url });
   });
 }
-
-
-
-// export const uploadImage = upload.array("file", 4), async (req, res) => {
-//   let base_url = Config.basePort;
-//   //console.log('url',base_url);
-//   let doc_url = req.files
-//     ? req.files.map((i) => `${base_url}/qrcode/${i.filename}`)
-//     : [];
- 
-
-//  return res.json({ status: "suceess",message:"data upload sucessfully", url: doc_url });
-// }

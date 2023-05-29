@@ -22,7 +22,7 @@ const LoginUser = async (req, res) => {
     const userDetails = await studentdetails.findOne({
       where: { email: rest.email },
     });
-    //console.log('UserDetails',userDetails);
+    console.log("UserDetails", userDetails);
     if (!User) {
       //  console.log("User is not registered");
       res.status(400).send({ msg: "User is not Registered" });
@@ -113,9 +113,13 @@ const Verify = async (req, res, next) => {
           type: QueryTypes.SELECT,
         }
       );
-      data.push({ msg: `user details ${userDetails.role}`, userDetail, course_enrolled });
+      data.push({
+        msg: `user details ${userDetails.role}`,
+        userDetail,
+        course_enrolled,
+      });
     } else if (userDetails != null && userDetails.role === "Teacher") {
-     // console.log("Teacher", userDetails.name);
+      // console.log("Teacher", userDetails.name);
       const userDetail = await db.sequelize.query(
         `  select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.phone ,s.institutionId,s.role, 
         s.coursesId, s.subCoursesId, s.class,s.section ,i.InstituteName ,i.InstituteLogo 
@@ -143,7 +147,11 @@ const Verify = async (req, res, next) => {
         }
       );
 
-      data.push({ msg: `user details ${userDetails.role}`, userDetail, course_enrolled });
+      data.push({
+        msg: `user details ${userDetails.role}`,
+        userDetail,
+        course_enrolled,
+      });
     } else if (userDetails != null && userDetails.role == "Principal") {
       const userDetail = await db.sequelize.query(
         ` select s.user_id,s.email ,s.name ,s.profilePhoto ,s.address ,s.city ,s.Additional ,
@@ -172,7 +180,11 @@ const Verify = async (req, res, next) => {
         }
       );
 
-      data.push({ msg: `user details ${userDetails.role}`, userDetail,course_enrolled});
+      data.push({
+        msg: `user details ${userDetails.role}`,
+        userDetail,
+        course_enrolled,
+      });
     } else if (userDetails != null && userDetails.role === "Admin") {
       console.log("Admin", userDetails.name);
       const user = await db.sequelize.query(

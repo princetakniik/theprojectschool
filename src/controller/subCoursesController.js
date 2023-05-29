@@ -12,16 +12,16 @@ const insertsubCourses = async (req, res) => {
         isDelete: false,
       },
     });
-
+console.log('courseData',courseData);
     const subcoursesData = await subcourses.findOne({
       where: {
-        course_id: rest.courseId,
+        courseId: rest.courseId,
         InstituteId: rest.InstituteId,
         subcourses: rest.subcourses,
         isDelete: false,
       },
     });
-    console.log("data", courseData);
+console.log('subcoursesData',subcoursesData);
     if (courseData == null) {
       res
         .status(400)

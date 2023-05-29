@@ -10,7 +10,7 @@ const http = require('http');
 const server = http.createServer(app);
 const Config =require('./src/Config/config')
 const { Server } = require("socket.io");
-const connection=require('./src/Config/dbConnection')
+const session = require('express-session');
 const io = new Server(server,{
   cors:{
     origin:"*",
@@ -22,6 +22,13 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser())
+
+
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: true,
+}));
 router.use((req, res, next) => {
     console.log('Time:', Date.now())
     next()
@@ -32,6 +39,7 @@ app.get('/',(req,res)=>{
   res.send('Anusaran')
 })
 app.use("/profile", express.static("upload"));
+app.use("/qrcode", express.static("upload"));
 require('./src/middleware/fileUpload')(app);
 require('./Router')(app)
 
