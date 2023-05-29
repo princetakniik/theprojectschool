@@ -7,6 +7,8 @@ const {
 const { QueryTypes } = require("sequelize");
 const db = require("../Config/dbConnection");
 const nodeCron = require("node-cron");
+const jwt = require("jsonwebtoken");
+const Config = require("../Config/config");
 const moment = require("moment");
 const job = nodeCron.schedule("05 55 23 * * *", function () {
   absent();
@@ -65,11 +67,13 @@ const cronJob = nodeCron.schedule("05 05 00 * * *", function () {
 });
 
 const instituteQr = async (req, res) => {
+  const { institute_id, subcourses_id } = req.query;
   try {
     const instituteDetails = await db.sequelize.query(
-      ` select s.subcourses_id,i.institute_id,current_date() as date  from subcourses s 
-      inner join institutes i on i.institute_id =s.InstituteId 
-      where s.isDelete =false && i.isDelete=false && "01:02:20" between s.startTime and s.endTime `,
+      `select s.subcourses_id ,s.InstituteId ,current_date() as date from subcourses s
+      inner join institutes i on i.institute_id =s.InstituteId
+      where i.isDelete =false && s.isDelete =false && s.InstituteId =${institute_id}
+       && s.subcourses_id=${subcourses_id} `,
       {
         type: QueryTypes.SELECT,
       }
@@ -79,7 +83,7 @@ const instituteQr = async (req, res) => {
     for (let i = 0; i < instituteDetails.length; i++) {
       var Anusaran = {
         application: "Anusaran",
-        institutionId: instituteDetails[i].institute_id,
+        institutionId: instituteDetails[i].InstituteId,
         subCoursesId: instituteDetails[i].subcourses_id,
         date: instituteDetails[i].date,
       };
@@ -92,14 +96,29 @@ const instituteQr = async (req, res) => {
 
     console.log(resultData);
 
-    req.session.data =  resultData;
+    const token = jwt.sign(Anusaran, Config.JWT_SECRET);
+    console.log("token", token);
+    const Data = {
+      token: token,
+    };
+    const updatetoken = await subcourses.update(Data, {
+      where: {
+        subcourses_id: subcourses_id,
+        InstituteId: institute_id,
+      },
+    });
 
-   return res.status(200).json({ msg: `QR code get successfull`, data: resultData });
+    return res
+      .status(200)
+      .json({ msg: `QR code get successfull`, data: resultData, updatetoken });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `institute QR is not created`, err });
   }
 };
+
+
+
 
 module.exports = {
   generateQR,

@@ -4,6 +4,7 @@ const {
   getsubCoursesById,
   deletesubCoursesById,
   getsubCourses,
+  getToken,
 } = require("../controller/subCoursesController");
 
 module.exports = (app) => {
@@ -16,5 +17,5 @@ module.exports = (app) => {
   app.delete("/deletesubCoursesById", (req, res) =>
     deletesubCoursesById(req, res)
   );
-
+  app.get("/getToken", (req, res) => getToken(req, res));
 };

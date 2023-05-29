@@ -5,14 +5,17 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    InstituteId:{
+    InstituteId: {
       type: DataTypes.INTEGER,
-  },
-  courseId: {
+    },
+    courseId: {
       type: DataTypes.INTEGER,
     },
     subcourses: {
       type: DataTypes.STRING,
+    },
+    token: {
+      type: DataTypes.STRING(1000),
     },
     startTime: {
       type: DataTypes.TIME,

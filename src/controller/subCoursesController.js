@@ -12,7 +12,7 @@ const insertsubCourses = async (req, res) => {
         isDelete: false,
       },
     });
-console.log('courseData',courseData);
+    console.log("courseData", courseData);
     const subcoursesData = await subcourses.findOne({
       where: {
         courseId: rest.courseId,
@@ -21,7 +21,7 @@ console.log('courseData',courseData);
         isDelete: false,
       },
     });
-console.log('subcoursesData',subcoursesData);
+    console.log("subcoursesData", subcoursesData);
     if (courseData == null) {
       res
         .status(400)
@@ -155,10 +155,30 @@ const deletesubCoursesById = async (req, res) => {
   }
 };
 
+const getToken = async (req, res) => {
+  const { subcourses_id, InstituteId } = req.query;
+  try {
+    const token = await subcourses.findOne({
+      where: {
+        subcourses_id: subcourses_id,
+        InstituteId: InstituteId,
+      },
+    });
+    console.log("token", token.token);
+    res
+      .status(200)
+      .json({ msg: `get institute token successfull `, data: token.token });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `token not found in institute `, err });
+  }
+};
+
 module.exports = {
   insertsubCourses,
   getsubCourses,
   getsubCoursesById,
   updatesubCoursesById,
   deletesubCoursesById,
+  getToken,
 };
