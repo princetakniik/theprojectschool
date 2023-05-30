@@ -62,7 +62,7 @@ const getCoursesUser = async (req, res) => {
       from usercourses u
      inner join courses c on c.course_id =u.course_id
      where u.isDelete=false 
-         group by u.user_id`,
+         group by u.user_id,u.Institute_id,u.teacher_id `,
       {
         type: QueryTypes.SELECT,
       }
@@ -83,7 +83,7 @@ const getUserCoursesByuser_id = async (req, res) => {
       from usercourses u
      inner join courses c on c.course_id =u.course_id
      where u.isDelete=false && u.user_id=${req.query.user_id}
-         group by u.user_id`,
+         group by u.user_id,u.Institute_id,u.teacher_id `,
       {
         type: QueryTypes.SELECT,
       }
