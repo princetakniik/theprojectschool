@@ -57,7 +57,7 @@ const getsubCourses = async (req, res) => {
     console.log("data", getData);
     res
       .status(200)
-      .json({ msg: "get courses successfully all ", data: getData });
+      .json({ msg: "get sub courses successfully all ", data: getData });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "data get successfully", err });
@@ -81,7 +81,7 @@ const getsubCoursesById = async (req, res) => {
     );
     console.log("data", getData);
     res.status(200).json({
-      msg: `get courses By Id successfully ${subcourses_id}`,
+      msg: `get sub courses By Id successfully ${subcourses_id}`,
       data: getData,
     });
   } catch (err) {

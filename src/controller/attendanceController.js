@@ -38,8 +38,6 @@ const createAttendance = async (req, res) => {
         user_id: user_id,
         date: date,
         institutionId: institutionId,
-        class: Class,
-        section: section,
         coursesId: coursesId,
         subCoursesId: subCoursesId,
         isDelete: false,

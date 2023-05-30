@@ -26,11 +26,11 @@ const insertuserskill = async (req, res) => {
       const insert = await userskill.create(req.body);
       res
         .status(200)
-        .json({ msg: "create courses successfully", data: insert });
+        .json({ msg: "create user skill successfully", data: insert });
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({ msg: "course is not insert data", err });
+    res.status(500).json({ msg: "skill is not insert data", err });
   }
 };
 

@@ -6,26 +6,26 @@ const { courses, institute } = require("../Config/dbConnection");
 const userCoursesInsert = async (req, res) => {
   const { ...rest } = req.body;
   try {
-      const getData = await courses.findOne({
-        where: {
-          isDelete: false,
-          course_id: rest.course_id,
-        },
-      });
-console.log();
-        // if (getData != null || getData.course_id != rest.course_id) {
-        //  res.status(401).json({msg:`not persent in course table`})
-        // }else{
-          const insertCourses = await usercourses.create({
-            course_id: rest.course_id,
-            Institute_id: rest.Institute_id,
-            user_id: rest.user_id,
-            teacher_id: rest.teacher_id,
-          });
-          res
-            .status(200)
-            .json({ msg: `insert data successfully`, data: insertCourses });
-       // }
+    const getData = await courses.findOne({
+      where: {
+        isDelete: false,
+        course_id: rest.course_id,
+      },
+    });
+    console.log();
+    // if (getData != null || getData.course_id != rest.course_id) {
+    //  res.status(401).json({msg:`not persent in course table`})
+    // }else{
+    const insertCourses = await usercourses.create({
+      course_id: rest.course_id,
+      Institute_id: rest.Institute_id,
+      user_id: rest.user_id,
+      teacher_id: rest.teacher_id,
+    });
+    res
+      .status(200)
+      .json({ msg: `insert data successfully`, data: insertCourses });
+    // }
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: ` Courses not Insert` });
