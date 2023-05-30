@@ -80,45 +80,53 @@ const instituteQr = async (req, res) => {
     );
 
     let resultData = [];
+
     for (let i = 0; i < instituteDetails.length; i++) {
+      var anusaran = {
+        application: "Anusaran",
+        institutionId: instituteDetails[i].InstituteId,
+        subCoursesId: instituteDetails[i].subcourses_id,
+        date: instituteDetails[i].date,
+      };
+
+      const token = jwt.sign(anusaran, Config.JWT_SECRET);
       var Anusaran = {
         application: "Anusaran",
         institutionId: instituteDetails[i].InstituteId,
         subCoursesId: instituteDetails[i].subcourses_id,
         date: instituteDetails[i].date,
+        token: token,
       };
       let strData = JSON.stringify(Anusaran);
 
       console.log("user", strData);
       const qrImage = await generateQRCode(strData);
       resultData.push(qrImage);
+
+
+      const Data = {
+        token: token,
+      };
+      const updatetoken = await subcourses.update(Data, {
+        where: {
+          subcourses_id: subcourses_id,
+          InstituteId: institute_id,
+        },
+      });
     }
 
     console.log(resultData);
 
-    const token = jwt.sign(Anusaran, Config.JWT_SECRET);
-    console.log("token", token);
-    const Data = {
-      token: token,
-    };
-    const updatetoken = await subcourses.update(Data, {
-      where: {
-        subcourses_id: subcourses_id,
-        InstituteId: institute_id,
-      },
-    });
+   
 
     return res
       .status(200)
-      .json({ msg: `QR code get successfull`, data: resultData, updatetoken });
+      .json({ msg: `QR code get successfull`, data: resultData});
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `institute QR is not created`, err });
   }
 };
-
-
-
 
 module.exports = {
   generateQR,

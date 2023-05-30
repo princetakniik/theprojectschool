@@ -55,7 +55,7 @@ const principalAllData = async (req, res) => {
   try {
     const getdata = await db.sequelize.query(
         `select s.user_id,s.email ,s.name ,s.profilePhoto ,s.address ,s.city ,s.Additional ,s.zipCode ,s.state ,s.country ,
-        s.phone ,s.institutionId ,s.gender,i.InstituteName ,i.InstituteLogo 
+        s.phone ,s.institutionId ,s.gender,i.InstituteName ,i.InstituteLogo,s.role 
         from studentdetails s 
         inner join registers r on r.email =s.email 
         inner join institutes i on i.institute_id =s.institutionId 
@@ -78,7 +78,7 @@ const principalDataById = async(req,res)=>{
     try{
         const getdata = await db.sequelize.query(
             `select s.user_id,s.email ,s.name ,s.profilePhoto ,s.address ,s.city ,s.Additional ,s.zipCode ,s.state ,s.country ,
-            s.phone ,s.institutionId ,s.gender,i.InstituteName ,i.InstituteLogo 
+            s.phone ,s.institutionId ,s.gender,i.InstituteName ,i.InstituteLogo,s.role 
             from studentdetails s 
             inner join registers r on r.email =s.email 
             inner join institutes i on i.institute_id =s.institutionId 
