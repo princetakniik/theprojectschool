@@ -89,7 +89,7 @@ const createAttendance = async (req, res) => {
     } else if (getAttendance !== null) {
       res.status(400).json({ msg: `user is Allready persent ${user_id}` });
     } else {
-      const createData = await attendancest.create({
+      const createData = await attendance.create({
         user_id: user_id,
         Comment: Comment,
         isPersent: isPersent,
