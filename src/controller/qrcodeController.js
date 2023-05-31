@@ -79,8 +79,8 @@ const instituteQr = async (req, res) => {
         type: QueryTypes.SELECT,
       }
     );
-
-    let resultData = [];
+    
+    if (instituteDetails.length === 0) res.send("Empty Data!");
 
     for (let i = 0; i < instituteDetails.length; i++) {
       var anusaran = {
@@ -89,7 +89,7 @@ const instituteQr = async (req, res) => {
         subCoursesId: instituteDetails[i].subcourses_id,
         date: instituteDetails[i].date,
       };
-
+      
       const token = jwt.sign(anusaran, Config.JWT_SECRET);
       var Anusaran = {
         application: "Anusaran",
@@ -98,8 +98,10 @@ const instituteQr = async (req, res) => {
         date: instituteDetails[i].date,
         token: token,
       };
+     
       let strData = JSON.stringify(Anusaran);
-
+      
+      
       QRCode.toDataURL(strData, function (err, url) {
         if (err) console.log("err", err);
         res.json({ msg: `QR code get successfull`, data: url });
