@@ -10,6 +10,7 @@ const nodeCron = require("node-cron");
 const jwt = require("jsonwebtoken");
 const Config = require("../Config/config");
 const moment = require("moment");
+const QRCode = require("qrcode");
 const job = nodeCron.schedule("05 55 23 * * *", function () {
   absent();
 });
@@ -98,7 +99,10 @@ const instituteQr = async (req, res) => {
         token: token,
       };
       let strData = JSON.stringify(Anusaran);
-
+QRCode.toDataURL(strData,function(err,code){
+  if(err)console.log('err',err);
+ res.json({ msg: `QR code get successfull`, data:code});
+})
       console.log("user", strData);
       const qrImage = await generateQRCode(strData);
       resultData.push(qrImage);
@@ -115,13 +119,13 @@ const instituteQr = async (req, res) => {
       });
     }
 
-    console.log(resultData);
+    //console.log(resultData);
 
    
 
-    return res
-      .status(200)
-      .json({ msg: `QR code get successfull`, data: resultData});
+    // return res
+    //   .status(200)
+    //   .json({ msg: `QR code get successfull`, data: resultData});
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `institute QR is not created`, err });
