@@ -39,7 +39,7 @@ app.get('/',(req,res)=>{
   res.send('Anusaran')
 })
 app.use("/profile", express.static("upload"));
-app.use("/qrcode", express.static("upload"));
+//app.use("/qrcode", express.static("upload"));
 require('./src/middleware/fileUpload')(app);
 require('./Router')(app)
 

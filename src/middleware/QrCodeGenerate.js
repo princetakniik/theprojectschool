@@ -9,6 +9,6 @@ const generateQRCode = async (strData) => {
   }
 };
 
-module.exports ={
-    generateQRCode
-}
+module.exports = {
+  generateQRCode,
+};

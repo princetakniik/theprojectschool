@@ -99,14 +99,15 @@ const instituteQr = async (req, res) => {
         token: token,
       };
       let strData = JSON.stringify(Anusaran);
-QRCode.toDataURL(strData,function(err,code){
-  if(err)console.log('err',err);
- res.json({ msg: `QR code get successfull`, data:code});
-})
-      console.log("user", strData);
-      const qrImage = await generateQRCode(strData);
-      resultData.push(qrImage);
 
+      QRCode.toDataURL(strData, function (err, url) {
+        if (err) console.log("err", err);
+        res.json({ msg: `QR code get successfull`, data: url });
+      });
+
+      // console.log("user", strData);
+      // const qrImage = await generateQRCode(strData);
+      // resultData.push(qrImage);
 
       const Data = {
         token: token,
@@ -119,13 +120,9 @@ QRCode.toDataURL(strData,function(err,code){
       });
     }
 
-    //console.log(resultData);
-
-   
-
     // return res
     //   .status(200)
-    //   .json({ msg: `QR code get successfull`, data: resultData});
+    //   .json({ msg: `QR code get successfull`, data: resultData });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `institute QR is not created`, err });
