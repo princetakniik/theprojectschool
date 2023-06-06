@@ -122,7 +122,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
     eContactNum: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
     },
     eContactRela: {
       type: DataTypes.STRING,

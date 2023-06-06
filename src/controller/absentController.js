@@ -5,7 +5,7 @@ const db = require("../Config/dbConnection");
 const nodeCron = require("node-cron");
 var CronJob = require("cron").CronJob;
 
-const job = nodeCron.schedule("05 41 23 * * *", function () {
+const job = nodeCron.schedule("05 39 13 * * *", function () {
   absent();
 });
 
