@@ -18,7 +18,7 @@ const getFeedback = async (req, res) => {
   try {
     const getdata = await db.sequelize.query(
       `select f.id ,f.email,f.name,f.image,f.feedback 
-      from feedbacks f  
+      from feedBacks f  
 where f.institutionId =${instituteId} && isDelete =false 
 order by id desc `,
       {
@@ -37,7 +37,7 @@ const getFeedbackById = async (req, res) => {
     const {id}=req.query
   try {
     const getdata = await db.sequelize.query(`select f.id ,f.email,f.name,f.image,f.feedback 
-    from feedbacks f  
+    from feedBacks f  
     where f.id =${id} && isDelete =false 
     order by id desc `,
     {
@@ -56,7 +56,7 @@ const getFeedbackByUserId = async (req, res) => {
     console.log('data..',email);
   try {
     const getdata = await db.sequelize.query(`select f.id ,f.email,f.name,f.image,f.feedback 
-    from feedbacks f  
+    from feedBacks f  
     where f.email='${email}' && isDelete =false 
     order by id desc `,
     {
