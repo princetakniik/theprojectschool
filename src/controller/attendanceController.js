@@ -341,6 +341,21 @@ const deleteAttendance = async (req, res) => {
   }
 };
 
+const getAttendanceSubCourses = async(req,res)=>{
+  const {subcourses_id,InstituteId}=req.query
+  try{
+    const getdata = await db.sequelize.query(`select a.user_id ,a.isPersent ,a.subCoursesId ,a.subCoursesId ,s.subcourses from attendances a 
+    inner join subcourses s on s.subcourses_id =a.subCoursesId && s.InstituteId =a.institutionId 
+    where s.subcourses_id=${subcourses_id} && s.InstituteId =${InstituteId} `,
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
+  res.status(200).json({msg:`all user are in this sub course found`,data:getdata})
+  }catch(err){
+    res.status(500).json({msg:`data not found`})
+  }
+}
 
 
 module.exports = {
@@ -353,4 +368,5 @@ module.exports = {
   getAttendanceCM,
   getAttendanceSummeryMonthly,
   getAttendanceBetweenMonth,
+  getAttendanceSubCourses
 };
