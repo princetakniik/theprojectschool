@@ -344,9 +344,10 @@ const deleteAttendance = async (req, res) => {
 const getAttendanceSubCourses = async(req,res)=>{
   const {subcourses_id,InstituteId}=req.query
   try{
-    const getdata = await db.sequelize.query(`select a.user_id ,a.isPersent ,a.subCoursesId ,a.subCoursesId ,s.subcourses from attendances a 
-    inner join subcourses s on s.subcourses_id =a.subCoursesId && s.InstituteId =a.institutionId 
-    where s.subcourses_id=${subcourses_id} && s.InstituteId =${InstituteId} `,
+    const getdata = await db.sequelize.query(`select a.user_id ,a.isPersent ,a.subCoursesId ,a.subCoursesId ,s.subcourses,s2.name from attendances a 
+    inner join subcourses s on s.subcourses_id =a.subCoursesId && s.InstituteId =a.institutionId
+    inner join studentdetails s2 on s2.user_id =a.user_id 
+    where s.subcourses_id=${subcourses_id} && s.InstituteId =${InstituteId} && s2.role='Student' && s2.isDelete=FALSE `,
     {
       type: QueryTypes.SELECT,
     }
