@@ -90,4 +90,5 @@ db.userskill = require("../model/userSkillModel")(
   Sequelize,
   DataTypes
 );
+db.feedBack=require('../model/feedbackModel')(sequelize, Sequelize, DataTypes);
 module.exports = db;

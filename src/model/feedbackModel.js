@@ -1,31 +1,24 @@
 module.exports = (sequelize, Sequelize, DataTypes) => {
-  const Register = sequelize.define("register", {
-    user_id: {
+  const FeedBack = sequelize.define("feedBack", {
+    id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
     email: {
       type: DataTypes.STRING,
-      unique: true,
     },
-    password: {
+    name: {
+      type: DataTypes.STRING,
+    },
+    image:{
         type: DataTypes.STRING,
     },
-    fname:{
-        type: DataTypes.STRING,
-    },
-    lname:{
-        type: DataTypes.STRING,
-    },
-    username:{
-        type: DataTypes.STRING,
-    },
-    phone:{
-        type: DataTypes.BIGINT,
-    },
-    token: {
+    feedback: {
       type: DataTypes.STRING(1000),
+    },
+    institutionId: {
+      type: DataTypes.INTEGER,
     },
     isDelete: {
       type: DataTypes.BOOLEAN,
@@ -33,5 +26,5 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       defaultValue: false,
     },
   });
-  return Register;
+  return FeedBack;
 };
