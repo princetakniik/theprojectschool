@@ -111,6 +111,7 @@ const getUserSubcourse = async (req, res) => {
     res.status(500).json({ msg: `user subCourse details not found`, err });
   }
 };
+
 const userSubcoursesdelete = async (req, res) => {
   try {
     const data = {
@@ -131,6 +132,34 @@ const userSubcoursesdelete = async (req, res) => {
   }
 };
 
+const userSubCoursesCreate = async (req,res) =>{
+  try{
+    const userSubcourseDetails = await db.sequelize.query(
+    `select s.courseId ,s.subcourses_id,s.InstituteId,u.user_id  from courses c 
+    inner join subcourses s on s.courseId =c.course_id && s.InstituteId =c.Institute 
+    inner join usercourses u on u.course_id = c.course_id && u.Institute_id =s.subcourses_id `,
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
+
+//   let resultData=[];
+//   for (let i=0;i<userSubcourseDetails.length;i++){
+//     var ObjAttendence={
+//       user_id: userSubcourseDetails[i].user_id,
+//       courseId: userSubcourseDetails[i].courseId,
+//       InstituteId: userSubcourseDetails[i].InstituteId,
+//       subcourses_id: userSubcourseDetails[i].subcourses_id,
+//     }
+// resultData.push(ObjAttendence)
+//   }
+  res.status(200).json({msg:`insert user subcourses`,data:userSubcourseDetails})
+  }catch(err){
+    console.log(err);
+    res.status(500).json({msg:`user subCourses not created`})
+  }
+}
+
 module.exports = {
   userSubcoursesInsert,
   userSubcoursesUpdate,
@@ -138,4 +167,5 @@ module.exports = {
   getSubcoursesUser,
   getUserSubcoursesByuser_id,
   getUserSubcourse,
+  userSubCoursesCreate
 };

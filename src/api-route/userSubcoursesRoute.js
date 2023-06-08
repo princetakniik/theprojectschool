@@ -5,6 +5,7 @@ const {
   userSubcoursesdelete,
   getUserSubcoursesByuser_id,
   getUserSubcourse,
+  userSubCoursesCreate,
 } = require("../controller/userSubcoursesController");
 
 module.exports = (app) => {
@@ -22,4 +23,5 @@ module.exports = (app) => {
   app.delete("/userSubcoursesdelete", (req, res) =>
     userSubcoursesdelete(req, res)
   );
+  app.post('/userSubCoursesCreate',(req,res)=>userSubCoursesCreate(req,res))
 };
