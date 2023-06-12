@@ -144,9 +144,9 @@ setInterval(function () {
 const userSubCoursesCreate = async (req, res) => {
   try {
     const userSubcourseDetails = await db.sequelize.query(
-      `select s.courseId ,s.subcourses_id,s.InstituteId  from courses c 
+      `select s.courseId ,s.subcourses_id,s.InstituteId,u.user_id  from courses c 
       inner join subcourses s on s.courseId =c.course_id && s.InstituteId =c.Institute 
-      inner join usercourses u on u.course_id = c.course_id && u.Institute_id =s.InstituteId `,
+      inner join usercourses u on u.course_id = c.course_id && u.Institute_id =s.InstituteId  `,
       {
         type: QueryTypes.SELECT,
       }
