@@ -298,16 +298,16 @@ const updateAttendance = async (req, res) => {
     if (getData.role == "Admin") {
       res.send({ msg: "Admin id not attendance update" });
     }
-    const update = await attendancest.update(data, {
+    const update = await attendance.update(data, {
       where: {
         user_id: user_id,
         date: date,
       },
     });
-    res.status(200).json({ msg: "update attendance ", data: update });
+    res.status(200).json({ msg: "update attendance by id", data: update });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ msg: "attendance update by id ", err });
+    res.status(500).json({ msg: "attendance not update by id ", err });
   }
 };
 
