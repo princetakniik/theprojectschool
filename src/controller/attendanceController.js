@@ -100,7 +100,7 @@ const createAttendance = async (req, res) => {
         subCoursesId: subCoursesId,
         date: date,
       });
-      // console.log("createData", createData);
+   console.log("createData", createData);
       res
         .status(200)
         .json({ msg: `user is persent today ${user_id}`, data: createData });
