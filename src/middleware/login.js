@@ -101,13 +101,13 @@ const Verify = async (req, res, next) => {
       );
       const course_enrolled = await db.sequelize.query(
         `select u.course_id,c.course ,JSON_ARRAYAGG( u2.subcourses_id) as subcourses_id,
-  JSON_ARRAYAGG(s.subcourses) as subcourses 
-  from usercourses u 
-  inner join usersubcourses u2 on u2.course_id =u.course_id 
-  inner join courses c on c.course_id =u.course_id
-  inner join subcourses s on s.subcourses_id =u2.subcourses_id 
-  where u.user_id =${userDetails.user_id} && u.isDelete =false && u2.isDelete =false
-  group by u.course_id  `,
+        JSON_ARRAYAGG(s.subcourses) as subcourses 
+        from usercourses u 
+        inner join usersubcourses u2 on u2.course_id =u.course_id 
+        inner join courses c on c.course_id =u.course_id
+        inner join subcourses s on s.subcourses_id =u2.subcourses_id 
+        where u.user_id =${userDetails.user_id} && u.isDelete =false  && s.isDelete =FALSE && c.isDelete=FALSE  
+        group by u.course_id  `,
         {
           //&& ad.date=${date}
           type: QueryTypes.SELECT,
@@ -139,7 +139,8 @@ const Verify = async (req, res, next) => {
         inner join usersubcourses u2 on u2.course_id =u.course_id 
         inner join courses c on c.course_id =u.course_id
         inner join subcourses s on s.subcourses_id =u2.subcourses_id 
-        where u.user_id =${userDetails.user_id} && u.isDelete =false && u2.isDelete =false
+        where u.user_id =${userDetails.user_id} && u.isDelete =false && u2.isDelete =false 
+        && c.isDelete =FALSE && s.isDelete =FALSE 
         group by u.course_id  `,
         {
           //&& ad.date=${date}

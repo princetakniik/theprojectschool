@@ -301,6 +301,7 @@ const updateAttendance = async (req, res) => {
       where: {
         user_id: user_id,
         date: date,
+        subCoursesId: subCoursesId,
       },
     });
     res.status(200).json({ msg: "update attendance by id", data: update });
