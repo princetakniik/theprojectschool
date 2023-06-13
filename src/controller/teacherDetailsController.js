@@ -118,6 +118,7 @@ const updateTeacherProfile = async (req, res) => {
     const data = {
       profilePhoto: rest.profilePhoto,
       phone: rest.phone,
+      name:rest.name,
       institutionId: rest.institutionId,
       teacherId: rest.teacherId,
       address: rest.address,

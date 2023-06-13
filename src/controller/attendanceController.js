@@ -115,14 +115,13 @@ const getAttendanceSt = async (req, res) => {
   try {
     const getdata = await db.sequelize.query(
       `select s.name ,s.phone ,i.institute_id ,s.email ,c.course_id ,s2.subcourses_id ,
-      s.class ,s.section ,s3.user_id,s.profilePhoto,i.InstituteName,c.course,
-      s2.subcourses ,s3.name as teacherName,a.isPersent ,a.Comment,a.date   
+      s.class ,s.section ,s.profilePhoto,i.InstituteName,c.course,
+      s2.subcourses ,a.isPersent ,a.Comment,a.date   
             from attendances as a
              inner join institutes i on i.institute_id =a.institutionId 
              inner join courses c on c.course_id =a.coursesId 
             inner join subcourses s2 on s2.subcourses_id =a.subCoursesId
             inner join studentdetails as s on s.user_id =a.user_id  
-            INNER join studentdetails s3 on s3.user_id =s.teacherId 
             where s.role='Student' && a.date = CURRENT_DATE() && a.isDelete =false`,
       {
         //&& ad.date=${date}
