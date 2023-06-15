@@ -90,7 +90,7 @@ const instituteQr = async (req, res) => {
         date: instituteDetails[i].date,
       };
 
-      const token = jwt.sign(anusaran, Config.JWT_SECRET);
+      const token = jwt.sign(anusaran, { expiresIn: "24h" }, Config.JWT_SECRET);
       var Anusaran = {
         application: "Anusaran",
         institutionId: instituteDetails[i].InstituteId,
@@ -111,10 +111,10 @@ const instituteQr = async (req, res) => {
           InstituteId: institute_id,
         },
       });
-      if (moment(dateData.updatedAt).format('YYYY-MM-DD') == Anusaran.date) {
-        console.log('match');
-      }else{
-        console.log(' not match');
+      if (moment(dateData.updatedAt).format("YYYY-MM-DD") == Anusaran.date) {
+        console.log("match");
+      } else {
+        console.log(" not match");
         const Data = {
           token: token,
         };
@@ -125,9 +125,7 @@ const instituteQr = async (req, res) => {
           },
         });
       }
-      }
-
-  
+    }
 
     // return res
     //   .status(200)
