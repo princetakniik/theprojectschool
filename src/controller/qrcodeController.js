@@ -71,7 +71,8 @@ const instituteQr = async (req, res) => {
   const { institute_id, subcourses_id } = req.query;
   try {
     const instituteDetails = await db.sequelize.query(
-      `select s.subcourses_id ,s.InstituteId ,current_date() as date from subcourses s
+      `select s.subcourses_id ,s.InstituteId ,current_date() as date ,date_add(s.updatedAt ,interval 5 hour) as updatedAt,s.token 
+      from subcourses s
       inner join institutes i on i.institute_id =s.InstituteId
       where i.isDelete =false && s.isDelete =false && s.InstituteId =${institute_id}
        && s.subcourses_id=${subcourses_id} `,
@@ -88,17 +89,12 @@ const instituteQr = async (req, res) => {
         institutionId: instituteDetails[i].InstituteId,
         subCoursesId: instituteDetails[i].subcourses_id,
         date: instituteDetails[i].date,
+        updatedAt:instituteDetails[i].updatedAt,
+        token:instituteDetails[i].token
       };
-      const dateData = await subcourses.findOne({
-        where: {
-          subcourses_id: subcourses_id,
-          InstituteId: institute_id,
-        },
-      });
-      console.log('dateData',dateData);
  
-      if (moment(dateData.updatedAt).format("YYYY-MM-DD") == anusaran.date && dateData.token !=null) {
-        const token = dateData.token;
+      if (moment(anusaran.updatedAt).format("YYYY-MM-DD") == anusaran.date && anusaran.token !=null) {
+        const token = anusaran.token;
         var Anusaran = {
           application: "Anusaran",
           institutionId: instituteDetails[i].InstituteId,
