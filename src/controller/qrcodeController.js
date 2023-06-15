@@ -113,7 +113,6 @@ const instituteQr = async (req, res) => {
       });
       if (moment(dateData.updatedAt).format('YYYY-MM-DD') == Anusaran.date) {
         console.log('match');
-        res.status(400).json({ msg: `all ready update `, err });
       }else{
         console.log(' not match');
         const Data = {
