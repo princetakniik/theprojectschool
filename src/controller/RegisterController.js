@@ -151,8 +151,8 @@ const updatePassword = async (req, res) => {
         email: rest.email,
       },
     });
-   // console.log("oldPassword", oldPassword.password);
-   
+    // console.log("oldPassword", oldPassword.password);
+
     bcrypt.compare(rest.password, oldPassword.password, async (err, result) => {
       if (result) {
         res.status(400).json({ msg: `it is old password ..` });

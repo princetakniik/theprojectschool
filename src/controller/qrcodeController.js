@@ -79,7 +79,7 @@ const instituteQr = async (req, res) => {
         type: QueryTypes.SELECT,
       }
     );
-    
+
     if (instituteDetails.length === 0) res.send("Empty Data!");
 
     for (let i = 0; i < instituteDetails.length; i++) {
@@ -89,7 +89,7 @@ const instituteQr = async (req, res) => {
         subCoursesId: instituteDetails[i].subcourses_id,
         date: instituteDetails[i].date,
       };
-      
+
       const token = jwt.sign(anusaran, Config.JWT_SECRET);
       var Anusaran = {
         application: "Anusaran",
@@ -98,29 +98,37 @@ const instituteQr = async (req, res) => {
         date: instituteDetails[i].date,
         token: token,
       };
-     
+
       let strData = JSON.stringify(Anusaran);
-      
-      
+
       QRCode.toDataURL(strData, function (err, url) {
         if (err) console.log("err", err);
         res.json({ msg: `QR code get successfull`, data: url });
       });
-
-      // console.log("user", strData);
-      // const qrImage = await generateQRCode(strData);
-      // resultData.push(qrImage);
-
-      const Data = {
-        token: token,
-      };
-      const updatetoken = await subcourses.update(Data, {
+      const dateData = await subcourses.findOne({
         where: {
           subcourses_id: subcourses_id,
           InstituteId: institute_id,
         },
       });
-    }
+      if (moment(dateData.updatedAt).format('YYYY-MM-DD') == Anusaran.date) {
+        console.log('match');
+        res.status(400).json({ msg: `all ready update `, err });
+      }else{
+        console.log(' not match');
+        const Data = {
+          token: token,
+        };
+        const updatetoken = await subcourses.update(Data, {
+          where: {
+            subcourses_id: subcourses_id,
+            InstituteId: institute_id,
+          },
+        });
+      }
+      }
+
+  
 
     // return res
     //   .status(200)
