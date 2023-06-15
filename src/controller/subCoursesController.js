@@ -93,6 +93,7 @@ const getsubCoursesById = async (req, res) => {
 const updatesubCoursesById = async (req, res) => {
   const { ...rest } = req.body;
   const subcourses_id = req.query.subcourses_id;
+
   try {
     const courseData = await courses.findOne({
       where: {
@@ -100,6 +101,7 @@ const updatesubCoursesById = async (req, res) => {
         isDelete: false,
       },
     });
+ 
     if (courseData == null) {
       res
         .status(400)
@@ -107,7 +109,7 @@ const updatesubCoursesById = async (req, res) => {
     } else if (courseData != null) {
       const instituteName = await subcourses.findOne({
         where: {
-          Institute: courseData.Institute,
+          InstituteId: courseData.Institute,
           courseId: rest.course,
           subcourses: rest.subcourses,
         },

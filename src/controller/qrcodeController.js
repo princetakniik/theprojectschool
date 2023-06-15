@@ -95,43 +95,43 @@ const instituteQr = async (req, res) => {
           InstituteId: institute_id,
         },
       });
-      if (moment(dateData.updatedAt).format("YYYY-MM-DD") == anusaran.date) {
-     const token = dateData.token
-     console.log('token',token);
-     var Anusaran = {
-      application: "Anusaran",
-      institutionId: instituteDetails[i].InstituteId,
-      subCoursesId: instituteDetails[i].subcourses_id,
-      date: instituteDetails[i].date,
-      token: token,
-    };
-    let strData = JSON.stringify(Anusaran);
+      console.log('dateData',dateData);
+ 
+      if (moment(dateData.updatedAt).format("YYYY-MM-DD") == anusaran.date && dateData.token !=null) {
+        const token = dateData.token;
+        var Anusaran = {
+          application: "Anusaran",
+          institutionId: instituteDetails[i].InstituteId,
+          subCoursesId: instituteDetails[i].subcourses_id,
+          date: instituteDetails[i].date,
+          token: token,
+        };
+        let strData = JSON.stringify(Anusaran);
 
-    QRCode.toDataURL(strData, function (err, url) {
-      if (err) console.log("err", err);
-      res.json({ msg: `QR code get successfull`, data: url });
-    });
+        QRCode.toDataURL(strData, function (err, url) {
+          if (err) console.log("err", err);
+          res.json({ msg: `QR code get successfull`, data: url });
+        });
       } else {
-        console.log(" not match");
-      const token = jwt.sign(anusaran, Config.JWT_SECRET,{ expiresIn: "24h" });
-      
-      var Anusaran = {
-        application: "Anusaran",
-        institutionId: instituteDetails[i].InstituteId,
-        subCoursesId: instituteDetails[i].subcourses_id,
-        date: instituteDetails[i].date,
-        token: token,
-      };
+        const token = jwt.sign(anusaran, Config.JWT_SECRET, {
+          expiresIn: "24h",
+        });
 
-      let strData = JSON.stringify(Anusaran);
+        var Anusaran = {
+          application: "Anusaran",
+          institutionId: instituteDetails[i].InstituteId,
+          subCoursesId: instituteDetails[i].subcourses_id,
+          date: instituteDetails[i].date,
+          token: token,
+        };
 
-      QRCode.toDataURL(strData, function (err, url) {
-        if (err) console.log("err", err);
-        res.json({ msg: `QR code get successfull`, data: url });
-      });
-    
-     
-       
+        let strData = JSON.stringify(Anusaran);
+
+        QRCode.toDataURL(strData, function (err, url) {
+          if (err) console.log("err", err);
+          res.json({ msg: `QR code get successfull`, data: url });
+        });
+
         const Data = {
           token: token,
         };
