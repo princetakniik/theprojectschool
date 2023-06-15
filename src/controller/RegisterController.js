@@ -27,28 +27,26 @@ const registerUser = async (req, res) => {
     //   });
     //   console.log("useremail", userData);
     //   if (userData == null || userData == undefined) {
-        //encrypting the password
-        const round = parseInt(Config.saltRound);
-        const salt = bcrypt.genSaltSync(round);
-        const hash = bcrypt.hashSync(rest.password, salt);
-        console.log("hash", hash);
-        const insertData = await register.create({
-          email: rest.email,
-          password: hash,
-          fname: rest.fname,
-          lname: rest.lname,
-          username: rest.username,
-          phone: rest.phone,
-          institutionname: rest.institutionname,
-          courseenrolled: rest.courseenrolled,
-        });
-        res
-          .status(200)
-          .json({ msg: "Insert data by client", data: insertData });
-      // } else if (userData.email === rest.email) {
-      //   res.send({ msg: "user already exit" });
-      // }
-  //  }
+    //encrypting the password
+    const round = parseInt(Config.saltRound);
+    const salt = bcrypt.genSaltSync(round);
+    const hash = bcrypt.hashSync(rest.password, salt);
+    console.log("hash", hash);
+    const insertData = await register.create({
+      email: rest.email,
+      password: hash,
+      fname: rest.fname,
+      lname: rest.lname,
+      username: rest.username,
+      phone: rest.phone,
+      institutionname: rest.institutionname,
+      courseenrolled: rest.courseenrolled,
+    });
+    res.status(200).json({ msg: "Insert data by client", data: insertData });
+    // } else if (userData.email === rest.email) {
+    //   res.send({ msg: "user already exit" });
+    // }
+    //  }
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "Data not insert by client", err });
@@ -141,21 +139,37 @@ const deleteUserDetails = async (req, res) => {
     res.status(500).json({ msg: "data not get user ..", err });
   }
 };
+
 const updatePassword = async (req, res) => {
   const { ...rest } = req.body;
   const round = parseInt(Config.saltRound);
   const salt = bcrypt.genSaltSync(round);
   const hash = bcrypt.hashSync(rest.password, salt);
   try {
-    const data = {
-      password: hash,
-    };
-    const update = await register.update(data, {
+    const oldPassword = await register.findOne({
       where: {
         email: rest.email,
       },
     });
-    res.status(200).json({ msg: "update password successfully", data: update });
+   // console.log("oldPassword", oldPassword.password);
+   
+    bcrypt.compare(rest.password, oldPassword.password, async (err, result) => {
+      if (result) {
+        res.status(400).json({ msg: `it is old password ..` });
+      } else {
+        const data = {
+          password: hash,
+        };
+        const update = await register.update(data, {
+          where: {
+            email: rest.email,
+          },
+        });
+        res
+          .status(200)
+          .json({ msg: "update password successfully", data: update });
+      }
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "password not update" });
