@@ -89,8 +89,18 @@ const instituteQr = async (req, res) => {
         subCoursesId: instituteDetails[i].subcourses_id,
         date: instituteDetails[i].date,
       };
-
-      const token = jwt.sign(anusaran, Config.JWT_SECRET);
+      const dateData = await subcourses.findOne({
+        where: {
+          subcourses_id: subcourses_id,
+          InstituteId: institute_id,
+        },
+      });
+      if (moment(dateData.updatedAt).format("YYYY-MM-DD") == anusaran.date) {
+       res.status(400).send({msg:`all ready created ..qr `})
+      } else {
+        console.log(" not match");
+      const token = jwt.sign(anusaran, Config.JWT_SECRET,{ expiresIn: "24h" });
+      
       var Anusaran = {
         application: "Anusaran",
         institutionId: instituteDetails[i].InstituteId,
@@ -105,16 +115,9 @@ const instituteQr = async (req, res) => {
         if (err) console.log("err", err);
         res.json({ msg: `QR code get successfull`, data: url });
       });
-      const dateData = await subcourses.findOne({
-        where: {
-          subcourses_id: subcourses_id,
-          InstituteId: institute_id,
-        },
-      });
-      if (moment(dateData.updatedAt).format("YYYY-MM-DD") == Anusaran.date) {
-        console.log("match");
-      } else {
-        console.log(" not match");
+    
+     
+       
         const Data = {
           token: token,
         };
