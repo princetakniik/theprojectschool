@@ -192,7 +192,7 @@ const getAttendanceCM = async (req, res) => {
     const getdata = await db.sequelize.query(
       `   select s.name ,s.phone ,i.institute_id ,s.email ,c.course_id ,s2.subcourses_id  ,
       s.teacherId ,s.profilePhoto,i.InstituteName ,c.course ,
-      s2.subcourses,a.isPersent ,a.Comment,a.section,a.class,a.date     
+      s2.subcourses,a.isPersent='1' ,a.Comment,a.section,a.class,a.date     
             from attendances as a
             inner join studentdetails as s on s.user_id =a.user_id 
             inner join institutes i on i.institute_id =a.institutionId 
