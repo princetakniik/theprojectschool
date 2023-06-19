@@ -19,7 +19,7 @@ const absent = async (req, res) => {
       where u.isDelete=false && u2.isDelete =false && u2.subcourses_id not in
        (select a.subCoursesId from attendances a  
        where u.user_id =a.user_id && u.course_id =a.coursesId && u2.subcourses_id =a.subCoursesId 
-       && a.createdAt=current_date())  `,
+       && a.date=CURRENT_DATE()  && a.isPersent='1') `,
       {
         //&& ad.date=${date}
         type: QueryTypes.SELECT,

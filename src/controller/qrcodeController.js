@@ -63,7 +63,7 @@ const generateQR = async (req, res) => {
   }
 };
 
-const cronJob = nodeCron.schedule("09 09 00 * * *", function () {
+const cronJob = nodeCron.schedule("05 00 09 * * *", function () {
   instituteQr();
 });
 
