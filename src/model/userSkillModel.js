@@ -16,17 +16,9 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: false,
       },
-      createdAt: {
-        type: "TIMESTAMP",
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-        allowNull: false,
-      },
-      updatedAt: {
-        type: "TIMESTAMP",
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-        allowNull: false,
-      },
-    }
-  );
+    },
+    {
+      timestamps: true
+  });
     return userSkill;
   };
