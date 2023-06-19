@@ -54,6 +54,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       allowNull: true,
       defaultValue: false,
     },
+    
   });
   return Attendance;
 };

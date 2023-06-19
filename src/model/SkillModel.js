@@ -1,3 +1,5 @@
+var moment = require("moment");
+
 module.exports = (sequelize, Sequelize, DataTypes) => {
   const Skill = sequelize.define("skill", {
     id: {
@@ -23,6 +25,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       allowNull: false,
     },
-  });
+  },
+  );
   return Skill;
 };

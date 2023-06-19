@@ -26,6 +26,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
         allowNull: false,
       },
-    });
+    }
+  );
     return userSkill;
   };
