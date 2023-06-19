@@ -16,7 +16,7 @@ const absent = async (req, res) => {
     const getData = await db.sequelize.query(
       `select u.course_id ,u2.subcourses_id,u.Institute_id,u.user_id  from usercourses u 
       inner join usersubcourses u2 on u2.user_id =u.user_id && u.course_id =u2.course_id
-      where u.isDelete=false && u2.isDelete =false && u2.subcourses_id && u.user_id =${req.body.userid} && u2.subcourses_id=${req.body.u2.subcourses_id} not in
+      where u.isDelete=false && u2.isDelete =false && u2.subcourses_id  not in
        (select a.subCoursesId from attendances a  
        where u.user_id =a.user_id && u.course_id =a.coursesId && u2.subcourses_id =a.subCoursesId 
        && a.date=CURRENT_DATE()  && a.isPersent='1') `,
