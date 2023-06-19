@@ -94,7 +94,6 @@ const instituteQr = async (req, res) => {
       };
  
       if (moment(anusaran.updatedAt).format("YYYY-MM-DD") == anusaran.date && anusaran.token !=null) {
-        console.log('old');
         const token = anusaran.token;
         var Anusaran = {
           application: "Anusaran",
@@ -110,8 +109,13 @@ const instituteQr = async (req, res) => {
           res.json({ msg: `QR code get successfull`, data: url });
         });
       } else {
-        console.log('new');
-        const token = jwt.sign(anusaran, Config.JWT_SECRET, );
+        let data={
+          application: "Anusaran",
+          institutionId: instituteDetails[i].InstituteId,
+          subCoursesId: instituteDetails[i].subcourses_id,
+          date: instituteDetails[i].date,
+        }
+        const token = jwt.sign(data, Config.JWT_SECRET);
 
         var Anusaran = {
           application: "Anusaran",
