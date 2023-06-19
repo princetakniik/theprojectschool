@@ -63,7 +63,7 @@ const generateQR = async (req, res) => {
   }
 };
 
-const cronJob = nodeCron.schedule("05 05 00 * * *", function () {
+const cronJob = nodeCron.schedule("09 09 00 * * *", function () {
   instituteQr();
 });
 
@@ -94,6 +94,7 @@ const instituteQr = async (req, res) => {
       };
  
       if (moment(anusaran.updatedAt).format("YYYY-MM-DD") == anusaran.date && anusaran.token !=null) {
+        console.log('old');
         const token = anusaran.token;
         var Anusaran = {
           application: "Anusaran",
@@ -109,9 +110,8 @@ const instituteQr = async (req, res) => {
           res.json({ msg: `QR code get successfull`, data: url });
         });
       } else {
-        const token = jwt.sign(anusaran, Config.JWT_SECRET, {
-          expiresIn: "24h",
-        });
+        console.log('new');
+        const token = jwt.sign(anusaran, Config.JWT_SECRET, );
 
         var Anusaran = {
           application: "Anusaran",
