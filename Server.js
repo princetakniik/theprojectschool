@@ -41,6 +41,9 @@ app.get('/',(req,res)=>{
 app.use("/profile", express.static("upload"));
 //app.use("/qrcode", express.static("upload"));
 require('./src/middleware/fileUpload')(app);
+
+app.use("/profile", express.static("videos"));
+require('./src/middleware/uploadVideo')(app)
 require('./Router')(app)
 
 io.on('connection', (socket)=>{

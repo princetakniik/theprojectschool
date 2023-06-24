@@ -90,5 +90,24 @@ db.userskill = require("../model/userSkillModel")(
   Sequelize,
   DataTypes
 );
-db.feedBack=require('../model/feedbackModel')(sequelize, Sequelize, DataTypes);
+db.feedBack = require("../model/feedbackModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
+db.uploadvideo = require("../model/uploadVideoModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
+db.viewvideo = require("../model/viewUserVideoModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
+db.assignment = require("../model/assignmentsModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
 module.exports = db;
