@@ -19,4 +19,6 @@ module.exports = (app) => {
   require("./src/api-route/feedBackRoute")(app);
   require("./src/api-route/uploadVideoRoute")(app);
   require("./src/api-route/viewUserVideoRoute")(app);
+  require("./src/api-route/assignmentRoute")(app);
+  require("./src/api-route/userAssignmentRoute")(app);
 };

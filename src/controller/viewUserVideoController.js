@@ -110,17 +110,18 @@ const videoNotViewUser = async (req,res)=>{
     const {subcoursesId} =req.query
     try{
 const userData = await db.sequelize.query(`
-select s.user_id ,s.name ,s.email ,s.phone,u.id ,u.videosPaths ,u.videoName  from studentdetails s 
-inner join courses c on c.Institute =s.institutionId 
-inner join subcourses s2 on s2.InstituteId =s.institutionId 
-inner join uploadvideos u on u.instituteId =s.institutionId && u.subCourseId =s2.subcourses_id 
-where s2.subcourses_id =${subcoursesId} && s.role='Student' && s.user_id not in 
-(select v.userId  from viewvideos v where v.subCourseId=${subcoursesId})
-group by s.id ,u.id 
+select s.user_id ,u.id as videoId ,u.videoName ,u.subCourseId ,u.instituteId,u.videosPaths
+ from studentdetails s 
+inner join uploadvideos u on u.instituteId =s.institutionId 
+where u.instituteId =1 && u.subCourseId =2 && u.isDelete =false && s.role ='Student' &&
+ (u.id,s.user_id ) not in
+(select v.videoId as id , v.userId as user_id  from viewvideos v where v.isDelete=false &&
+   v.subCourseId=2 && v.instituteId=1)
+
 `, {
     type: QueryTypes.SELECT,
   })
-  res.status(200).json({msg:``})
+  res.status(200).json({msg:`user not view videos are ...`,data:userData})
     }catch(err){
         console.log(err);
         res.status(500).json({msg:`data not found ...`,err})
@@ -175,6 +176,7 @@ module.exports = {
   viewUser,
   getViewUser,
   getViewUserById,
+  videoNotViewUser,
   updateViewData,
   deleteViewData,
 };

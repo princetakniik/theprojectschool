@@ -110,4 +110,9 @@ db.assignment = require("../model/assignmentsModel")(
   Sequelize,
   DataTypes
 );
+db.userassignment = require("../model/userAssignmentModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
 module.exports = db;
