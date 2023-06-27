@@ -106,27 +106,106 @@ const getViewUserById = async (req, res) => {
   }
 };
 
-const videoNotViewUser = async (req,res)=>{
-    const {subcoursesId} =req.query
-    try{
-const userData = await db.sequelize.query(`
+const getAllViewVideoModule = async (req, res) => {
+  try {
+    const userData = await db.sequelize.query(
+      `
+      select v.id,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoId ,v.videoMin ,
+      v.videoSawMin ,v.status,u.videosPaths ,u.videoName  ,c.course 
+      from viewvideos v
+      inner join uploadvideos u on u.id =v.videoId 
+      inner join courses c on c.course_id =u.courseId 
+      where u.isDelete=false && v.isDelete =false 
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `module wise all videos are...`, data: userData });
+  } catch (err) {
+    console.log(err);
+    res.status({ msg: `All View Video Module are not found....`, err });
+  }
+};
+
+const getViewVideoModule = async (req, res) => {
+  const { id } = req.query;
+  try {
+    const viewData = await db.sequelize.query(
+      `select v.id ,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoId ,v.videoMin ,
+v.videoSawMin ,v.status,u.videosPaths ,u.videoName  ,c.course 
+from viewvideos v
+inner join uploadvideos u on u.id =v.videoId 
+inner join courses c on c.course_id =u.courseId 
+where u.isDelete=false && v.isDelete =false && c.isDelete =false  && v.id =${id}
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `View Video by id data are...`, data: viewData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `View Video Module not found by id...`, err });
+  }
+};
+
+const videoNotViewUser = async (req, res) => {
+  const { subcoursesId, instituteId } = req.query;
+  try {
+    const userData = await db.sequelize.query(
+      `
 select s.user_id ,u.id as videoId ,u.videoName ,u.subCourseId ,u.instituteId,u.videosPaths
  from studentdetails s 
 inner join uploadvideos u on u.instituteId =s.institutionId 
-where u.instituteId =1 && u.subCourseId =2 && u.isDelete =false && s.role ='Student' &&
+where u.instituteId =${instituteId} && u.subCourseId =${subcoursesId} && u.isDelete =false && s.role ='Student' &&
  (u.id,s.user_id ) not in
 (select v.videoId as id , v.userId as user_id  from viewvideos v where v.isDelete=false &&
-   v.subCourseId=2 && v.instituteId=1)
+   v.subCourseId=${subcoursesId} && v.instituteId=${instituteId})
 
-`, {
-    type: QueryTypes.SELECT,
-  })
-  res.status(200).json({msg:`user not view videos are ...`,data:userData})
-    }catch(err){
-        console.log(err);
-        res.status(500).json({msg:`data not found ...`,err})
-    }
-}   
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `user not view videos are ...`, data: userData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `data not found ...`, err });
+  }
+};
+
+const videoNotViewUserModule = async (req, res) => {
+  const { instituteId, courseId } = req.query;
+  try {
+    const videoData = await db.sequelize.query(
+      `
+select s.user_id ,u.id as videoId ,u.videoName ,u.subCourseId ,u.instituteId,u.videosPaths
+ from studentdetails s 
+inner join uploadvideos u on u.instituteId =s.institutionId 
+where u.instituteId =${instituteId} && u.courseId=${courseId} && u.isDelete =false && s.role ='Student' &&
+ (u.id,s.user_id ) not in
+(select v.videoId as id , v.userId as user_id  from viewvideos v where v.isDelete=false &&
+   v.courseId=${courseId}  && v.instituteId=${instituteId})
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `user not view video data are...`, data: videoData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `data not found...`, err });
+  }
+};
 
 const updateViewData = async (req, res) => {
   const { id } = req.query;
@@ -176,7 +255,10 @@ module.exports = {
   viewUser,
   getViewUser,
   getViewUserById,
+  getAllViewVideoModule,
+  getViewVideoModule,
   videoNotViewUser,
+  videoNotViewUserModule,
   updateViewData,
   deleteViewData,
 };

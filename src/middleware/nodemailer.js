@@ -1,22 +1,29 @@
 const nodemailer = require("nodemailer");
 const { emailveryfi } = require("../Config/dbConnection");
 const { generateOtp } = require("./generateOtp");
+const {
+  assignmentNotsubmitte,
+} = require("../controller/userAssignmentController");
+
+const nodeCron = require("node-cron");
+
+const job = nodeCron.schedule("05 45 23 * * *", function () {
+  sendMail();
+});
 
 const sendMail = async (req, res) => {
-    try {
-      const { email } = req.body;
-      const Otp = await generateOtp()
-      console.log("otp", Otp, "email", email);
+  try {
+    const UserData = await assignmentNotsubmitte();
 
-      const user = await emailveryfi.upsert(
-        {
-            email: email,
-            otp: Otp
-        },
-        { email: email }
-      )
-      console.log('user',user);
-    
+    let data = [];
+    for (let user of UserData) {
+      var userData = {
+        email: user.email,
+        assignmentsName: user.assignmentsName,
+        name: user.name,
+      };
+      console.log("userData", userData.email);
+
       let transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
@@ -26,28 +33,29 @@ const sendMail = async (req, res) => {
           pass: "moizhjibtfvmwwcs", // generated ethereal password
         },
       });
-  
+
       var mailOptions = {
         from: "prince@takniik.com",
-        to: email,
+        to: [userData.email],
         subject: "Email School for ... ",
         Text: "First Email send from nodejs nodemailer own made Package ( for auto emails of banking)",
-        html: `<p>please veryfi your email ${Otp}`,
+        html: `<p> ${userData.name} please submmit your assignment is ${userData.assignmentsName}`,
       };
       transporter.sendMail(mailOptions, function (err, info) {
         if (err) {
           console.log(err);
           return false;
         } else {
-        res.json({msg:"Email sent successfully"});
+          res.json({ msg: "Email sent successfully" });
           res.send(transporter);
         }
       });
-    } catch (err) {
-      console.log(err);
     }
-  };
-  
-  module.exports ={
-    sendMail
+  } catch (err) {
+    console.log(err);
   }
+};
+
+module.exports = {
+  sendMail,
+};

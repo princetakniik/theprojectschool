@@ -5,6 +5,7 @@ const {
   updateUserAssignment,
   deleteUserAssignment,
   assignmentNotUploadUser,
+  assignmentNotsubmitte,
 } = require("../controller/userAssignmentController");
 
 module.exports = (app) => {
@@ -21,5 +22,8 @@ module.exports = (app) => {
   );
   app.get("/assignmentNotUploadUser", (req, res) =>
     assignmentNotUploadUser(req, res)
+  );
+  app.get("/assignmentNotsubmitte", (req, res) =>
+    assignmentNotsubmitte(req, res)
   );
 };
