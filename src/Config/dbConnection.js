@@ -120,4 +120,9 @@ db.teachermodule = require("../model/teacherModuleModel")(
   Sequelize,
   DataTypes
 );
+db.attendanceadmin = require("../model/attendanceSetAdminModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
 module.exports = db;

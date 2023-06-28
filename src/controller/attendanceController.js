@@ -100,7 +100,7 @@ const createAttendance = async (req, res) => {
         subCoursesId: subCoursesId,
         date: date,
       });
-   console.log("createData", createData);
+      console.log("createData", createData);
       res
         .status(200)
         .json({ msg: `user is persent today ${user_id}`, data: createData });
@@ -341,24 +341,28 @@ const deleteAttendance = async (req, res) => {
   }
 };
 
-const getAttendanceSubCourses = async(req,res)=>{
-  const {subcourses_id,InstituteId}=req.query
-  try{
-    const getdata = await db.sequelize.query(`select a.user_id ,a.isPersent ,a.subCoursesId ,
+const getAttendanceSubCourses = async (req, res) => {
+  const { subcourses_id, InstituteId } = req.query;
+  try {
+    const getdata = await db.sequelize.query(
+      `select a.user_id ,a.isPersent ,a.subCoursesId ,
     a.subCoursesId ,s.subcourses,s2.name,a.date 
     from attendances a 
     inner join subcourses s on s.subcourses_id =a.subCoursesId && s.InstituteId =a.institutionId
     inner join studentdetails s2 on s2.user_id =a.user_id 
     where s.subcourses_id=${subcourses_id} && s.InstituteId =${InstituteId} && s2.role='Student' && s2.isDelete=FALSE `,
-    {
-      type: QueryTypes.SELECT,
-    }
-  );
-  res.status(200).json({msg:`all user are in this sub course found`,data:getdata})
-  }catch(err){
-    res.status(500).json({msg:`data not found`})
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `all user are in this sub course found`, data: getdata });
+  } catch (err) {
+    res.status(500).json({ msg: `data not found` });
   }
-}
+};
+
 
 
 module.exports = {
@@ -371,5 +375,6 @@ module.exports = {
   getAttendanceCM,
   getAttendanceSummeryMonthly,
   getAttendanceBetweenMonth,
-  getAttendanceSubCourses
+  getAttendanceSubCourses,
+ 
 };
