@@ -23,4 +23,6 @@ module.exports = (app) => {
   require("./src/api-route/userAssignmentRoute")(app);
   require("./src/api-route/teacherModuleRoute")(app);
   require("./src/api-route/attendanceSetAdminRoute")(app);
+  require("./src/api-route/studentsFeedbackRoute")(app);
+  require("./src/api-route/teacherFeedbackRoute")(app);
 };

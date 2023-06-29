@@ -125,4 +125,9 @@ db.attendanceadmin = require("../model/attendanceSetAdminModel")(
   Sequelize,
   DataTypes
 );
+db.userfeedback = require("../model/userFeedbackModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
 module.exports = db;
