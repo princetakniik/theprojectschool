@@ -111,7 +111,6 @@ const deleteSetAttendance = async (req, res) => {
 const allAttendanceModuleM = async (req, res) => {
   const { date } = req.query;
   console.log("date", date);
-
   try {
     const userData = await db.sequelize.query(
       `SELECT a.user_id ,a.isPersent ,a.coursesId ,a.institutionId,c.course ,s.name ,s.profilePhoto 
@@ -120,8 +119,8 @@ const allAttendanceModuleM = async (req, res) => {
       inner join attendances a on a.institutionId =s.institutionId && a.user_id =s.user_id 
       inner join courses c on c.course_id =a.coursesId && c.Institute =a.institutionId 
       inner join attendanceadmins a2 on a2.coursesId =c.course_id && a2.institutionId =a.institutionId 
-      where s.isDelete =FALSE && a.isDelete =FALSE && c.isDelete =FALSE && a2.isDelete =false && s.role='Student' && 
-      DATE_FORMAT(a.date,"%Y-%m") = DATE_FORMAT('${date}',"%Y-%m")
+      where s.isDelete =FALSE && a.isDelete =FALSE && c.isDelete =FALSE && a2.isDelete =false && 
+      s.role='Student' && DATE_FORMAT(a.date,"%Y-%m") = DATE_FORMAT('${date}',"%Y-%m")
       order by a.date DESC 
   `,
       {
@@ -140,8 +139,9 @@ const allAttendanceModuleM = async (req, res) => {
 const allAttendanceModuleCD = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
-      `SELECT a.user_id ,a.isPersent ,a.coursesId ,a.institutionId,c.course ,s.name ,s.profilePhoto ,s.email,a.date,a2.minAttendance ,a2.startDate ,a2.endDate  
-      from studentdetails s 
+      `SELECT a.user_id ,a.isPersent ,a.coursesId ,a.institutionId,c.course ,s.name ,s.profilePhoto ,
+     s.email,a.date,a2.minAttendance ,a2.startDate ,a2.endDate  
+     from studentdetails s 
      inner join attendances a on a.institutionId =s.institutionId && a.user_id =s.user_id 
      inner join courses c on c.course_id =a.coursesId && c.Institute =a.institutionId 
      inner join attendanceadmins a2 on a2.coursesId =c.course_id && a2.institutionId =a.institutionId 
@@ -259,6 +259,199 @@ const teacherWiseAtten = async (req, res) => {
   }
 };
 
+const weeklyAttendance = async (req, res) => {
+  try {
+    const weeklyData = await db.sequelize.query(
+      `
+            select s.name ,s.phone ,i.institute_id ,s.email ,c.course_id ,s2.subcourses_id,s.teacherId,
+            s.profilePhoto,i.InstituteName ,c.course ,s2.subcourses,a.section,a.isPersent,a.Comment,
+            a.class,a.user_id ,a.date,dayname(a.date) as dayname,MONTHNAME(a.date) as monthname     
+            from attendances as a
+            inner join studentdetails as s on s.user_id =a.user_id 
+            inner join institutes i on i.institute_id =a.institutionId 
+            inner join courses c on c.course_id =a.coursesId 
+            inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
+            where YEARWEEK(a.date, 1) = YEARWEEK( CURDATE() - INTERVAL 0 WEEK, 1)
+            order by a.date desc
+               `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `weekly Attendance data by user Id....`, data: weeklyData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `weekly Attendance data not found...`, err });
+  }
+};
+
+const weeklyAttendanceById = async (req, res) => {
+  const { userId } = req.query;
+  try {
+    const weeklyData = await db.sequelize.query(
+      `
+      select a.user_id ,s.name ,s.phone ,i.institute_id ,s.email ,c.course_id ,s2.subcourses_id ,
+      s.teacherId ,s.profilePhoto,i.InstituteName ,c.course ,s2.subcourses,a.section,a.class,
+      a.isPersent ,a.Comment,a.date,dayname(a.date) as dayname,MONTHNAME(a.date) as monthname
+      from attendances as a
+      inner join studentdetails as s on s.user_id =a.user_id 
+      inner join institutes i on i.institute_id =a.institutionId 
+      inner join courses c on c.course_id =a.coursesId 
+      inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
+      where YEARWEEK(a.date, 1) = YEARWEEK( CURDATE() - INTERVAL 0 WEEK, 1) and a.user_id=${userId}
+      order by a.date desc 
+       `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `weekly Attendance data By Id are ...`, data: weeklyData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `weekly Attendance not found By Id...`, err });
+  }
+};
+
+const fifteenDayAttendance = async (req, res) => {
+  const { userId } = req.query;
+  try {
+    const userData = await db.sequelize.query(
+      `
+     select a.user_id ,s.name ,s.phone ,i.institute_id ,s.email ,c.course_id ,s2.subcourses_id  ,
+     s.teacherId ,s.profilePhoto,i.InstituteName ,c.course ,s2.subcourses,a.section,a.class,
+     a.isPersent ,a.Comment,a.date,dayname(a.date) as dayname,MONTHNAME(a.date) as monthname
+    from attendances as a
+    inner join studentdetails as s on s.user_id =a.user_id 
+    inner join institutes i on i.institute_id =a.institutionId 
+    inner join courses c on c.course_id =a.coursesId 
+    inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
+    where a.date > (current_date()  - interval 15 day) and a.user_id=${userId}
+    order by a.date desc 
+    `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `last fifteen days data are...`, data: userData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `last fifteen days data not found ...`, err });
+  }
+};
+
+const attendanceSubmoduleCD = async (req, res) => {
+  try {
+    const userData = await db.sequelize.query(
+      `
+      select s.user_id ,s.email,s.name ,a.isPersent ,a.Comment ,a.coursesId ,a.institutionId ,
+      a.subCoursesId ,c.course ,s2.subcourses 
+      from studentdetails s 
+      inner join attendances a on a.institutionId =s.institutionId and a.user_id =s.user_id 
+      inner join courses c on c.course_id =a.coursesId and c.Institute =a.institutionId 
+      inner join subcourses s2 on s2.subcourses_id =a.subCoursesId and s2.InstituteId =a.institutionId 
+      where s.isDelete =false and a.isDelete =false and s2.isDelete =false and s.role='Student' and a.date=current_date() 
+      `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `attendance Submodules wise data are...`, data: userData });
+  } catch (err) {
+    console.log(err);
+    res
+      .status(500)
+      .json({ msg: `attendance Submodules wise not found....`, err });
+  }
+};
+
+const attendanceSubmoduleM = async (req, res) => {
+  const { date } = req.query;
+  try {
+    const userData = await db.sequelize.query(
+      `
+      select s.user_id ,s.email,s.name ,a.isPersent ,a.Comment ,a.coursesId ,a.institutionId ,
+      a.subCoursesId ,c.course ,s2.subcourses 
+      from studentdetails s 
+      inner join attendances a on a.institutionId =s.institutionId and a.user_id =s.user_id 
+      inner join courses c on c.course_id =a.coursesId and c.Institute =a.institutionId 
+      inner join subcourses s2 on s2.subcourses_id =a.subCoursesId and s2.InstituteId =a.institutionId 
+      where s.isDelete =false and a.isDelete =false and s2.isDelete =false and s.role='Student' and
+      DATE_FORMAT(a.date,"%Y-%m") = DATE_FORMAT('${date}',"%Y-%m")
+      `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `attendance Submodules wise data are...`, data: userData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `attendance Submodules wise not found`, err });
+  }
+};
+
+const attendanceSubmoduleCDById = async (req, res) => {
+  const { subCoursesId } = req.query;
+  try {
+    const userData = await db.sequelize.query(
+      `
+      select s.user_id ,s.email,s.name ,a.isPersent ,a.Comment ,a.coursesId ,a.institutionId ,a.subCoursesId ,c.course ,s2.subcourses 
+      from studentdetails s 
+      inner join attendances a on a.institutionId =s.institutionId and a.user_id =s.user_id 
+      inner join courses c on c.course_id =a.coursesId and c.Institute =a.institutionId 
+      inner join subcourses s2 on s2.subcourses_id =a.subCoursesId and s2.InstituteId =a.institutionId 
+      where s.isDelete =false and a.isDelete =false and s2.isDelete =false and s.role='Student' and 
+      a.date=current_date() and a.subCoursesId =${subCoursesId}
+      `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `attendance Submodules wise data are...`, data: userData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `attendance Submodules wise not found`, err });
+  }
+};
+
+const attendanceSubmoduleMById = async (req, res) => {
+  const { date, subCoursesId } = req.query;
+  try {
+    const userData = await db.sequelize.query(
+      `
+      select s.user_id ,s.email,s.name ,a.isPersent ,a.Comment ,a.coursesId ,a.institutionId ,
+      a.subCoursesId ,c.course ,s2.subcourses 
+      from studentdetails s 
+      inner join attendances a on a.institutionId =s.institutionId and a.user_id =s.user_id 
+      inner join courses c on c.course_id =a.coursesId and c.Institute =a.institutionId 
+      inner join subcourses s2 on s2.subcourses_id =a.subCoursesId and s2.InstituteId =a.institutionId 
+      where s.isDelete =false and a.isDelete =false and s2.isDelete =false and s.role='Student' and 
+      DATE_FORMAT(a.date,"%Y-%m") = DATE_FORMAT('${date}',"%Y-%m") and a.subCoursesId =${subCoursesId}
+   `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `attendance Submodules wise data are...`, data: userData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `attendance Submodules wise not found`, err });
+  }
+};
+
 module.exports = {
   insertSetAttendance,
   getSetAttendance,
@@ -270,5 +463,12 @@ module.exports = {
   AttendanceModuleWiseM,
   AttendanceModuleWiseCD,
   teacherWiseAtten,
-  allTeacherWiseAtten
+  allTeacherWiseAtten,
+  weeklyAttendance,
+  weeklyAttendanceById,
+  fifteenDayAttendance,
+  attendanceSubmoduleCD,
+  attendanceSubmoduleM,
+  attendanceSubmoduleCDById,
+  attendanceSubmoduleMById,
 };

@@ -10,6 +10,13 @@ const {
   AttendanceModuleWiseM,
   teacherWiseAtten,
   allTeacherWiseAtten,
+  weeklyAttendance,
+  weeklyAttendanceById,
+  fifteenDayAttendance,
+  attendanceSubmoduleCD,
+  attendanceSubmoduleM,
+  attendanceSubmoduleCDById,
+  attendanceSubmoduleMById,
 } = require("../controller/attendanceSetAdminController");
 
 module.exports = (app) => {
@@ -40,4 +47,29 @@ module.exports = (app) => {
   //teacher wise attendance
   app.get("/allTeacherWiseAtten", (req, res) => allTeacherWiseAtten(req, res));
   app.get("/teacherWiseAtten", (req, res) => teacherWiseAtten(req, res));
+
+  //weeklyAttendance
+  app.get("/weeklyAttendance", (req, res) => weeklyAttendance(req, res));
+  app.get("/weeklyAttendanceById", (req, res) =>
+    weeklyAttendanceById(req, res)
+  );
+  app.get("/fifteenDayAttendance", (req, res) =>
+    fifteenDayAttendance(req, res)
+  );
+
+  //submodule wise
+
+  app.get("/attendanceSubmoduleCD", (req, res) =>
+    attendanceSubmoduleCD(req, res)
+  );
+
+  app.get("/attendanceSubmoduleM", (req, res) =>
+    attendanceSubmoduleM(req, res)
+  );
+  app.get("/attendanceSubmoduleCDById", (req, res) =>
+    attendanceSubmoduleCDById(req, res)
+  );
+  app.get("/attendanceSubmoduleMById", (req, res) =>
+    attendanceSubmoduleMById(req, res)
+  );
 };

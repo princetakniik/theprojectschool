@@ -4,6 +4,8 @@ const {
   studentFeedbackById,
   updateFeedbackByStu,
   deleteFeedbackByStu,
+  studentFeedbackSubAll,
+  studentFeedbackSubById,
 } = require("../controller/studentsFeedbackController");
 
 module.exports = (app) => {
@@ -13,5 +15,11 @@ module.exports = (app) => {
   app.put("/updateFeedbackByStu", (req, res) => updateFeedbackByStu(req, res));
   app.delete("/deleteFeedbackByStu", (req, res) =>
     deleteFeedbackByStu(req, res)
+  );
+  app.get("/studentFeedbackSubAll", (req, res) =>
+    studentFeedbackSubAll(req, res)
+  );
+  app.get("/studentFeedbackSubById", (req, res) =>
+    studentFeedbackSubById(req, res)
   );
 };

@@ -130,4 +130,9 @@ db.userfeedback = require("../model/userFeedbackModel")(
   Sequelize,
   DataTypes
 );
+db.studentlimit = require("../model/studentLimitModel")(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
 module.exports = db;

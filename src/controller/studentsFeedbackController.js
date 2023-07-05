@@ -11,6 +11,7 @@ const insertFeedbackByStu = async (req, res) => {
       feedback: rest.feedback,
       institutionId: rest.institutionId,
       courseId: rest.courseId,
+      subCourseId: rest.subCourseId,
       rating: rest.rating,
     });
     res
@@ -26,11 +27,12 @@ const studentFeedbackAll = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-     select u.id ,u.userId ,s.email ,s.name ,u.name as feedbackName ,u.feedback ,u.courseId ,u.rating 
-     from userfeedbacks u 
-     inner join studentdetails s on s.user_id =u.userId and s.institutionId =u.institutionId 
-     where s.isDelete =false and u.isDelete =false  and s.role='Student'
-     order by u.id desc
+      select u.id ,u.userId ,s.email ,s.name ,u.name as feedbackName ,u.feedback ,u.courseId ,u.rating,c.course  
+      from userfeedbacks u 
+      inner join studentdetails s on s.user_id =u.userId and s.institutionId =u.institutionId 
+      inner join courses c on c.course_id =u.courseId and c.Institute =u.institutionId
+      where s.isDelete =false and u.isDelete =false  and s.role='Student'
+      order by u.id desc
 `,
       {
         type: QueryTypes.SELECT,
@@ -49,10 +51,11 @@ const studentFeedbackById = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-     select u.id ,u.userId ,s.email ,s.name ,u.name as feedbackName ,u.feedback ,u.courseId ,u.rating 
-     from userfeedbacks u 
-     inner join studentdetails s on s.user_id =u.userId and s.institutionId =u.institutionId 
-     where s.isDelete =false and u.isDelete =false and s.role='Student' and u.id =${id}
+      select u.id ,u.userId ,s.email ,s.name ,u.name as feedbackName ,u.feedback ,u.courseId ,u.rating,c.course  
+      from userfeedbacks u 
+      inner join studentdetails s on s.user_id =u.userId and s.institutionId =u.institutionId 
+      inner join courses c on c.course_id =u.courseId and c.Institute =u.institutionId
+      where s.isDelete =false and u.isDelete =false  and s.role='Student' and u.id =${id}
 `,
       {
         type: QueryTypes.SELECT,
@@ -115,10 +118,68 @@ const deleteFeedbackByStu = async (req, res) => {
   }
 };
 
+const studentFeedbackSubAll = async (req, res) => {
+  try {
+    const userData = await db.sequelize.query(
+      `
+      select u.id ,u.userId ,s.email ,s.name ,u.name as feedbackName ,u.feedback ,u.courseId ,u.rating,c.course,u.subCourseId ,s2.subcourses  
+      from userfeedbacks u 
+      inner join studentdetails s on s.user_id =u.userId and s.institutionId =u.institutionId 
+      inner join courses c on c.course_id =u.courseId and c.Institute =u.institutionId
+      inner join subcourses s2 on s2.subcourses_id =u.subCourseId and s2.InstituteId =u.institutionId 
+      where s.isDelete =false and u.isDelete =false  and s.role='Student'
+      order by u.id desc
+        `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({
+      msg: `student Feedback Subcourses all data are...`,
+      data: userData,
+    });
+  } catch (err) {
+    console.log(err);
+    res
+      .status(500)
+      .json({ msg: `student Feedback Subcourse all data not found ...`, err });
+  }
+};
+
+const studentFeedbackSubById = async (req, res) => {
+  const { id } = req.query;
+  try {
+    const userData = await db.sequelize.query(
+      `
+      select u.id ,u.userId ,s.email ,s.name ,u.name as feedbackName ,u.feedback ,u.courseId ,
+      u.rating,c.course,u.subCourseId ,s2.subcourses  
+      from userfeedbacks u 
+      inner join studentdetails s on s.user_id =u.userId and s.institutionId =u.institutionId 
+      inner join courses c on c.course_id =u.courseId and c.Institute =u.institutionId
+      inner join subcourses s2 on s2.subcourses_id =u.subCourseId and s2.InstituteId =u.institutionId 
+      where s.isDelete =false and u.isDelete =false  and s.role='Student' and u.id =${id}
+       `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `student Feedback Subcourse By Id are...`, data: userData });
+  } catch (err) {
+    console.log(err);
+    res
+      .status(200)
+      .json({ msg: `student Feedback Subcourse By Id not found `, err });
+  }
+};
+
 module.exports = {
   insertFeedbackByStu,
   studentFeedbackAll,
   studentFeedbackById,
   updateFeedbackByStu,
   deleteFeedbackByStu,
+  studentFeedbackSubAll,
+  studentFeedbackSubById,
 };
