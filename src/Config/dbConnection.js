@@ -135,4 +135,9 @@ db.studentlimit = require("../model/studentLimitModel")(
   Sequelize,
   DataTypes
 );
+db.geolocation=require('../model/geoLocationModel')(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
 module.exports = db;

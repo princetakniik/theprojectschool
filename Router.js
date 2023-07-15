@@ -26,4 +26,5 @@ module.exports = (app) => {
   require("./src/api-route/studentsFeedbackRoute")(app);
   require("./src/api-route/teacherFeedbackRoute")(app);
   require("./src/api-route/studentLimitRoute")(app);
+  require("./src/api-route/middlewareRoute")(app);
 };
