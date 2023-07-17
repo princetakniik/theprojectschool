@@ -7,6 +7,7 @@ const inserAssignment = async (req, res) => {
   try {
     const assignmentData = await assignment.create({
       assignmentsName: rest.assignmentsName,
+      assignmentsPaths:rest.assignmentsPaths,
       lastDate: rest.lastDate,
       instituteId: rest.instituteId,
       courseId: rest.courseId,
@@ -27,10 +28,11 @@ const getAllAssignment = async (req, res) => {
   try {
     const assignmentData = await db.sequelize.query(
       `
-select a.id ,a.assignmentsName ,a.lastDate ,a.instituteId ,a.courseId ,a.subCourseId ,a.userId ,s.subcourses 
-from assignments a 
-inner join subcourses s on s.subcourses_id =a.subCourseId && s.InstituteId =a.instituteId 
-where s.isDelete =false && a.isDelete =false 
+      select a.id ,a.assignmentsName ,a.assignmentsPaths ,a.lastDate ,a.instituteId ,a.courseId ,
+      a.subCourseId ,a.userId ,s.subcourses 
+      from assignments a 
+      inner join subcourses s on s.subcourses_id =a.subCourseId && s.InstituteId =a.instituteId 
+      where s.isDelete =false && a.isDelete =false 
 `,
       {
         type: QueryTypes.SELECT,
@@ -50,10 +52,11 @@ const getAssignmentById = async (req, res) => {
   try {
     const assignmentData = await db.sequelize.query(
       `
-select a.assignmentsName ,a.lastDate ,a.instituteId ,a.courseId ,a.subCourseId ,a.userId ,s.subcourses 
-from assignments a 
-inner join subcourses s on s.subcourses_id =a.subCourseId && s.InstituteId =a.instituteId 
-where s.isDelete =false && a.isDelete =false && id=${id}
+      select a.id ,a.assignmentsName ,a.assignmentsPaths ,a.lastDate ,a.instituteId ,a.courseId ,
+      a.subCourseId ,a.userId ,s.subcourses 
+      from assignments a  
+      inner join subcourses s on s.subcourses_id =a.subCourseId && s.InstituteId =a.instituteId 
+      where s.isDelete =false && a.isDelete =false && id=${id}
 
 `,
       {
@@ -75,6 +78,7 @@ const updateAssignment = async (req, res) => {
   try {
     const data = {
       assignmentsName: rest.assignmentsName,
+      assignmentsPaths:rest.assignmentsPaths,
       lastDate: rest.lastDate,
       instituteId: rest.instituteId,
       courseId: rest.courseId,

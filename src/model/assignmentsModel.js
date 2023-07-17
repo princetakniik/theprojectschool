@@ -10,6 +10,9 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       assignmentsName: {
         type: DataTypes.STRING,
       },
+      assignmentsPaths: {
+        type: DataTypes.STRING(1000),
+      },
       lastDate: {
         type: DataTypes.DATEONLY,
         field: "lastDate",
