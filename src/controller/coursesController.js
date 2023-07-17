@@ -36,6 +36,22 @@ const insertCourses = async (req, res) => {
   }
 };
 
+const getCoursesAll = async (req, res) => {
+  try {
+    const getData = await courses.findAll({
+      where: {
+        isDelete: false,
+      },
+    });
+    res
+      .status(200)
+      .json({ msg: "get courses successfully all ", data: getData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "data get successfully", err });
+  }
+};
+
 const getCourses = async (req, res) => {
   try {
     const getData = await courses.findAll({
@@ -116,6 +132,7 @@ const deleteCoursesById = async (req, res) => {
 
 module.exports = {
   insertCourses,
+  getCoursesAll,
   getCourses,
   getCoursesById,
   updateCoursesById,

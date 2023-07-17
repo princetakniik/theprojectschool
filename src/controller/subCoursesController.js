@@ -40,6 +40,27 @@ const insertsubCourses = async (req, res) => {
   }
 };
 
+const getsubCoursesAll = async (req, res) => {
+  try {
+    const getData = await db.sequelize.query(
+      `select s.subcourses_id ,s.InstituteId ,s.courseId ,s.subcourses ,s.startTime ,s.endTime  
+      from subcourses s 
+      where s.isDelete =false `,
+      {
+        //&& ad.date=${date}
+        type: QueryTypes.SELECT,
+      }
+    );
+    console.log("data", getData);
+    res
+      .status(200)
+      .json({ msg: "get sub courses successfully all ", data: getData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "data get successfully", err });
+  }
+};
+
 const getsubCourses = async (req, res) => {
   try {
     const getData = await db.sequelize.query(
@@ -178,6 +199,7 @@ const getToken = async (req, res) => {
 
 module.exports = {
   insertsubCourses,
+  getsubCoursesAll,
   getsubCourses,
   getsubCoursesById,
   updatesubCoursesById,
