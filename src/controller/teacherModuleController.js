@@ -11,6 +11,8 @@ const insertTeacherModule = async (req, res) => {
       subcourseId: rest.subcourseId,
       userId: rest.userId,
       teachDate: rest.teachDate,
+      startTime: rest.startTime,
+      endTime: rest.endTime,
     });
     res
       .status(200)
@@ -25,7 +27,8 @@ const getTeacherModule = async (req, res) => {
   try {
     const moduleData = await db.sequelize.query(
       `
-      select t.id,s.user_id ,s.name,s2.subcourses ,t.instituteId ,t.subcourseId ,t.teachDate  ,c.course ,c.course_id 
+      select t.id,s.user_id ,s.name,s2.subcourses ,t.instituteId ,t.subcourseId ,t.teachDate  ,
+      c.course ,c.course_id,t.startTime ,t.endTime 
       from studentdetails s 
       inner join subcourses s2 on s2.InstituteId =s.institutionId 
       inner join teachermodules t on t.instituteId =s2.InstituteId && s2.subcourses_id =t.subcourseId && t.userId =s.user_id 
@@ -50,7 +53,8 @@ const TeacherModuleById = async (req, res) => {
   try {
     const teacherData = await db.sequelize.query(
       `
-select t.id,s.user_id ,s.name,s2.subcourses ,t.instituteId ,t.subcourseId ,t.teachDate  ,c.course ,c.course_id 
+select t.id,s.user_id ,s.name,s2.subcourses ,t.instituteId ,t.subcourseId ,t.teachDate  ,c.course ,
+c.course_id ,t.startTime ,t.endTime 
 from studentdetails s 
 inner join subcourses s2 on s2.InstituteId =s.institutionId 
 inner join teachermodules t on t.instituteId =s2.InstituteId && s2.subcourses_id =t.subcourseId && t.userId =s.user_id 
@@ -83,6 +87,8 @@ const updateTeacherModule = async (req, res) => {
       subcourseId: rest.subcourseId,
       userId: rest.userId,
       teachDate: rest.teachDate,
+      startTime: rest.startTime,
+      endTime: rest.endTime,
     };
     const updateData = await teachermodule.update(data, {
       where: {
@@ -125,5 +131,5 @@ module.exports = {
   getTeacherModule,
   TeacherModuleById,
   updateTeacherModule,
-  deleteTeacherModule
+  deleteTeacherModule,
 };

@@ -26,6 +26,12 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
         type: DataTypes.DATEONLY,
         field: "teachDate",
       },
+      startTime: {
+        type: DataTypes.TIME,
+      },
+      endTime: {
+        type: DataTypes.TIME,
+      },
       isDelete: {
         type: DataTypes.BOOLEAN,
         allowNull: true,
