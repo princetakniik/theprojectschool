@@ -27,13 +27,12 @@ const getTeacherModule = async (req, res) => {
   try {
     const moduleData = await db.sequelize.query(
       `
-      select t.id,s.user_id ,s.name,s2.subcourses ,t.instituteId ,t.subcourseId ,t.teachDate  ,
+      SELECT t.id,s.user_id ,s.name,t.instituteId ,t.subcourseId ,t.teachDate  ,
       c.course ,c.course_id,t.startTime ,t.endTime 
-      from studentdetails s 
-      inner join subcourses s2 on s2.InstituteId =s.institutionId 
-      inner join teachermodules t on t.instituteId =s2.InstituteId && s2.subcourses_id =t.subcourseId && t.userId =s.user_id 
-      inner join courses c on c.course_id =t.courseId && c.Institute =t.instituteId 
-      where s.isDelete =false && s2.isDelete =false && t.isDelete =false && t.teachDate =current_date() 
+      FROM studentdetails s 
+      inner join teachermodules t on t.userId =s.user_id 
+      inner join courses c on c.course_id =t.courseId 
+      where s.role='Teacher' and s.isDelete =FALSE and t.isDelete =FALSE and c.isDelete =FALSE 
 `,
       {
         type: QueryTypes.SELECT,
@@ -53,14 +52,13 @@ const TeacherModuleById = async (req, res) => {
   try {
     const teacherData = await db.sequelize.query(
       `
-select t.id,s.user_id ,s.name,s2.subcourses ,t.instituteId ,t.subcourseId ,t.teachDate  ,c.course ,
-c.course_id ,t.startTime ,t.endTime 
-from studentdetails s 
-inner join subcourses s2 on s2.InstituteId =s.institutionId 
-inner join teachermodules t on t.instituteId =s2.InstituteId && s2.subcourses_id =t.subcourseId && t.userId =s.user_id 
-inner join courses c on c.course_id =t.courseId && c.Institute =t.instituteId 
-where s.isDelete =false && s2.isDelete =false && t.isDelete =false && t.teachDate =current_date()
- && t.courseId =${courseId} && t.instituteId =${instituteId}
+      SELECT t.id,s.user_id ,s.name,t.instituteId ,t.subcourseId ,t.teachDate  ,
+      c.course ,c.course_id,t.startTime ,t.endTime 
+      FROM studentdetails s 
+      inner join teachermodules t on t.userId =s.user_id 
+      inner join courses c on c.course_id =t.courseId 
+      where s.role='Teacher' and s.isDelete =FALSE and t.isDelete =FALSE and c.isDelete =FALSE 
+      && t.courseId =${courseId} && t.instituteId =${instituteId}
 `,
       {
         type: QueryTypes.SELECT,
