@@ -29,11 +29,10 @@ const getAllAssignment = async (req, res) => {
     const assignmentData = await db.sequelize.query(
       `
       select a.id ,a.assignmentsName ,a.assignmentsPaths ,a.lastDate ,a.instituteId ,a.courseId ,
-      a.subCourseId ,a.userId ,s.subcourses ,c.course 
+      a.subCourseId ,a.userId  ,c.course 
       from assignments a 
-      inner join subcourses s on s.subcourses_id =a.subCourseId 
       inner join courses c on c.course_id =a.courseId  
-      where s.isDelete =false && a.isDelete =false 
+      where  a.isDelete =false && c.isDelete =FALSE 
 `,
       {
         type: QueryTypes.SELECT,
@@ -54,11 +53,10 @@ const getAssignmentById = async (req, res) => {
     const assignmentData = await db.sequelize.query(
       `
       select a.id ,a.assignmentsName ,a.assignmentsPaths ,a.lastDate ,a.instituteId ,a.courseId ,
-      a.subCourseId ,a.userId ,s.subcourses,c.course  
-      from assignments a  
-      inner join subcourses s on s.subcourses_id =a.subCourseId 
-      inner join courses c on c.course_id =a.courseId 
-      where s.isDelete =false && a.isDelete =false && id=${id}
+      a.subCourseId ,a.userId  ,c.course 
+      from assignments a 
+      inner join courses c on c.course_id =a.courseId  
+      where  a.isDelete =false && c.isDelete =FALSE  && id=${id}
 
 `,
       {

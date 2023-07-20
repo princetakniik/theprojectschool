@@ -29,7 +29,7 @@ const getSetAttendance = async (req, res) => {
          select a.id ,a.minAttendance ,a.coursesId ,a.institutionId ,a.startDate ,a.endDate 
          from attendanceadmins a 
          where a.isDelete =false 
-`,
+    `,
       {
         type: QueryTypes.SELECT,
       }
@@ -145,7 +145,8 @@ const allAttendanceModuleCD = async (req, res) => {
      inner join attendances a on a.institutionId =s.institutionId && a.user_id =s.user_id 
      inner join courses c on c.course_id =a.coursesId && c.Institute =a.institutionId 
      inner join attendanceadmins a2 on a2.coursesId =c.course_id && a2.institutionId =a.institutionId 
-     where s.isDelete =FALSE && a.isDelete =FALSE && c.isDelete =FALSE && a2.isDelete =false && s.role='Student' && a.date=CURRENT_DATE()
+     where s.isDelete =FALSE && a.isDelete =FALSE && c.isDelete =FALSE && a2.isDelete =false && 
+     s.role='Student' && a.date=CURRENT_DATE()
      order by a.date DESC 
   `,
       {

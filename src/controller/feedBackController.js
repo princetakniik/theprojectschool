@@ -18,9 +18,9 @@ const getFeedback = async (req, res) => {
   try {
     const getdata = await db.sequelize.query(
       `select f.id ,f.email,f.name,f.image,f.feedback 
-      from feedBacks f  
-where f.institutionId =${instituteId} && isDelete =false 
-order by id desc `,
+       from feedBacks f  
+       where f.institutionId =${instituteId} && isDelete =false 
+       order by id desc `,
       {
         type: QueryTypes.SELECT,
       }

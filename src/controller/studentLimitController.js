@@ -54,7 +54,8 @@ const getStudentLimitById = async (req, res) => {
   const { instituteId } = req.query;
   try {
     const userData = await db.sequelize.query(
-      `select s.instituteId ,s.maxNoOfStudents ,i.InstituteName ,i.InstituteLogo ,s2.user_id ,s2.name 
+      `select s.instituteId ,s.maxNoOfStudents ,i.InstituteName ,i.InstituteLogo ,s2.user_id ,
+      s2.name 
        from studentlimits s 
        inner join institutes i on i.institute_id =s.instituteId 
        inner join studentdetails s2 on s2.institutionId =s.instituteId 
