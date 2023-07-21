@@ -186,14 +186,15 @@ const videoNotViewUserModule = async (req, res) => {
   try {
     const videoData = await db.sequelize.query(
       `
-select s.user_id ,u.id as videoId ,u.videoName ,u.subCourseId ,u.instituteId,u.videosPaths
- from studentdetails s 
-inner join uploadvideos u on u.instituteId =s.institutionId 
-where u.instituteId =${instituteId} && u.courseId=${courseId} && u.isDelete =false && s.role ='Student' &&
- (u.id,s.user_id ) not in
-(select v.videoId as id , v.userId as user_id  from viewvideos v where v.isDelete=false &&
-   v.courseId=${courseId}  && v.instituteId=${instituteId})
-`,
+       select s.user_id ,u.id as videoId ,u.videoName ,u.subCourseId ,u.instituteId,u.videosPaths,
+       u.courseId 
+       from studentdetails s 
+       inner join uploadvideos u on u.instituteId =s.institutionId 
+       where u.instituteId =${instituteId} && u.courseId=${courseId} && u.isDelete =false 
+       && s.role ='Student' && (u.id,s.user_id ) not in
+       (select v.videoId as id , v.userId as user_id  from viewvideos v where v.isDelete=false &&
+       v.courseId=${courseId}  && v.instituteId=${instituteId})
+       `,
       {
         type: QueryTypes.SELECT,
       }

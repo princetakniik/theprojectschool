@@ -1,25 +1,25 @@
-const {emailveryfi} =require('../Config/dbConnection');
+const { emailveryfi } = require("../Config/dbConnection");
 
-const VeryfiEmail   = async (req,res)=>{
-try{
-    const {email,otp} =req.body
-const veryfi =await emailveryfi.findOne({
-    where:{
-        email
+const VeryfiEmail = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    const veryfi = await emailveryfi.findOne({
+      where: {
+        email,
+      },
+    });
+    if (otp === veryfi.otp) {
+      console.log("email veryfi...");
+      res.send({ msg: "email is veryfied ...." });
+    } else {
+      res.send({ msg: "mail is not veryfied..." });
     }
-})
-if(otp===veryfi.otp){
-    console.log('email veryfi...');
-    res.send({msg:'email is veryfied ....'})
-}else{
-    res.send({msg:'mail is not veryfied...'})
-}
-}catch(err){
+  } catch (err) {
     console.log(err);
-res.status(500).json({msg:'email not veryfied ...',err})
-}
-}
+    res.status(500).json({ msg: "email not veryfied ...", err });
+  }
+};
 
-module.exports ={
-    VeryfiEmail
-}
+module.exports = {
+  VeryfiEmail,
+};
