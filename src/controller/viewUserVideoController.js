@@ -134,12 +134,12 @@ const getViewVideoModule = async (req, res) => {
   const { id } = req.query;
   try {
     const viewData = await db.sequelize.query(
-      `select v.id ,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoId ,v.videoMin ,
-v.videoSawMin ,v.status,u.videosPaths ,u.videoName  ,c.course 
-from viewvideos v
-inner join uploadvideos u on u.id =v.videoId 
-inner join courses c on c.course_id =u.courseId 
-where u.isDelete=false && v.isDelete =false && c.isDelete =false  && v.id =${id}
+    `select v.id ,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoId ,v.videoMin ,
+     v.videoSawMin ,v.status,u.videosPaths ,u.videoName  ,c.course 
+     from viewvideos v
+     inner join uploadvideos u on u.id =v.videoId 
+     inner join courses c on c.course_id =u.courseId 
+     where u.isDelete=false && v.isDelete =false && c.isDelete =false  && v.id =${id}
 `,
       {
         type: QueryTypes.SELECT,
@@ -159,15 +159,15 @@ const videoNotViewUser = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-select s.user_id ,u.id as videoId ,u.videoName ,u.subCourseId ,u.instituteId,u.videosPaths
- from studentdetails s 
-inner join uploadvideos u on u.instituteId =s.institutionId 
-where u.instituteId =${instituteId} && u.subCourseId =${subcoursesId} && u.isDelete =false && s.role ='Student' &&
- (u.id,s.user_id ) not in
-(select v.videoId as id , v.userId as user_id  from viewvideos v where v.isDelete=false &&
-   v.subCourseId=${subcoursesId} && v.instituteId=${instituteId})
+    select s.user_id ,u.id as videoId ,u.videoName ,u.subCourseId ,u.instituteId,u.videosPaths
+    from studentdetails s 
+    inner join uploadvideos u on u.instituteId =s.institutionId 
+    where u.instituteId =${instituteId} && u.subCourseId =${subcoursesId} && u.isDelete =false 
+    && s.role ='Student' && (u.id,s.user_id ) not in
+    (select v.videoId as id , v.userId as user_id  from viewvideos v where v.isDelete=false &&
+    v.subCourseId=${subcoursesId} && v.instituteId=${instituteId})
 
-`,
+   `,
       {
         type: QueryTypes.SELECT,
       }
