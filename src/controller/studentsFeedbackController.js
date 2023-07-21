@@ -51,7 +51,7 @@ const studentFeedbackById = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-      select u.id ,u.userId ,s.email ,s.name ,u.name as feedbackName ,u.feedback ,u.courseId ,u.rating,c.course  
+      select DISTINCT u.id ,u.userId ,s.email ,s.name ,u.name as feedbackName ,u.feedback ,u.courseId ,u.rating,c.course  
       from userfeedbacks u 
       inner join studentdetails s on s.user_id =u.userId and s.institutionId =u.institutionId 
       inner join courses c on c.course_id =u.courseId and c.Institute =u.institutionId
