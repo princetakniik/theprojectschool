@@ -13,6 +13,8 @@ const inserUserAssignment = async (req, res) => {
       courseId: rest.courseId,
       subCourseId: rest.subCourseId,
       userId: rest.userId,
+      uploadPath:rest.uploadPath,
+      status:rest.status
     });
     res
       .status(200)
@@ -28,7 +30,8 @@ const getUserAssignment = async (req, res) => {
     const getUserData = await db.sequelize.query(
       `
       select u.id ,u.assignmentPaths ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate 
-      ,u.userId ,u.subCourseId ,u.instituteId ,case when u.marks is not null then u.marks else '0' end as marks 
+      ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPath ,u.status ,
+      case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
       inner join assignments a on a.id =u.assignmentsId
       where u.isDelete =false && a.isDelete =false 
@@ -50,7 +53,8 @@ const getUserAssignmentById = async (req, res) => {
     const getUserData = await db.sequelize.query(
       `
         select u.id ,u.assignmentPaths ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate 
-        ,u.userId ,u.subCourseId ,u.instituteId,case when u.marks is not null then u.marks else '0' end as marks  
+        ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPath ,u.status,
+        case when u.marks is not null then u.marks else '0' end as marks  
         from userassignments u 
         inner join assignments a on a.id =u.assignmentsId
         where u.isDelete =false && a.isDelete =false && u.userId =${userId} && u.assignmentsId =${assignmentsId}
@@ -124,7 +128,8 @@ const assignmentNotUploadUser = async(req,res)=>{
     const {instituteId,subCourseId}=req.query
     try{
 const userData = await db.sequelize.query(`
-select s.user_id ,a.id as assignmentsId,a.assignmentsName ,a.lastDate ,a.instituteId ,a.subCourseId  from studentdetails s 
+select s.user_id ,a.id as assignmentsId,a.assignmentsName ,a.lastDate ,a.instituteId ,a.subCourseId 
+ from studentdetails s 
 inner join assignments a on a.instituteId =s.institutionId 
 where a.isDelete =false  && s.role='Student' && a.instituteId =${instituteId} && a.subCourseId =${subCourseId} 
 && (a.id,s.user_id) not in (select u.assignmentsId as id ,u.userId as user_id  from userassignments u 
