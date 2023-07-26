@@ -13,8 +13,8 @@ const inserUserAssignment = async (req, res) => {
       courseId: rest.courseId,
       subCourseId: rest.subCourseId,
       userId: rest.userId,
-      uploadPath:rest.uploadPath,
-      status:rest.status
+      uploadPath: rest.uploadPath,
+      status: rest.status,
     });
     res
       .status(200)
@@ -35,6 +35,29 @@ const getUserAssignment = async (req, res) => {
       from userassignments u 
       inner join assignments a on a.id =u.assignmentsId
       where u.isDelete =false && a.isDelete =false 
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({ msg: `UserAssignment are`, data: getUserData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `UserAssignment are not found ...`, err });
+  }
+};
+
+const getUserAssignmentByUserId = async (req, res) => {
+  const { userId } = req.query;
+  try {
+    const getUserData = await db.sequelize.query(
+      `
+      select u.id ,u.assignmentPaths ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate 
+      ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPath ,u.status ,
+      case when u.marks is not null then u.marks else '0' end as marks 
+      from userassignments u 
+      inner join assignments a on a.id =u.assignmentsId
+      where u.isDelete =false && a.isDelete =false and u.userId =${userId} 
 `,
       {
         type: QueryTypes.SELECT,
@@ -82,7 +105,7 @@ const updateUserAssignment = async (req, res) => {
       courseId: rest.courseId,
       subCourseId: rest.subCourseId,
       userId: rest.userId,
-      marks:rest.marks
+      marks: rest.marks,
     };
     const updateData = await userassignment.update(data, {
       where: {
@@ -124,51 +147,62 @@ const deleteUserAssignment = async (req, res) => {
   }
 };
 
-const assignmentNotUploadUser = async(req,res)=>{
-    const {instituteId,subCourseId}=req.query
-    try{
-const userData = await db.sequelize.query(`
+const assignmentNotUploadUser = async (req, res) => {
+  const { instituteId, subCourseId } = req.query;
+  try {
+    const userData = await db.sequelize.query(
+      `
 select s.user_id ,a.id as assignmentsId,a.assignmentsName ,a.lastDate ,a.instituteId ,a.subCourseId 
  from studentdetails s 
 inner join assignments a on a.instituteId =s.institutionId 
 where a.isDelete =false  && s.role='Student' && a.instituteId =${instituteId} && a.subCourseId =${subCourseId} 
 && (a.id,s.user_id) not in (select u.assignmentsId as id ,u.userId as user_id  from userassignments u 
 where u.isDelete=false && u.instituteId=${instituteId} && u.subCourseId=${subCourseId})
-`,{
-    type:QueryTypes.SELECT
-})
-res.status(200).json({msg:`assignment Not Upload User data are...`,data:userData})
-    }catch(err){
-        console.log(err);
-        res.status(500).json({msg:`assignment Not Upload User data not found...`,err})
-    }
-}
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `assignment Not Upload User data are...`, data: userData });
+  } catch (err) {
+    console.log(err);
+    res
+      .status(500)
+      .json({ msg: `assignment Not Upload User data not found...`, err });
+  }
+};
 
-const assignmentNotsubmitte = async(req,res)=>{
-  try{
-const userData = await db.sequelize.query(`
+const assignmentNotsubmitte = async (req, res) => {
+  try {
+    const userData = await db.sequelize.query(
+      `
 select s.user_id ,s.name ,s.email ,a.assignmentsName ,a.id ,a.lastDate ,a.subCourseId 
 from studentdetails s 
 inner join assignments a on a.instituteId =s.institutionId 
 where s.role='Student' && s.isDelete =false && a.isDelete =false && a.lastDate<current_date()  
 && (a.id,s.user_id) not in 
 (select u.assignmentsId as id ,u.userId as user_id  from userassignments u where u.isDelete=false)
-`,{
-  type:QueryTypes.SELECT
-})
-return userData
-  }catch(err){
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    return userData;
+  } catch (err) {
     console.log(err);
-    res.status(500).json({msg:`not send sms to student ...`,err})
+    res.status(500).json({ msg: `not send sms to student ...`, err });
   }
-}
+};
 
 module.exports = {
   inserUserAssignment,
   getUserAssignment,
+  getUserAssignmentByUserId,
   getUserAssignmentById,
   updateUserAssignment,
   deleteUserAssignment,
   assignmentNotUploadUser,
-  assignmentNotsubmitte
+  assignmentNotsubmitte,
 };

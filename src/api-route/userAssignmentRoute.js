@@ -6,11 +6,15 @@ const {
   deleteUserAssignment,
   assignmentNotUploadUser,
   assignmentNotsubmitte,
+  getUserAssignmentByUserId,
 } = require("../controller/userAssignmentController");
 
 module.exports = (app) => {
   app.post("/inserUserAssignment", (req, res) => inserUserAssignment(req, res));
   app.get("/getUserAssignment", (req, res) => getUserAssignment(req, res));
+  app.get("/getUserAssignmentByUserId", (req, res) =>
+    getUserAssignmentByUserId(req, res)
+  );
   app.get("/getUserAssignmentById", (req, res) =>
     getUserAssignmentById(req, res)
   );
