@@ -5,7 +5,7 @@ const IPData = require("ipdata");
 const { geolocation } = require("../Config/dbConnection");
 const db = require("../Config/dbConnection");
 const { QueryTypes } = require("sequelize");
-const WorldCities = require('worldcities');
+const WorldCities = require("worldcities");
 
 const geoLocation = async (req, res) => {
   const { ...rest } = req.body;
@@ -37,12 +37,12 @@ const getLocation = async (req, res) => {
         type: QueryTypes.SELECT,
       }
     );
-  res.status(200).json({ msg: `location data are....`, data: locationData });
+    res.status(200).json({ msg: `location data are....`, data: locationData });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `location data not found`, err });
   }
-}
+};
 
 const getLocationById = async (req, res) => {
   const { id } = req.query;
@@ -192,13 +192,13 @@ const fetchLocationName = async (req, res) => {
   try {
     const response = await axios.get(url);
     console.log("currency Symbol", response.data);
-   
-const currency={
-  Symbol:response.data.currency.symbol,
-  native:response.data.currency.native,
-  code:response.data.currency.code
-}
-console.log('currency',currency);
+
+    const currency = {
+      Symbol: response.data.currency.symbol,
+      native: response.data.currency.native,
+      code: response.data.currency.code,
+    };
+    console.log("currency", currency);
     const result = {
       userId: rest.userId,
       ip: response.data.ip,
@@ -224,34 +224,30 @@ console.log('currency',currency);
 };
 
 const getLocationBylatlon = async (req, res) => {
-  const apiKey = 'YOUR_API_KEY';
-const placeName = 'New York City'; // The place name you want to geocode
+  const apiKey = "YOUR_API_KEY";
+  const placeName = "New York City"; // The place name you want to geocode
 
-axios
-  .get('https://maps.googleapis.com/maps/api/geocode/json', {
-    params: {
-      address: placeName,
-      key: Config.api_key,
-    },
-  })
-  .then((response) => {
-    const { results } = response.data;
-    if (results.length > 0) {
-      const { lat, lng } = results[0].geometry.location;
-      console.log('Latitude:', lat);
-      console.log('Longitude:', lng);
-    } else {
-      console.log('No results found for the given place name.');
-    }
-  })
-  .catch((error) => {
-    console.error('Error:', error.message);
-  });
+  axios
+    .get("https://maps.googleapis.com/maps/api/geocode/json", {
+      params: {
+        address: placeName,
+        key: Config.api_key,
+      },
+    })
+    .then((response) => {
+      const { results } = response.data;
+      if (results.length > 0) {
+        const { lat, lng } = results[0].geometry.location;
+        console.log("Latitude:", lat);
+        console.log("Longitude:", lng);
+      } else {
+        console.log("No results found for the given place name.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error.message);
+    });
 };
-
-
-
-
 
 module.exports = {
   getDistance,

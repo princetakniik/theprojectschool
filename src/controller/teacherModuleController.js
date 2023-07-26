@@ -33,6 +33,7 @@ const getTeacherModule = async (req, res) => {
       inner join teachermodules t on t.userId =s.user_id 
       inner join courses c on c.course_id =t.courseId 
       where s.role='Teacher' and s.isDelete =FALSE and t.isDelete =FALSE and c.isDelete =FALSE 
+      ORDER by t.id DESC 
 `,
       {
         type: QueryTypes.SELECT,
@@ -59,7 +60,8 @@ const TeacherModuleById = async (req, res) => {
       inner join courses c on c.course_id =t.courseId 
       where s.role='Teacher' and s.isDelete =FALSE and t.isDelete =FALSE and c.isDelete =FALSE 
       && t.courseId =${courseId} && t.instituteId =${instituteId}
-`,
+      ORDER by t.id DESC 
+       `,
       {
         type: QueryTypes.SELECT,
       }
