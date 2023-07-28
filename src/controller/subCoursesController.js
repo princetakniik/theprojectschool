@@ -122,7 +122,7 @@ const updatesubCoursesById = async (req, res) => {
         isDelete: false,
       },
     });
- 
+
     if (courseData == null) {
       res
         .status(400)
@@ -137,6 +137,21 @@ const updatesubCoursesById = async (req, res) => {
       });
       if (instituteName == null) {
         const updateData = await subcourses.update(rest, {
+          where: {
+            isDelete: false,
+            subcourses_id: subcourses_id,
+          },
+        });
+        res.status(200).json({
+          msg: `update courses successfully ${subcourses_id}`,
+          data: updateData,
+        });
+      } else if (instituteName != null) {
+        const data = {
+          startDate: rest.startDate,
+          endDate: rest.endDate,
+        };
+        const updateData = await subcourses.update(data, {
           where: {
             isDelete: false,
             subcourses_id: subcourses_id,
