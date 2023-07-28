@@ -119,8 +119,10 @@ const allAttendanceModuleM = async (req, res) => {
       inner join attendances a on a.institutionId =s.institutionId && a.user_id =s.user_id 
       inner join courses c on c.course_id =a.coursesId && c.Institute =a.institutionId 
       inner join attendanceadmins a2 on a2.coursesId =c.course_id && a2.institutionId =a.institutionId 
+      inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
       where s.isDelete =FALSE && a.isDelete =FALSE && c.isDelete =FALSE && a2.isDelete =false && 
-      s.role='Student' && DATE_FORMAT(a.date,"%Y-%m") = DATE_FORMAT('${date}',"%Y-%m")
+      s.role='Student' && DATE_FORMAT(a.date,"%Y-%m") = DATE_FORMAT('${date}',"%Y-%m") 
+      and a.date BETWEEN s2.startDate and s2.endDate
       order by a.date DESC 
   `,
       {
@@ -145,8 +147,9 @@ const allAttendanceModuleCD = async (req, res) => {
      inner join attendances a on a.institutionId =s.institutionId && a.user_id =s.user_id 
      inner join courses c on c.course_id =a.coursesId && c.Institute =a.institutionId 
      inner join attendanceadmins a2 on a2.coursesId =c.course_id && a2.institutionId =a.institutionId 
+     inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
      where s.isDelete =FALSE && a.isDelete =FALSE && c.isDelete =FALSE && a2.isDelete =false && 
-     s.role='Student' && a.date=CURRENT_DATE()
+     s.role='Student' && a.date=CURRENT_DATE() and a.date BETWEEN s2.startDate and s2.endDate
      order by a.date DESC 
   `,
       {
@@ -173,8 +176,10 @@ const AttendanceModuleWiseM = async (req, res) => {
       inner join attendances a on a.institutionId =s.institutionId && a.user_id =s.user_id 
       inner join courses c on c.course_id =a.coursesId && c.Institute =a.institutionId 
       inner join attendanceadmins a2 on a2.coursesId =c.course_id && a2.institutionId =a.institutionId 
+      inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
       where s.isDelete =FALSE && a.isDelete =FALSE && c.isDelete =FALSE && a2.isDelete =false && s.role='Student' &&
-      DATE_FORMAT(a.date, "%Y-%m") = DATE_FORMAT('${date}', "%Y-%m") && c.course_id =${courseId}
+      DATE_FORMAT(a.date, "%Y-%m") = DATE_FORMAT('${date}', "%Y-%m") && c.course_id =${courseId} 
+      and a.date BETWEEN s2.startDate and s2.endDate
       order by a.date DESC
   `,
       {
@@ -198,7 +203,9 @@ const AttendanceModuleWiseCD = async (req, res) => {
       inner join attendances a on a.institutionId =s.institutionId && a.user_id =s.user_id 
       inner join courses c on c.course_id =a.coursesId && c.Institute =a.institutionId 
       inner join attendanceadmins a2 on a2.coursesId =c.course_id && a2.institutionId =a.institutionId
-      where s.isDelete =FALSE && a.isDelete =FALSE && c.isDelete =FALSE && a2.isDelete =false && s.role='Student' && a.date=CURRENT_DATE() && c.course_id =${courseId}
+      inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
+      where s.isDelete =FALSE && a.isDelete =FALSE && c.isDelete =FALSE && a2.isDelete =false && s.role='Student' 
+      && a.date=CURRENT_DATE() && c.course_id =${courseId} and a.date BETWEEN s2.startDate and s2.endDate
       order by a.date DESC
   `,
       {
@@ -272,7 +279,8 @@ const weeklyAttendance = async (req, res) => {
             inner join institutes i on i.institute_id =a.institutionId 
             inner join courses c on c.course_id =a.coursesId 
             inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
-            where YEARWEEK(a.date, 1) = YEARWEEK( CURDATE() - INTERVAL 0 WEEK, 1)
+            where YEARWEEK(a.date, 1) = YEARWEEK( CURDATE() - INTERVAL 0 WEEK, 1) 
+            and a.date BETWEEN s2.startDate and s2.endDate
             order by a.date desc
                `,
       {
@@ -301,7 +309,8 @@ const weeklyAttendanceById = async (req, res) => {
       inner join institutes i on i.institute_id =a.institutionId 
       inner join courses c on c.course_id =a.coursesId 
       inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
-      where YEARWEEK(a.date, 1) = YEARWEEK( CURDATE() - INTERVAL 0 WEEK, 1) and a.user_id=${userId}
+      where YEARWEEK(a.date, 1) = YEARWEEK( CURDATE() - INTERVAL 0 WEEK, 1) and a.user_id=${userId} 
+      and a.date BETWEEN s2.startDate and s2.endDate
       order by a.date desc 
        `,
       {
@@ -330,7 +339,8 @@ const fifteenDayAttendance = async (req, res) => {
     inner join institutes i on i.institute_id =a.institutionId 
     inner join courses c on c.course_id =a.coursesId 
     inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
-    where a.date > (current_date()  - interval 15 day) and a.user_id=${userId}
+    where a.date > (current_date()  - interval 15 day) and a.user_id=${userId} 
+    and a.date BETWEEN s2.startDate and s2.endDate
     order by a.date desc 
     `,
       {
@@ -356,7 +366,8 @@ const attendanceSubmoduleCD = async (req, res) => {
       inner join attendances a on a.institutionId =s.institutionId and a.user_id =s.user_id 
       inner join courses c on c.course_id =a.coursesId and c.Institute =a.institutionId 
       inner join subcourses s2 on s2.subcourses_id =a.subCoursesId and s2.InstituteId =a.institutionId 
-      where s.isDelete =false and a.isDelete =false and s2.isDelete =false and s.role='Student' and a.date=current_date() 
+      where s.isDelete =false and a.isDelete =false and s2.isDelete =false and s.role='Student' 
+      and a.date=current_date() and a.date BETWEEN s2.startDate and s2.endDate
       `,
       {
         type: QueryTypes.SELECT,
@@ -385,7 +396,7 @@ const attendanceSubmoduleM = async (req, res) => {
       inner join courses c on c.course_id =a.coursesId and c.Institute =a.institutionId 
       inner join subcourses s2 on s2.subcourses_id =a.subCoursesId and s2.InstituteId =a.institutionId 
       where s.isDelete =false and a.isDelete =false and s2.isDelete =false and s.role='Student' and
-      DATE_FORMAT(a.date,"%Y-%m") = DATE_FORMAT('${date}',"%Y-%m")
+      DATE_FORMAT(a.date,"%Y-%m") = DATE_FORMAT('${date}',"%Y-%m") and a.date BETWEEN s2.startDate and s2.endDate
       `,
       {
         type: QueryTypes.SELECT,
@@ -411,7 +422,7 @@ const attendanceSubmoduleCDById = async (req, res) => {
       inner join courses c on c.course_id =a.coursesId and c.Institute =a.institutionId 
       inner join subcourses s2 on s2.subcourses_id =a.subCoursesId and s2.InstituteId =a.institutionId 
       where s.isDelete =false and a.isDelete =false and s2.isDelete =false and s.role='Student' and 
-      a.date=current_date() and a.subCoursesId =${subCoursesId}
+      a.date=current_date() and a.subCoursesId =${subCoursesId} and a.date BETWEEN s2.startDate and s2.endDate
       `,
       {
         type: QueryTypes.SELECT,
@@ -438,7 +449,8 @@ const attendanceSubmoduleMById = async (req, res) => {
       inner join courses c on c.course_id =a.coursesId and c.Institute =a.institutionId 
       inner join subcourses s2 on s2.subcourses_id =a.subCoursesId and s2.InstituteId =a.institutionId 
       where s.isDelete =false and a.isDelete =false and s2.isDelete =false and s.role='Student' and 
-      DATE_FORMAT(a.date,"%Y-%m") = DATE_FORMAT('${date}',"%Y-%m") and a.subCoursesId =${subCoursesId}
+      DATE_FORMAT(a.date,"%Y-%m") = DATE_FORMAT('${date}',"%Y-%m") and a.subCoursesId =${subCoursesId} 
+      and a.date BETWEEN s2.startDate and s2.endDate
    `,
       {
         type: QueryTypes.SELECT,

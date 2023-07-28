@@ -122,7 +122,8 @@ const getAttendanceSt = async (req, res) => {
              inner join courses c on c.course_id =a.coursesId 
             inner join subcourses s2 on s2.subcourses_id =a.subCoursesId
             inner join studentdetails as s on s.user_id =a.user_id  
-            where s.role='Student' && a.date = CURRENT_DATE() && a.isDelete =false`,
+            where s.role='Student' && a.date = CURRENT_DATE() && a.isDelete =false 
+            and a.date BETWEEN s2.startDate and s2.endDate ` ,
       {
         //&& ad.date=${date}
         type: QueryTypes.SELECT,
@@ -147,7 +148,8 @@ const getAttendanceTe = async (req, res) => {
             inner join institutes i on i.institute_id =a.institutionId 
             inner join courses c on c.course_id =a.coursesId 
             inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
-            where s.role='Teacher' && a.date = CURRENT_DATE() && a.isDelete =false`,
+            where s.role='Teacher' && a.date = CURRENT_DATE() && a.isDelete =false 
+            and a.date BETWEEN s2.startDate and s2.endDate `,
       {
         type: QueryTypes.SELECT,
       }
@@ -172,7 +174,8 @@ const getAttendanceByid = async (req, res) => {
             inner join institutes i on i.institute_id =a.institutionId 
             inner join courses c on c.course_id =a.coursesId 
             inner join subcourses s2 on s2.subcourses_id =a.subCoursesId  
-            where a.user_id=${userId} && a.date = CURRENT_DATE() && a.isDelete =false`,
+            where a.user_id=${userId} && a.date = CURRENT_DATE() && a.isDelete =false 
+            and a.date BETWEEN s2.startDate and s2.endDate `,
       {
         type: QueryTypes.SELECT,
       }
@@ -198,7 +201,8 @@ const getAttendanceCM = async (req, res) => {
             inner join institutes i on i.institute_id =a.institutionId 
             inner join courses c on c.course_id =a.coursesId 
             inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
-            where a.user_id=${userId} && DATE_FORMAT(a.date, "%Y %m") =DATE_FORMAT(CURRENT_DATE(), "%Y %m") && a.isDelete =false `,
+            where a.user_id=${userId} && DATE_FORMAT(a.date, "%Y %m") =DATE_FORMAT(CURRENT_DATE(),
+             "%Y %m") && a.isDelete =false and a.date BETWEEN s2.startDate and s2.endDate `,
       {
         type: QueryTypes.SELECT,
       }
@@ -223,7 +227,8 @@ const getAttendanceSummeryMonthly = async (req, res) => {
             inner join institutes i on i.institute_id =a.institutionId 
             inner join courses c on c.course_id =a.coursesId 
             inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
-            where a.user_id=${userId} && DATE_FORMAT(a.date, "%Y-%m") =DATE_FORMAT('${date}', "%Y-%m") && a.isDelete =false`,
+            where a.user_id=${userId} && DATE_FORMAT(a.date, "%Y-%m") =DATE_FORMAT('${date}', 
+            "%Y-%m") && a.isDelete =false and a.date BETWEEN s2.startDate and s2.endDate `,
       {
         type: QueryTypes.SELECT,
       }
@@ -251,7 +256,8 @@ const getAttendanceBetweenMonth = async (req, res) => {
             inner join institutes i on i.institute_id =a.institutionId 
             inner join courses c on c.course_id =a.coursesId 
             inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
-            where a.user_id=${userId} && DATE_FORMAT(a.date, "%Y-%m-%d") BETWEEN '${startDate}' AND '${endDate}' && a.isDelete =false`,
+            where a.user_id=${userId} && DATE_FORMAT(a.date, "%Y-%m-%d") BETWEEN '${startDate}' 
+            AND '${endDate}' && a.isDelete =false and a.date BETWEEN s2.startDate and s2.endDate `,
       {
         type: QueryTypes.SELECT,
       }
@@ -350,7 +356,8 @@ const getAttendanceSubCourses = async (req, res) => {
     from attendances a 
     inner join subcourses s on s.subcourses_id =a.subCoursesId && s.InstituteId =a.institutionId
     inner join studentdetails s2 on s2.user_id =a.user_id 
-    where s.subcourses_id=${subcourses_id} && s.InstituteId =${InstituteId} && s2.role='Student' && s2.isDelete=FALSE `,
+    where s.subcourses_id=${subcourses_id} && s.InstituteId =${InstituteId} && s2.role='Student' 
+    && s2.isDelete=FALSE and a.date BETWEEN s.startDate and s.endDate `,
       {
         type: QueryTypes.SELECT,
       }
