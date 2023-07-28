@@ -368,7 +368,8 @@ const getAttendanceByInstituteCourse = async (req, res) => {
     const {institutionId,course_id}=req.query
     const userData = await db.sequelize.query(
       `
-     select s.user_id ,s.email ,s.name ,a.isPersent ,a.coursesId ,a.institutionId ,c.course,s2.startDate ,s2.endDate  
+     select s.user_id ,s.email ,s.name ,a.isPersent ,a.coursesId ,a.institutionId ,c.course,s2.startDate ,
+     s2.endDate ,a.subCoursesId,s2.subcourses   
      from studentdetails s 
      inner join attendances a on a.user_id =s.user_id and a.institutionId =s.institutionId 
      inner join courses c on c.course_id =a.coursesId and c.Institute =a.institutionId 
