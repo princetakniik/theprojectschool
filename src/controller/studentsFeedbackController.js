@@ -175,7 +175,7 @@ const studentFeedbackSubById = async (req, res) => {
 };
 
 const studentFeedbackByInstitute = async (req, res) => {
-  const { institutionId } = req.query;
+  const { institutionId} = req.query;
   try {
     const feedbackData = await db.sequelize.query(
       `
@@ -186,7 +186,7 @@ const studentFeedbackByInstitute = async (req, res) => {
       inner join institutes i on u.institutionId =i.institute_id 
       INNER join courses c on c.course_id =u.courseId 
       where u.isDelete =FALSE and s.isDelete =FALSE and i.isDelete =FALSE and c.isDelete =false and s.role='Student' and 
-      u.institutionId =${institutionId}
+      u.institutionId=${institutionId}
       `,
       {
         type: QueryTypes.SELECT,
