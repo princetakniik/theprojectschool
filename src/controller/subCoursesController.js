@@ -43,7 +43,8 @@ const insertsubCourses = async (req, res) => {
 const getsubCoursesAll = async (req, res) => {
   try {
     const getData = await db.sequelize.query(
-      `select s.subcourses_id ,s.InstituteId ,s.courseId ,s.subcourses ,s.startTime ,s.endTime  
+      `select s.subcourses_id ,s.InstituteId ,s.courseId ,s.subcourses ,s.startTime ,s.endTime,
+      s.startDate ,s.endDate    
       from subcourses s 
       where s.isDelete =false `,
       {
@@ -65,7 +66,7 @@ const getsubCourses = async (req, res) => {
   try {
     const getData = await db.sequelize.query(
       `select s.subcourses_id,s.subcourses ,s.courseId ,c.course,s.InstituteId,i.InstituteName,
-        s.startTime ,s.endTime 
+        s.startTime ,s.endTime,s.startDate ,s.endDate   
         from subcourses s 
         inner join courses c on c.course_id =s.courseId 
         inner join institutes i on i.institute_id =s.InstituteId  
@@ -90,7 +91,7 @@ const getsubCoursesById = async (req, res) => {
   try {
     const getData = await db.sequelize.query(
       `select s.subcourses_id,s.subcourses ,s.courseId ,c.course,s.InstituteId,i.InstituteName,
-        s.startTime ,s.endTime 
+        s.startTime ,s.endTime,s.startDate ,s.endDate   
         from subcourses s 
         inner join courses c on c.course_id =s.courseId 
         inner join institutes i on i.institute_id =s.InstituteId 
