@@ -150,6 +150,8 @@ const updatesubCoursesById = async (req, res) => {
         const data = {
           startDate: rest.startDate,
           endDate: rest.endDate,
+          startTime: rest.startTime,
+          endTime: rest.endTime,
         };
         const updateData = await subcourses.update(data, {
           where: {
