@@ -174,6 +174,39 @@ const studentFeedbackSubById = async (req, res) => {
   }
 };
 
+const studentFeedbackByInstitute = async (req, res) => {
+  const { institutionId } = req.query;
+  try {
+    const feedbackData = await db.sequelize.query(
+      `
+      SELECT DISTINCT u.id ,u.userId ,s.email ,s.name ,u.name as feedbackName ,u.feedback ,
+      u.courseId ,u.rating,c.course,u.institutionId 
+      from userfeedbacks u 
+      inner join studentdetails s on s.user_id =u.userId 
+      inner join institutes i on u.institutionId =i.institute_id 
+      INNER join courses c on c.course_id =u.courseId 
+      where u.isDelete =FALSE and s.isDelete =FALSE and i.isDelete =FALSE and c.isDelete =false and s.role='Student' and 
+      u.institutionId =${institutionId}
+      `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({
+      msg: `feedback data are by institute id ${institutionId}...`,
+      feedbackData,
+    });
+  } catch (err) {
+    console.log(err);
+    res
+      .status(500)
+      .json(
+        { msg: `feedback data not found by institute Id ${institutionId}` },
+        err
+      );
+  }
+};
+
 module.exports = {
   insertFeedbackByStu,
   studentFeedbackAll,
@@ -182,4 +215,5 @@ module.exports = {
   deleteFeedbackByStu,
   studentFeedbackSubAll,
   studentFeedbackSubById,
+  studentFeedbackByInstitute,
 };

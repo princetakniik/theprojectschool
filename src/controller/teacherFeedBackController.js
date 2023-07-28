@@ -134,10 +134,42 @@ const deleteFeedbackByTea = async (req, res) => {
   }
 };
 
+const teacherFeedbackByInstitute = async (req, res) => {
+  const { institutionId } = req.query;
+  try {
+    const feedbackData = await db.sequelize.query(
+      `
+    select u.id ,u.userId as teacherId,u.name ,u.feedback ,u.institutionId ,u.courseId ,u.subCourseId,
+    u.rating ,u.studentId ,s2.name as studentName,u.responsiveness ,u.attentive ,u.politeness,c.course
+    from userfeedbacks u 
+    inner join studentdetails s on s.user_id =u.userId and s.institutionId =u.institutionId 
+    inner join studentdetails s2 on s2.user_id =u.studentId 
+    inner join courses c on c.course_id =u.courseId  
+    where s.role ='Teacher' and s.isDelete =false and u.isDelete =false and s2.isDelete =false and
+     u.institutionId =${institutionId}
+     `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({
+      msg: `teacher feedback data are institute id : ${institutionId}`,
+      data: feedbackData,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      msg: `teacher feedback data are institute id : ${institutionId} is not found `,
+      err,
+    });
+  }
+};
+
 module.exports = {
   insertFeedbackTeac,
   teacherFeedbackAll,
   teacherFeedbackById,
   updateFeedbackByTea,
   deleteFeedbackByTea,
+  teacherFeedbackByInstitute,
 };

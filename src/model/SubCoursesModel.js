@@ -17,6 +17,12 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     token: {
       type: DataTypes.STRING(1000),
     },
+    startDate: {
+      type: DataTypes.DATEONLY,
+    },
+    endDate: {
+      type: DataTypes.DATEONLY,
+    },
     startTime: {
       type: DataTypes.TIME,
     },
