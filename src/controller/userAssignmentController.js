@@ -110,7 +110,6 @@ const updateUserAssignment = async (req, res) => {
     };
     const updateData = await userassignment.update(data, {
       where: {
-        userId: rest.userId,
         id: id,
         isDelete: false,
       },
