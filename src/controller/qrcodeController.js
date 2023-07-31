@@ -11,9 +11,7 @@ const jwt = require("jsonwebtoken");
 const Config = require("../Config/config");
 const moment = require("moment");
 const QRCode = require("qrcode");
-const job = nodeCron.schedule("05 55 23 * * *", function () {
-  absent();
-});
+
 const { generateQRCode } = require("../middleware/QrCodeGenerate");
 const upload = require("../middleware/uploadQr");
 
