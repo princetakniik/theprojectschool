@@ -84,7 +84,8 @@ const createAttendance = async (req, res) => {
         type: QueryTypes.SELECT,
       }
     );
-    console.log("subCourseData", subCourseData);
+   // console.log("subCourseData", subCourseData);
+ 
     if (getData === null) {
       res.status(400).json({ msg: "user details is not persent" });
     } else if (getData.role == "Admin") {
@@ -97,12 +98,10 @@ const createAttendance = async (req, res) => {
       res.status(400).json({ msg: "courseData is not persent" });
     } else if (subcourseData === null) {
       res.status(400).json({ msg: "subcourseData is not persent" });
-    } else if (subCourseData === null) {
-      res
-        .status(400)
-        .json({
-          msg: `date is not between in startDate and endDate in subCourse`,
-        });
+    } else if (subCourseData.length === 0) {
+      res.status(400).json({
+        msg: `date is not between in startDate and endDate in subCourse`,
+      });
     } else if (getAttendance !== null) {
       res.status(400).json({ msg: `user is Allready persent ${user_id}` });
     } else {
