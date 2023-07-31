@@ -180,24 +180,26 @@ const assignmentNotsubmitte = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-    select s.user_id ,s.name ,s.email ,a.assignmentsName ,a.id ,a.lastDate ,a.subCourseId 
-    from studentdetails s 
-    inner join assignments a on a.instituteId =s.institutionId 
-    where s.role='Student' && s.isDelete =false && a.isDelete =false && a.lastDate<current_date()  
-    && (a.id,s.user_id) not in 
-    (select u.assignmentsId as id ,u.userId as user_id  from userassignments u 
-      where u.isDelete=false)
+      select s.user_id ,s.name ,s.email ,a.assignmentsName ,a.id ,a.lastDate ,a.subCourseId 
+      from studentdetails s 
+      inner join assignments a on a.instituteId =s.institutionId 
+      where s.role='Student' && s.isDelete =false && a.isDelete =false && a.lastDate<current_date()  
+      && (a.id,s.user_id) not in 
+      (select u.assignmentsId as id ,u.userId as user_id  from userassignments u 
+        where u.isDelete=false)
      `,
       {
         type: QueryTypes.SELECT,
       }
     );
-    return userData;
+    res.status(200).json({msg:`assignment data Not submitte are...`,data:userData})
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `not send sms to student ...`, err });
   }
-};
+}
+
+
 
 module.exports = {
   inserUserAssignment,
