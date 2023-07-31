@@ -77,7 +77,7 @@ const createAttendance = async (req, res) => {
     const subCourseData = await db.sequelize.query(
       `
          select * FROM subcourses s 
-         where s.isDelete =FALSE and ${date} BETWEEN s.startDate and s.endDate and 
+         where s.isDelete =FALSE and '${date}' BETWEEN s.startDate and s.endDate and 
          s.subcourses_id =${subCoursesId}
        `,
       {
