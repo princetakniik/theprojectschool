@@ -55,7 +55,7 @@ const getSubcoursesUser = async (req, res) => {
        inner join courses c on c.course_id=us.course_id
        inner join subcourses s on s.subcourses_id =us.subcourses_id
        where us.isDelete=false 
-       group by us.user_id`,
+       group by us.user_id,us.Institute_id,us.teacher_id`,
       {
         type: QueryTypes.SELECT,
       }
@@ -77,7 +77,7 @@ const getUserSubcoursesByuser_id = async (req, res) => {
        inner join courses c on c.course_id=us.course_id
        inner join subcourses s on s.subcourses_id =us.subcourses_id
       where us.isDelete=false && us.user_id=${req.query.user_id}
-      group by us.user_id`,
+      group by us.user_id,us.Institute_id,us.teacher_id`,
       {
         type: QueryTypes.SELECT,
       }
@@ -99,7 +99,7 @@ const getUserSubcourse = async (req, res) => {
        inner join courses c on c.course_id=us.course_id
        inner join subcourses s on s.subcourses_id =us.subcourses_id
        where us.isDelete=false 
-       group by us.user_id`,
+       group by us.user_id,us.Institute_id,us.teacher_id`,
       {
         type: QueryTypes.SELECT,
       }
