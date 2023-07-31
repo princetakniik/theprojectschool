@@ -97,25 +97,31 @@ const createAttendance = async (req, res) => {
       res.status(400).json({ msg: "courseData is not persent" });
     } else if (subcourseData === null) {
       res.status(400).json({ msg: "subcourseData is not persent" });
+    } else if (subCourseData === null) {
+      res
+        .status(400)
+        .json({
+          msg: `date is not between in startDate and endDate in subCourse`,
+        });
     } else if (getAttendance !== null) {
       res.status(400).json({ msg: `user is Allready persent ${user_id}` });
     } else {
-      console.log('att',attendance);
-      // const createData = await attendance.create({
-      //   user_id: user_id,
-      //   Comment: Comment,
-      //   isPersent: isPersent,
-      //   section: section,
-      //   class: Class,
-      //   coursesId: coursesId,
-      //   institutionId: institutionId,
-      //   subCoursesId: subCoursesId,
-      //   date: date,
-      // });
-      // console.log("createData", createData);
-      // res
-      //   .status(200)
-      //   .json({ msg: `user is persent today ${user_id}`, data: createData });
+      console.log("att", attendance);
+      const createData = await attendance.create({
+        user_id: user_id,
+        Comment: Comment,
+        isPersent: isPersent,
+        section: section,
+        class: Class,
+        coursesId: coursesId,
+        institutionId: institutionId,
+        subCoursesId: subCoursesId,
+        date: date,
+      });
+      console.log("createData", createData);
+      res
+        .status(200)
+        .json({ msg: `user is persent today ${user_id}`, data: createData });
     }
   } catch (err) {
     console.log(err);
