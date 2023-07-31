@@ -14,10 +14,13 @@ const absent = async (req, res) => {
   //console.log("CURRENT_DATE", CURRENT_DATE);
   try {
     const getData = await db.sequelize.query(
-      `select u.course_id ,u2.subcourses_id,u.Institute_id,u.user_id  from usercourses u 
+      `select u.course_id ,u2.subcourses_id,u.Institute_id,u.user_id  
+      from usercourses u 
       inner join usersubcourses u2 on u2.user_id =u.user_id && u.course_id =u2.course_id
-      where u.isDelete=false && u2.isDelete =false && u2.subcourses_id  not in
-       (select a.subCoursesId from attendances a  
+      inner join subcourses s on s.subcourses_id =u2.subcourses_id 
+      where u.isDelete=false && u2.isDelete =false and s.isDelete =FALSE  
+      and CURRENT_DATE() BETWEEN s.startDate and s.endDate && (u2.subcourses_id,u2.user_id)  not in
+       (select a.subCoursesId as subcourses_id,a.user_id  from attendances a  
        where u.user_id =a.user_id && u.course_id =a.coursesId && u2.subcourses_id =a.subCoursesId 
        && a.date=CURRENT_DATE()  && a.isPersent='1') `,
       {

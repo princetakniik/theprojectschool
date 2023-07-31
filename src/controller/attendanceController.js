@@ -74,6 +74,17 @@ const createAttendance = async (req, res) => {
     });
     //console.log("subcourseData", subcourseData);
 
+    const subCourseData = await db.sequelize.query(
+      `
+         select * FROM subcourses s 
+         where s.isDelete =FALSE and ${date} BETWEEN s.startDate and s.endDate and 
+         s.subcourses_id =${subCoursesId}
+       `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    console.log("subCourseData", subCourseData);
     if (getData === null) {
       res.status(400).json({ msg: "user details is not persent" });
     } else if (getData.role == "Admin") {
@@ -89,21 +100,22 @@ const createAttendance = async (req, res) => {
     } else if (getAttendance !== null) {
       res.status(400).json({ msg: `user is Allready persent ${user_id}` });
     } else {
-      const createData = await attendance.create({
-        user_id: user_id,
-        Comment: Comment,
-        isPersent: isPersent,
-        section: section,
-        class: Class,
-        coursesId: coursesId,
-        institutionId: institutionId,
-        subCoursesId: subCoursesId,
-        date: date,
-      });
-      console.log("createData", createData);
-      res
-        .status(200)
-        .json({ msg: `user is persent today ${user_id}`, data: createData });
+      console.log('att',attendance);
+      // const createData = await attendance.create({
+      //   user_id: user_id,
+      //   Comment: Comment,
+      //   isPersent: isPersent,
+      //   section: section,
+      //   class: Class,
+      //   coursesId: coursesId,
+      //   institutionId: institutionId,
+      //   subCoursesId: subCoursesId,
+      //   date: date,
+      // });
+      // console.log("createData", createData);
+      // res
+      //   .status(200)
+      //   .json({ msg: `user is persent today ${user_id}`, data: createData });
     }
   } catch (err) {
     console.log(err);
@@ -123,7 +135,7 @@ const getAttendanceSt = async (req, res) => {
             inner join subcourses s2 on s2.subcourses_id =a.subCoursesId
             inner join studentdetails as s on s.user_id =a.user_id  
             where s.role='Student' && a.date = CURRENT_DATE() && a.isDelete =false 
-            and a.date BETWEEN s2.startDate and s2.endDate ` ,
+            and a.date BETWEEN s2.startDate and s2.endDate `,
       {
         //&& ad.date=${date}
         type: QueryTypes.SELECT,
@@ -372,7 +384,7 @@ const getAttendanceSubCourses = async (req, res) => {
 
 const getAttendanceByInstituteCourse = async (req, res) => {
   try {
-    const {institutionId,course_id}=req.query
+    const { institutionId, course_id } = req.query;
     const userData = await db.sequelize.query(
       `
      select s.user_id ,s.email ,s.name ,a.isPersent ,a.coursesId ,a.institutionId ,c.course,s2.startDate ,
