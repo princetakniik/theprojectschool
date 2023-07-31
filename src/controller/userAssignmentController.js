@@ -107,6 +107,8 @@ const updateUserAssignment = async (req, res) => {
       subCourseId: rest.subCourseId,
       userId: rest.userId,
       marks: rest.marks,
+      status: rest.status,
+      uploadPath:rest.uploadPath
     };
     const updateData = await userassignment.update(data, {
       where: {
