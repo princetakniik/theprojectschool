@@ -1,6 +1,7 @@
 const { userassignment } = require("../Config/dbConnection");
 const { QueryTypes } = require("sequelize");
 const db = require("../Config/dbConnection");
+const nodeCron = require("node-cron");
 
 const inserUserAssignment = async (req, res) => {
   const { ...rest } = req.body;
@@ -108,7 +109,7 @@ const updateUserAssignment = async (req, res) => {
       userId: rest.userId,
       marks: rest.marks,
       status: rest.status,
-      uploadPath:rest.uploadPath
+      uploadPath: rest.uploadPath,
     };
     const updateData = await userassignment.update(data, {
       where: {
@@ -192,14 +193,148 @@ const assignmentNotsubmitte = async (req, res) => {
         type: QueryTypes.SELECT,
       }
     );
-    res.status(200).json({msg:`assignment data Not submitte are...`,data:userData})
+    res
+      .status(200)
+      .json({ msg: `assignment data Not submitte are...`, data: userData });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `not send sms to student ...`, err });
   }
-}
+};
 
+const assignmentPending = async (req, res) => {
+  try {
+    const userData = await db.sequelize.query(
+      `
+      select a.id ,a.lastDate ,a.subCourseId ,u.status,s.user_id ,s.email ,s.name 
+      FROM userassignments u 
+      inner join assignments a on a.id =u.assignmentsId 
+      INNER join studentdetails s on s.user_id =u.userId 
+      where u.status ='Pending' and s.isDelete =FALSE and a.isDelete =FALSE and u.isDelete =FALSE 
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `user assignment pending are ...`, data: userData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `pending assignment not found` });
+  }
+};
 
+const assignmentPendingByUser = async (req, res) => {
+  const { userId } = req.query;
+  try {
+    const userData = await db.sequelize.query(
+      `
+     select a.id ,a.lastDate ,a.subCourseId ,u.status,s.user_id ,s.email ,s.name 
+     FROM userassignments u 
+     inner join assignments a on a.id =u.assignmentsId 
+     INNER join studentdetails s on s.user_id =u.userId 
+     where u.status ='Pending' and s.isDelete =FALSE and a.isDelete =FALSE and 
+     u.isDelete =FALSE and u.userId = ${userId}
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `user assignment pending are ...`, data: userData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `pending assignment not found` });
+  }
+};
+
+const job = nodeCron.schedule("05 45 23 * * *", function () {
+  assignmentPendingInsert();
+});
+
+const assignmentPendingInsert = async (req, res) => {
+  try {
+    const userData = await db.sequelize.query(
+      `
+    select a.id ,a.lastDate ,a.subCourseId ,u.status,s.user_id ,s.email ,s.name 
+    FROM userassignments u 
+    inner join assignments a on a.id =u.assignmentsId 
+    INNER join studentdetails s on s.user_id =u.userId 
+    where u.status ='Created' and s.isDelete =FALSE and a.isDelete =FALSE and 
+    u.isDelete =FALSE and a.lastDate = CURRENT_DATE()
+    `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    console.log("getdata", userData);
+    let resultData = [];
+    for (let i = 0; i < userData.length; i++) {
+      var ObjAssignment = {
+        assignmentsId: userData[i].id,
+        status: "Pending",
+        subCourseId: userData[i].subCourseId,
+      };
+      const pendingAssignment = await userassignment.update(ObjAttendence, {
+        where: {
+          assignmentsId: userData[i].id,
+          userId: userData[i].user_id,
+          subCourseId: userData[i].subCourseId,
+        },
+      });
+      resultData.push(pendingAssignment);
+    }
+    console.log("todayAbsent", resultData);
+    res.json({ msg: `assignment pending are ....` });
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
+
+setInterval(function () {
+  assignmentInsert();
+}, 30 * 60 * 1000);
+const assignmentInsert = async (req, res) => {
+  try {
+    const userData = await db.sequelize.query(
+      `
+     select DISTINCT (a.instituteId ) as instituteId, a.id ,a.assignmentsPaths ,a.courseId ,
+     a.subCourseId ,us.user_id  from usercourses u 
+     inner join usersubcourses us on us.course_id =u.course_id
+     inner join assignments a on a.courseId =us.course_id and a.subCourseId =us.subcourses_id 
+     WHERE a.isDelete =FALSE and us.isDelete =FALSE and u.isDelete =false and 
+     (a.id,a.instituteId,a.courseId,a.subCourseId,us.user_id) not in 
+     (select ua.assignmentsId as id,ua.instituteId ,ua.courseId ,ua.subCourseId ,ua.userId as user_id
+     FROM userassignments ua where ua.isDelete =FALSE) 
+     `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    console.log("userData", userData);
+    let resultData = [];
+    for (let i = 0; i < userData.length; i++) {
+      var ObjAssignment = {
+        assignmentsId: userData[i].id,
+        status: "Created",
+        subCourseId: userData[i].subCourseId,
+        userId: userData[i].user_id,
+        assignmentPaths: userData[i].assignmentsPaths,
+        instituteId: userData[i].instituteId,
+        courseId: userData[i].courseId,
+      };
+      const createAssignment = await userassignment.create(ObjAssignment);
+      resultData.push(createAssignment);
+    }
+    console.log("createAssignment", resultData);
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
 
 module.exports = {
   inserUserAssignment,
@@ -210,4 +345,6 @@ module.exports = {
   deleteUserAssignment,
   assignmentNotUploadUser,
   assignmentNotsubmitte,
+  assignmentPending,
+  assignmentPendingByUser,
 };
