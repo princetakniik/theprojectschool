@@ -297,6 +297,7 @@ const assignmentPendingInsert = async (req, res) => {
 setInterval(function () {
   assignmentInsert();
 }, 30 * 60 * 1000);
+
 const assignmentInsert = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
