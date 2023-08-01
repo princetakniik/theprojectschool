@@ -184,12 +184,12 @@ const userSubCoursesCreate = async (req, res) => {
       }
     }
     console.log(resultData);
-   return resultData;
-   //res.status(200).json({ msg: `insert user subcourses`, data: resultData });
+    return resultData;
+    //res.status(200).json({ msg: `insert user subcourses`, data: resultData });
   } catch (err) {
     console.log(err);
-    return err
-   // res.status(500).json({ msg: `user subCourses not created`, err });
+    return err;
+    // res.status(500).json({ msg: `user subCourses not created`, err });
   }
 };
 
