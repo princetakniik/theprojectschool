@@ -306,7 +306,8 @@ const assignmentInsert = async (req, res) => {
      a.subCourseId ,us.user_id  from usercourses u 
      inner join usersubcourses us on us.course_id =u.course_id
      inner join assignments a on a.courseId =us.course_id and a.subCourseId =us.subcourses_id 
-     WHERE a.isDelete =FALSE and us.isDelete =FALSE and u.isDelete =false and 
+     INNER join studentdetails s on s.user_id =us.user_id 
+     WHERE a.isDelete =FALSE and us.isDelete =FALSE and u.isDelete =false and s.role='Student' and 
      (a.id,a.instituteId,a.courseId,a.subCourseId,us.user_id) not in 
      (select ua.assignmentsId as id,ua.instituteId ,ua.courseId ,ua.subCourseId ,ua.userId as user_id
      FROM userassignments ua where ua.isDelete =FALSE) 
