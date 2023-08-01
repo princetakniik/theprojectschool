@@ -115,7 +115,7 @@ const createAttendance = async (req, res) => {
 const getAttendanceSt = async (req, res) => {
   try {
     const getdata = await db.sequelize.query(
-      `select s.name ,s.phone ,i.institute_id ,s.email ,c.course_id ,s2.subcourses_id ,
+      `select s.name ,a.user_id,s.phone ,i.institute_id ,s.email ,c.course_id ,s2.subcourses_id ,
       s.class ,s.section ,s.profilePhoto,i.InstituteName,c.course,
       s2.subcourses ,a.isPersent ,a.Comment,a.date   
             from attendances as a
@@ -141,7 +141,7 @@ const getAttendanceSt = async (req, res) => {
 const getAttendanceTe = async (req, res) => {
   try {
     const getdata = await db.sequelize.query(
-      `select s.name ,s.phone ,i.institute_id ,s.email ,c.course_id ,s2.subcourses_id,
+      `select s.name ,a.user_id,s.phone ,i.institute_id ,s.email ,c.course_id ,s2.subcourses_id,
       s.user_id as teacherId ,s.profilePhoto,i.InstituteName ,c.course ,
       s2.subcourses ,a.isPersent ,a.Comment,a.section,a.class,a.date    
             from attendances as a
