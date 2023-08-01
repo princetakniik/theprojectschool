@@ -13,6 +13,7 @@ const insertVideo = async (req, res) => {
       subCourseId: rest.subCourseId,
       instituteId: rest.instituteId,
       userId: rest.userId,
+      videoImage:rest.videoImage
     });
     res
       .status(200)
@@ -27,7 +28,7 @@ const getVideos = async (req, res) => {
   try {
     const getVideos = await db.sequelize.query(
       `select u.id ,u.videosPaths,u.videoName ,u.courseId ,u.subCourseId ,u.userId ,u.instituteId,
-      s.subcourses ,c.course 
+      u.videoImage,  s.subcourses ,c.course 
       from uploadvideos u 
       inner join subcourses s on s.subcourses_id =u.subCourseId 
       inner join courses c on c.course_id =u.courseId 
@@ -50,7 +51,7 @@ const getVideoById = async (req, res) => {
   try {
     const videoData = await db.sequelize.query(`
       select u.id ,u.videosPaths,u.videoName ,u.courseId ,u.subCourseId ,u.userId ,u.instituteId ,
-      s.subcourses ,c.course 
+      u.videoImage,  s.subcourses ,c.course 
       from uploadvideos u 
       inner join subcourses s on s.subcourses_id =u.subCourseId 
       inner join courses c on c.course_id =u.courseId  
@@ -67,7 +68,7 @@ const getAllVideoModuleWise = async (req, res) => {
   try {
     const videoData = await db.sequelize.query(
       `
-      select u.id ,u.videosPaths,u.videoName ,u.courseId ,u.userId ,u.instituteId,c.course 
+      select u.id ,u.videosPaths,u.videoName ,u.courseId ,u.userId ,u.instituteId,u.videoImage, c.course 
       from uploadvideos u 
       inner join courses c on c.course_id =u.courseId 
       where u.isDelete =false && c.isDelete =false 
@@ -88,7 +89,7 @@ const getVideoModuleWise = async (req, res) => {
   try {
     const videoData = await db.sequelize.query(
       `
-      select u.id ,u.videosPaths,u.videoName ,u.courseId ,u.userId ,u.instituteId,c.course 
+      select u.id ,u.videosPaths,u.videoName ,u.courseId ,u.userId ,u.instituteId,u.videoImage, c.course 
       from uploadvideos u 
       inner join courses c on c.course_id =u.courseId 
       where u.isDelete =false && c.isDelete =false && c.course_id =${courseId}

@@ -13,6 +13,9 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       videoName: {
         type: DataTypes.STRING,
       },
+      videoImage: {
+        type: DataTypes.STRING(1000),
+      },
       instituteId: {
         type: DataTypes.INTEGER,
       },

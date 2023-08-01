@@ -64,7 +64,7 @@ const getViewUser = async (req, res) => {
     const userData = await db.sequelize.query(
       `
       select v.id,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoId ,v.videoMin ,
-      v.videoSawMin ,v.status,u.videosPaths ,u.videoName  ,s.subcourses 
+      v.videoSawMin ,v.status,u.videosPaths ,u.videoName  ,s.subcourses ,u.videoImage 
       from viewvideos v
       inner join uploadvideos u on u.id =v.videoId 
       inner join subcourses s on s.subcourses_id =u.subCourseId 
@@ -87,7 +87,7 @@ const getViewUserById = async (req, res) => {
     const userData = await db.sequelize.query(
       `
       select v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoId ,v.videoMin ,
-      v.videoSawMin ,v.status,u.videosPaths ,u.videoName  ,s.subcourses 
+      v.videoSawMin ,v.status,u.videosPaths ,u.videoName  ,s.subcourses ,u.videoImage 
       from viewvideos v
       inner join uploadvideos u on u.id =v.videoId 
       inner join subcourses s on s.subcourses_id =u.subCourseId  
@@ -111,7 +111,7 @@ const getAllViewVideoModule = async (req, res) => {
     const userData = await db.sequelize.query(
       `
       select v.id,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoId ,v.videoMin ,
-      v.videoSawMin ,v.status,u.videosPaths ,u.videoName  ,c.course 
+      v.videoSawMin ,v.status,u.videosPaths ,u.videoName  ,c.course ,u.videoImage 
       from viewvideos v
       inner join uploadvideos u on u.id =v.videoId 
       inner join courses c on c.course_id =u.courseId 
@@ -135,7 +135,7 @@ const getViewVideoModule = async (req, res) => {
   try {
     const viewData = await db.sequelize.query(
     `select v.id ,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoId ,v.videoMin ,
-     v.videoSawMin ,v.status,u.videosPaths ,u.videoName  ,c.course 
+     v.videoSawMin ,v.status,u.videosPaths ,u.videoName  ,c.course ,u.videoImage 
      from viewvideos v
      inner join uploadvideos u on u.id =v.videoId 
      inner join courses c on c.course_id =u.courseId 
@@ -159,7 +159,7 @@ const videoNotViewUser = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-    select s.user_id ,u.id as videoId ,u.videoName ,u.subCourseId ,u.instituteId,u.videosPaths
+    select s.user_id ,u.id as videoId ,u.videoName ,u.subCourseId ,u.instituteId,u.videosPaths,u.videoImage 
     from studentdetails s 
     inner join uploadvideos u on u.instituteId =s.institutionId 
     where u.instituteId =${instituteId} && u.subCourseId =${subcoursesId} && u.isDelete =false 
@@ -187,7 +187,7 @@ const videoNotViewUserModule = async (req, res) => {
     const videoData = await db.sequelize.query(
       `
        select s.user_id ,u.id as videoId ,u.videoName ,u.subCourseId ,u.instituteId,u.videosPaths,
-       u.courseId 
+       u.courseId ,u.videoImage 
        from studentdetails s 
        inner join uploadvideos u on u.instituteId =s.institutionId 
        where u.instituteId =${instituteId} && u.courseId=${courseId} && u.isDelete =false 
