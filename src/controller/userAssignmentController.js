@@ -277,7 +277,7 @@ const assignmentPendingInsert = async (req, res) => {
         status: "Pending",
         subCourseId: userData[i].subCourseId,
       };
-      const pendingAssignment = await userassignment.update(ObjAttendence, {
+      const pendingAssignment = await userassignment.update(ObjAssignment, {
         where: {
           assignmentsId: userData[i].id,
           userId: userData[i].user_id,
@@ -286,7 +286,7 @@ const assignmentPendingInsert = async (req, res) => {
       });
       resultData.push(pendingAssignment);
     }
-    console.log("todayAbsent", resultData);
+    console.log("pending Assignment are....", resultData);
     res.json({ msg: `assignment pending are ....` });
   } catch (err) {
     console.log(err);
@@ -330,6 +330,7 @@ const assignmentInsert = async (req, res) => {
       resultData.push(createAssignment);
     }
     console.log("createAssignment", resultData);
+    return resultData;
   } catch (err) {
     console.log(err);
     return err;
