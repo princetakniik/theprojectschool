@@ -3,10 +3,10 @@ const mysql = require('mysql2');
 const { Sequelize, DataTypes, QueryTypes } = require("sequelize");
 const Config = require("./config");
 var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'root',
-  database: 'school',
+  host: Config.host,
+  user: Config.user,
+  password: Config.password,
+  database: Config.database_name,
 });
 connection.connect(function (err) {
   if (err) {
@@ -20,13 +20,13 @@ connection.connect(function (err) {
 module.exports = connection;
 
 const sequelize = new Sequelize(
-  'school',
-  'root',
-  'root',
+  Config.database_name,
+  Config.user,
+  Config.password,
   {
-    port: 3306,
+    port: Config.mysql_port,
     dialect: "mysql",
-    host: 'localhost',
+    host: Config.host,
     logging: false,
   }
 );
