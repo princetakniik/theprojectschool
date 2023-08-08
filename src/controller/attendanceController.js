@@ -414,7 +414,7 @@ const getAttendanceByInstituteCourseTe = async (req, res) => {
         type: QueryTypes.SELECT,
       }
     );
-    res.status(200).json({ msg: `user data are ....`, userData });
+    res.status(200).json({ msg: `Teacher data are ....`, userData });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `data not found `, err });
