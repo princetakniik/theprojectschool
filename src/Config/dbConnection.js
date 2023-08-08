@@ -1,5 +1,5 @@
 //var mysql = require("mysql");
-const mysql = require('mysql2');
+const mysql = require("mysql2");
 const { Sequelize, DataTypes, QueryTypes } = require("sequelize");
 const Config = require("./config");
 var connection = mysql.createConnection({
@@ -136,7 +136,7 @@ db.studentlimit = require("../model/studentLimitModel")(
   Sequelize,
   DataTypes
 );
-db.geolocation=require('../model/geoLocationModel')(
+db.geolocation = require("../model/geoLocationModel")(
   sequelize,
   Sequelize,
   DataTypes
