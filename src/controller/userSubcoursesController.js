@@ -31,6 +31,7 @@ const userSubcoursesUpdate = async (req, res) => {
       Institute_id: rest.Institute_id,
       studentId_id: rest.studentId_id,
       teacher_Id: rest.teacher_Id,
+      rating: rest.rating,
     };
     const updateCourses = await usersubcourses.update(data, {
       where: {
@@ -193,6 +194,32 @@ const userSubCoursesCreate = async (req, res) => {
   }
 };
 
+const getUserRatingBySubcourses = async (req, res) => {
+  const { subcoursesId } = req.query;
+  try {
+    const userData = await db.sequelize.query(
+      `
+      select JSON_ARRAYAGG(us.subcourses_id) as subcourse_id,JSON_ARRAYAGG(s.subcourses) as subcourses,
+      JSON_ARRAYAGG(us.course_id) as course_id,JSON_ARRAYAGG(s.subcourses) as subcourses,us.user_id,us.Institute_id,us.teacher_id,
+      us.rating ,s2.email ,s2.name 
+       from usersubcourses as us
+       inner join courses c on c.course_id=us.course_id
+       inner join subcourses s on s.subcourses_id =us.subcourses_id
+       inner join studentdetails s2 on s2.user_id =us.user_id 
+       where us.isDelete=false and s2.role='Student' and s.subcourses_id =${subcoursesId}
+       group by us.user_id,us.Institute_id,us.teacher_id,us.rating ,s2.email ,s2.name 
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({ msg: `user rating data are...`, data: userData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `user rating data not found` });
+  }
+};
+
 module.exports = {
   userSubcoursesInsert,
   userSubcoursesUpdate,
@@ -201,4 +228,5 @@ module.exports = {
   getUserSubcoursesByuser_id,
   getUserSubcourse,
   userSubCoursesCreate,
+  getUserRatingBySubcourses,
 };

@@ -6,6 +6,7 @@ const {
   getUserSubcoursesByuser_id,
   getUserSubcourse,
   userSubCoursesCreate,
+  getUserRatingBySubcourses,
 } = require("../controller/userSubcoursesController");
 
 module.exports = (app) => {
@@ -17,11 +18,16 @@ module.exports = (app) => {
     getUserSubcoursesByuser_id(req, res)
   );
   app.get("/getUserSubcourse", (req, res) => getUserSubcourse(req, res));
+  app.get("/getUserRatingBySubcourses", (req, res) =>
+    getUserRatingBySubcourses(req, res)
+  );
   app.put("/userSubcoursesUpdate", (req, res) =>
     userSubcoursesUpdate(req, res)
   );
   app.delete("/userSubcoursesdelete", (req, res) =>
     userSubcoursesdelete(req, res)
   );
-  app.post('/userSubCoursesCreate',(req,res)=>userSubCoursesCreate(req,res))
+  app.post("/userSubCoursesCreate", (req, res) =>
+    userSubCoursesCreate(req, res)
+  );
 };

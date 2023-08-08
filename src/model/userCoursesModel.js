@@ -12,6 +12,9 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       teacher_id:{
         type: DataTypes.INTEGER,
       },
+      rating: {
+        type: DataTypes.INTEGER,
+      },
       isDelete: {
         type: DataTypes.BOOLEAN,
         allowNull: true,

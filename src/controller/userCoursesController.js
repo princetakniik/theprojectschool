@@ -39,6 +39,7 @@ const userCoursesUpdate = async (req, res) => {
       course_id: rest.course_id,
       Institute_id: rest.Institute_id,
       teacher_id: rest.teacher_id,
+      rating:rest.rating
     };
     const updateCourses = await usercourses.update(data, {
       where: {
@@ -58,11 +59,11 @@ const getCoursesUser = async (req, res) => {
   try {
     const getdata = await db.sequelize.query(
       `select JSON_ARRAYAGG(u.course_id) as course_id,
-      JSON_ARRAYAGG(c.course) as course,u.user_id,u.Institute_id,u.teacher_id 
+      JSON_ARRAYAGG(c.course) as course,u.user_id,u.Institute_id,u.teacher_id ,u.rating 
       from usercourses u
      inner join courses c on c.course_id =u.course_id
      where u.isDelete=false 
-         group by u.user_id,u.Institute_id,u.teacher_id `,
+         group by u.user_id,u.Institute_id,u.teacher_id,u.rating  `,
       {
         type: QueryTypes.SELECT,
       }
@@ -79,11 +80,11 @@ const getUserCoursesByuser_id = async (req, res) => {
   try {
     const getdata = await db.sequelize.query(
       `select JSON_ARRAYAGG(u.course_id) as course_id,
-      JSON_ARRAYAGG(c.course) as course,u.user_id,u.Institute_id,u.teacher_id 
+      JSON_ARRAYAGG(c.course) as course,u.user_id,u.Institute_id,u.teacher_id,u.rating 
       from usercourses u
      inner join courses c on c.course_id =u.course_id
      where u.isDelete=false && u.user_id=${req.query.user_id}
-         group by u.user_id,u.Institute_id,u.teacher_id `,
+         group by u.user_id,u.Institute_id,u.teacher_id ,u.rating`,
       {
         type: QueryTypes.SELECT,
       }
@@ -116,10 +117,35 @@ const userCoursesdelete = async (req, res) => {
   }
 };
 
+const getUserRatingByCourses = async (req, res) => {
+  const { courseId } = req.query;
+  try {
+    const userData = await db.sequelize.query(
+      `
+      select JSON_ARRAYAGG(u.course_id) as course_id,JSON_ARRAYAGG(c.course) as course,
+      u.user_id,u.Institute_id,u.teacher_id ,u.rating ,s.email ,s.name 
+      from usercourses u
+      inner join courses c on c.course_id =u.course_id
+      inner join studentdetails s on s.user_id =u.user_id 
+      where u.isDelete=false and s.role='Student' and c.course_id =${courseId}
+      group by u.user_id,u.Institute_id,u.teacher_id,u.rating,s.email ,s.name
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({ msg: `user rating data are...`, data: userData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `user rating data not found` });
+  }
+};
+
 module.exports = {
   userCoursesInsert,
   userCoursesUpdate,
   userCoursesdelete,
   getCoursesUser,
   getUserCoursesByuser_id,
+  getUserRatingByCourses,
 };

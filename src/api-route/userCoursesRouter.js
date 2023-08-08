@@ -4,6 +4,7 @@ const {
   userCoursesdelete,
   getCoursesUser,
   getUserCoursesByuser_id,
+  getUserRatingByCourses,
 } = require("../controller/userCoursesController");
 
 module.exports = (app) => {
@@ -12,6 +13,7 @@ module.exports = (app) => {
   );
   app.get('/getCoursesUser',(req,res)=>getCoursesUser(req,res));
   app.get('/getUserCoursesByuser_id',(req,res)=>getUserCoursesByuser_id(req,res));
+  app.get('/getUserRatingByCourses',(req,res)=>getUserRatingByCourses(req,res));
   app.put("/userCoursesUpdate", (req, res) =>
   userCoursesUpdate(req, res)
   );
