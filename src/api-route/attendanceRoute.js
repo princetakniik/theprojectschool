@@ -10,6 +10,7 @@ const {
   getAttendanceBetweenMonth,
   getAttendanceSubCourses,
   getAttendanceByInstituteCourse,
+  getAttendanceByInstituteCourseTe,
 } = require("../controller/attendanceController");
 
 module.exports = (app) => {
@@ -38,4 +39,8 @@ module.exports = (app) => {
   app.get("/getAttendanceByInstituteCourse", (req, res) =>
     getAttendanceByInstituteCourse(req, res)
   );
+  app.get("/getAttendanceByInstituteCourseTe", (req, res) =>
+  getAttendanceByInstituteCourseTe(req, res)
+  );
+  
 };

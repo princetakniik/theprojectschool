@@ -396,6 +396,31 @@ const getAttendanceByInstituteCourse = async (req, res) => {
   }
 };
 
+const getAttendanceByInstituteCourseTe = async (req, res) => {
+  try {
+    const { institutionId, course_id } = req.query;
+    const userData = await db.sequelize.query(
+      `
+     select s.user_id ,s.email ,s.name ,a.isPersent ,a.coursesId ,a.institutionId ,c.course,s2.startDate ,
+     s2.endDate ,a.subCoursesId,s2.subcourses   
+     from studentdetails s 
+     inner join attendances a on a.user_id =s.user_id and a.institutionId =s.institutionId 
+     inner join courses c on c.course_id =a.coursesId and c.Institute =a.institutionId 
+     inner join subcourses s2 on s2.subcourses_id =a.subCoursesId 
+     where s.isDelete =FALSE and c.isDelete =FALSE and a.isDelete =FALSE and a.institutionId =${institutionId}
+     and c.course_id =${course_id} and s.role='Teacher'  
+      `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({ msg: `user data are ....`, userData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `data not found `, err });
+  }
+};
+
 module.exports = {
   createAttendance,
   getAttendanceSt,
@@ -407,5 +432,5 @@ module.exports = {
   getAttendanceSummeryMonthly,
   getAttendanceBetweenMonth,
   getAttendanceSubCourses,
-  getAttendanceByInstituteCourse,
+  getAttendanceByInstituteCourse,getAttendanceByInstituteCourseTe
 };
