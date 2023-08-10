@@ -13,7 +13,7 @@ const moment = require("moment");
 const QRCode = require("qrcode");
 
 const { generateQRCode } = require("../middleware/QrCodeGenerate");
-const upload = require("../middleware/uploadQr");
+const upload = require("../middleware/uploadVideosMulter");
 
 const generateQR = async (req, res) => {
   try {

@@ -26,6 +26,9 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     rating: {
       type: DataTypes.INTEGER,
     },
+    coursesImage: {
+      type: DataTypes.STRING(1000),
+    },
     isDelete: {
       type: DataTypes.BOOLEAN,
       allowNull: true,

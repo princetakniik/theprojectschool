@@ -141,4 +141,9 @@ db.geolocation = require("../model/geoLocationModel")(
   Sequelize,
   DataTypes
 );
+db.uploaddata=require('../model/uploadData')(
+  sequelize,
+  Sequelize,
+  DataTypes
+);
 module.exports = db;

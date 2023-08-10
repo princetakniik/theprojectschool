@@ -13,6 +13,9 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       assignmentsPaths: {
         type: DataTypes.STRING(1000),
       },
+      filedata: {
+        type: DataTypes.BLOB("long")
+    },
       lastDate: {
         type: DataTypes.DATEONLY,
         field: "lastDate",

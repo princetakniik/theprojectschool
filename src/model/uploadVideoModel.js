@@ -10,8 +10,11 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       videosPaths: {
         type: DataTypes.STRING(1000),
       },
-      videoName: {
+      filename: {
         type: DataTypes.STRING,
+      },
+      filedata: {
+          type: DataTypes.BLOB("long")
       },
       videoImage: {
         type: DataTypes.STRING(1000),

@@ -38,6 +38,10 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       uploadPath: {
         type: DataTypes.STRING(1000),
       },
+     
+      filedata: {
+          type: DataTypes.BLOB("long")
+      },
       token: {
         type: DataTypes.STRING(1000),
       },
