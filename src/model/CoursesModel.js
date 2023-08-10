@@ -11,11 +11,20 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     course: {
       type: DataTypes.STRING,
     },
+    startDate: {
+      type: DataTypes.DATEONLY,
+    },
+    endDate: {
+      type: DataTypes.DATEONLY,
+    },
     startTime: {
       type: DataTypes.TIME,
     },
     endTime: {
       type: DataTypes.TIME,
+    },
+    rating: {
+      type: DataTypes.INTEGER,
     },
     isDelete: {
       type: DataTypes.BOOLEAN,

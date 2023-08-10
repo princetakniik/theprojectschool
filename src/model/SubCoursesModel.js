@@ -29,6 +29,9 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     endTime: {
       type: DataTypes.TIME,
     },
+    rating: {
+      type: DataTypes.INTEGER,
+    },
     isDelete: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
