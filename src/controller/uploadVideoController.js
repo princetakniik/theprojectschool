@@ -52,7 +52,7 @@ const getVideoById = async (req, res) => {
   try {
     const videoData = await db.sequelize.query(`
     select u.id ,u.videosPathsId ,u.videoImage ,u.instituteId ,u.courseId  ,u.subCourseId ,
-    s.subcourses ,c.course ,u2.fileName 
+    s.subcourses ,c.course ,u2.fileName ,u2.fileData 
     from uploadvideos u 
     inner join subcourses s on s.subcourses_id =u.subCourseId 
     inner join courses c on c.course_id =u.courseId 
