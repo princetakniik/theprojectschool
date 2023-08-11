@@ -29,7 +29,7 @@ const getAllAssignment = async (req, res) => {
     const assignmentData = await db.sequelize.query(
       `
       select a.id ,a.assignmentsName ,a.assignmentsPathsId ,a.lastDate ,a.instituteId ,a.courseId ,
-      a.subCourseId ,a.userId  ,c.course ,u.fileName 
+      a.subCourseId  ,c.course ,u.fileName 
       from assignments a 
       inner join courses c on c.course_id =a.courseId 
       inner join uploaddata u on u.id =a.assignmentsPathsId 
@@ -54,13 +54,12 @@ const getAssignmentById = async (req, res) => {
     const assignmentData = await db.sequelize.query(
       `
       select a.id ,a.assignmentsName ,a.assignmentsPathsId ,a.lastDate ,a.instituteId ,a.courseId ,
-      a.subCourseId ,a.userId  ,c.course ,u.fileName ,u.fileData 
+      a.subCourseId  ,c.course ,u.fileName 
       from assignments a 
       inner join courses c on c.course_id =a.courseId 
-      inner join uploaddata u on u.id =a.assignmentsPathsId  
-      where  a.isDelete =false && c.isDelete =FALSE  && id=${id}
-
-`,
+      inner join uploaddata u on u.id =a.assignmentsPathsId 
+      where  a.isDelete =false && c.isDelete =FALSE  && a.id=${id}
+           `,
       {
         type: QueryTypes.SELECT,
       }

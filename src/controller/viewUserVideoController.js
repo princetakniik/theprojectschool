@@ -63,12 +63,12 @@ const getViewUser = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-      select v.id,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoId ,v.videoMin ,
-      v.videoSawMin ,v.status,u.videosPathsId ,s.subcourses ,u.videoImage,u2.fileName  
-      from viewvideos v
+      SELECT v.id ,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoMin ,v.videoSawMin ,
+      v.status ,u.videosPathsId ,u.videoImage ,u2.fileName ,s.subcourses 
+      FROM viewvideos v 
       inner join uploadvideos u on u.id =v.videoId 
-      inner join subcourses s on s.subcourses_id =u.subCourseId 
-      inner join uploaddata u2 on u2.id =u.videosPathsId 
+      inner join uploaddata u2 on u2.id =u.videosPathsId  
+      INNER join subcourses s on s.subcourses_id =v.subCourseId 
       where u.isDelete=false && v.isDelete =false  
 `,
       {
@@ -87,12 +87,12 @@ const getViewUserById = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-      select v.id,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoId ,v.videoMin ,
-      v.videoSawMin ,v.status,u.videosPathsId ,s.subcourses ,u.videoImage,u2.fileName,u2.fileData   
-      from viewvideos v
+      SELECT v.id ,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoMin ,v.videoSawMin ,
+      v.status ,u.videosPathsId ,u.videoImage ,u2.fileName ,s.subcourses 
+      FROM viewvideos v 
       inner join uploadvideos u on u.id =v.videoId 
-      inner join subcourses s on s.subcourses_id =u.subCourseId 
-      inner join uploaddata u2 on u2.id =u.videosPathsId 
+      inner join uploaddata u2 on u2.id =u.videosPathsId  
+      INNER join subcourses s on s.subcourses_id =v.subCourseId
       where u.isDelete=false && v.isDelete =false  && v.id =${id}
 `,
       {
@@ -112,12 +112,12 @@ const getAllViewVideoModule = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-      select v.id,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoId ,v.videoMin ,
-      v.videoSawMin ,v.status,u.videosPathsId ,c.course ,u.videoImage,u2.fileName 
-      from viewvideos v
+      SELECT v.id ,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoMin ,v.videoSawMin ,
+      v.status ,u.videosPathsId ,u.videoImage ,u2.fileName ,s.subcourses 
+      FROM viewvideos v 
       inner join uploadvideos u on u.id =v.videoId 
-      inner join courses c on c.course_id =u.courseId 
-      inner join uploaddata u2 on u2.id =u.videosPathsId 
+      inner join uploaddata u2 on u2.id =u.videosPathsId  
+      INNER join subcourses s on s.subcourses_id =v.subCourseId
       where u.isDelete=false && v.isDelete =false 
 `,
       {
@@ -137,12 +137,12 @@ const getViewVideoModule = async (req, res) => {
   const { id } = req.query;
   try {
     const viewData = await db.sequelize.query(
-    `  select v.id,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoId ,v.videoMin ,
-    v.videoSawMin ,v.status,u.videosPathsId ,c.course ,u.videoImage,u2.fileName 
-    from viewvideos v
+    `SELECT v.id ,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoMin ,v.videoSawMin ,
+    v.status ,u.videosPathsId ,u.videoImage ,u2.fileName ,s.subcourses 
+    FROM viewvideos v 
     inner join uploadvideos u on u.id =v.videoId 
-    inner join courses c on c.course_id =u.courseId 
-    inner join uploaddata u2 on u2.id =u.videosPathsId 
+    inner join uploaddata u2 on u2.id =u.videosPathsId  
+    INNER join subcourses s on s.subcourses_id =v.subCourseId 
      where u.isDelete=false && v.isDelete =false && c.isDelete =false  && v.id =${id}
 `,
       {
