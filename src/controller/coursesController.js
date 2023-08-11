@@ -1,3 +1,5 @@
+const { QueryTypes } = require("sequelize");
+const db = require("../Config/dbConnection");
 const { courses, institute } = require("../Config/dbConnection");
 
 const insertCourses = async (req, res) => {
@@ -38,11 +40,13 @@ const insertCourses = async (req, res) => {
 
 const getCoursesAll = async (req, res) => {
   try {
-    const getData = await courses.findAll({
-      where: {
-        isDelete: false,
-      },
-    });
+    const getData = await db.sequelize.query(`
+    select c.course_id ,c.Institute ,c.course ,c.startDate ,c.endDate ,c.startTime ,c.endTime ,
+    c.rating ,c.coursesImageId ,u.fileName 
+    from courses c 
+    inner join uploaddata u on u.id =c.coursesImageId 
+    where c.isDelete =false 
+    `,{type:QueryTypes.SELECT})
     res
       .status(200)
       .json({ msg: "get courses successfully all ", data: getData });
@@ -53,13 +57,15 @@ const getCoursesAll = async (req, res) => {
 };
 
 const getCourses = async (req, res) => {
+  const {Institute}=req.query
   try {
-    const getData = await courses.findAll({
-      where: {
-        isDelete: false,
-        Institute: req.query.Institute,
-      },
-    });
+    const getData = await db.sequelize.query(`
+    select c.course_id ,c.Institute ,c.course ,c.startDate ,c.endDate ,c.startTime ,c.endTime ,
+    c.rating ,c.coursesImageId ,u.fileName  
+    from courses c 
+    inner join uploaddata u on u.id =c.coursesImageId
+    where c.isDelete =false and c.Institute =${Institute}
+    `,{type:QueryTypes.SELECT})
     res
       .status(200)
       .json({ msg: "get courses successfully all ", data: getData });
@@ -72,12 +78,13 @@ const getCourses = async (req, res) => {
 const getCoursesById = async (req, res) => {
   const { course_id, Institute } = req.query;
   try {
-    const getData = await courses.findOne({
-      where: {
-        isDelete: false,
-        course_id: course_id,
-      },
-    });
+    const getData = await db.sequelize.query(`
+    select c.course_id ,c.Institute ,c.course ,c.startDate ,c.endDate ,c.startTime ,c.endTime ,
+    c.rating ,c.coursesImageId ,u.fileName ,u.fileData 
+    from courses c 
+    inner join uploaddata u on u.id =c.coursesImageId
+    where c.isDelete =false and c.course_id =${course_id} 
+    `,{type:QueryTypes.SELECT})
     res.status(200).json({
       msg: `get courses By Id successfully ${course_id}`,
       data: getData,

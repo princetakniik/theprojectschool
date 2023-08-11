@@ -7,15 +7,15 @@ const inserUserAssignment = async (req, res) => {
   const { ...rest } = req.body;
   try {
     const insertData = await userassignment.create({
-      assignmentPaths: rest.assignmentPaths,
       assignmentsId: rest.assignmentsId,
       submitDate: rest.submitDate,
       instituteId: rest.instituteId,
       courseId: rest.courseId,
       subCourseId: rest.subCourseId,
       userId: rest.userId,
-      uploadPath: rest.uploadPath,
+      uploadPathId: rest.uploadPathId,
       status: rest.status,
+      marks: rest.marks,
     });
     res
       .status(200)
@@ -30,11 +30,12 @@ const getUserAssignment = async (req, res) => {
   try {
     const getUserData = await db.sequelize.query(
       `
-      select u.id ,u.assignmentPaths ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate 
-      ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPath ,u.status ,
+      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate 
+      ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPathId ,u.status ,u2.fileName ,
       case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
       inner join assignments a on a.id =u.assignmentsId
+      inner join uploaddata u2 on u2.id =u.uploadPathId 
       where u.isDelete =false && a.isDelete =false 
       ORDER BY u.id DESC
           `,
@@ -54,11 +55,12 @@ const getUserAssignmentByUserId = async (req, res) => {
   try {
     const getUserData = await db.sequelize.query(
       `
-      select u.id ,u.assignmentPaths ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate 
-      ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPath ,u.status ,
+      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate 
+      ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPathId ,u.status ,u2.fileName ,u2.fileData ,
       case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
       inner join assignments a on a.id =u.assignmentsId
+      inner join uploaddata u2 on u2.id =u.uploadPathId
       where u.isDelete =false && a.isDelete =false and u.userId =${userId} 
 `,
       {
@@ -77,11 +79,12 @@ const getUserAssignmentById = async (req, res) => {
   try {
     const getUserData = await db.sequelize.query(
       `
-        select u.id ,u.assignmentPaths ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate 
-        ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPath ,u.status,
-        case when u.marks is not null then u.marks else '0' end as marks  
-        from userassignments u 
-        inner join assignments a on a.id =u.assignmentsId
+      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate 
+      ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPathId ,u.status ,u2.fileName ,u2.fileData ,
+      case when u.marks is not null then u.marks else '0' end as marks 
+      from userassignments u 
+      inner join assignments a on a.id =u.assignmentsId
+      inner join uploaddata u2 on u2.id =u.uploadPathId
         where u.isDelete =false && a.isDelete =false && u.userId =${userId} && u.assignmentsId =${assignmentsId}
   `,
       {
@@ -155,12 +158,14 @@ const assignmentNotUploadUser = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-select s.user_id ,a.id as assignmentsId,a.assignmentsName ,a.lastDate ,a.instituteId ,a.subCourseId 
- from studentdetails s 
-inner join assignments a on a.instituteId =s.institutionId 
-where a.isDelete =false  && s.role='Student' && a.instituteId =${instituteId} && a.subCourseId =${subCourseId} 
-&& (a.id,s.user_id) not in (select u.assignmentsId as id ,u.userId as user_id  from userassignments u 
-where u.isDelete=false && u.instituteId=${instituteId} && u.subCourseId=${subCourseId})
+      select s.user_id ,a.id as assignmentsId,a.assignmentsName ,a.lastDate ,a.instituteId ,
+      a.subCourseId ,u2.fileName 
+      from studentdetails s 
+     inner join assignments a on a.instituteId =s.institutionId 
+     inner join uploaddata u2 on u2.id =a.assignmentsPathsId 
+     where a.isDelete =false  && s.role='Student' && a.instituteId =${instituteId} && a.subCourseId =${subCourseId} 
+     && (a.id,s.user_id) not in (select u.assignmentsId as id ,u.userId as user_id  from userassignments u 
+     where u.isDelete=false && u.instituteId=${instituteId} && u.subCourseId=${subCourseId})
 `,
       {
         type: QueryTypes.SELECT,
@@ -181,9 +186,10 @@ const assignmentNotsubmitte = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-      select s.user_id ,s.name ,s.email ,a.assignmentsName ,a.id ,a.lastDate ,a.subCourseId 
+      select s.user_id ,s.name ,s.email ,a.assignmentsName ,a.id ,a.lastDate ,a.subCourseId ,u2.fileName 
       from studentdetails s 
       inner join assignments a on a.instituteId =s.institutionId 
+      inner join uploaddata u2 on u2.id =a.assignmentsPathsId 
       where s.role='Student' && s.isDelete =false && a.isDelete =false && a.lastDate<current_date()  
       && (a.id,s.user_id) not in 
       (select u.assignmentsId as id ,u.userId as user_id  from userassignments u 
@@ -206,10 +212,11 @@ const assignmentPending = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-      select a.id ,a.lastDate ,a.subCourseId ,u.status,s.user_id ,s.email ,s.name 
+      select a.id ,a.lastDate ,a.subCourseId ,u.status,s.user_id ,s.email ,s.name,u2.fileName  
       FROM userassignments u 
       inner join assignments a on a.id =u.assignmentsId 
       INNER join studentdetails s on s.user_id =u.userId 
+      inner join uploaddata u2 on u2.id =u.uploadPathId 
       where u.status ='Pending' and s.isDelete =FALSE and a.isDelete =FALSE and u.isDelete =FALSE 
 `,
       {
@@ -230,10 +237,11 @@ const assignmentPendingByUser = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-     select a.id ,a.lastDate ,a.subCourseId ,u.status,s.user_id ,s.email ,s.name 
-     FROM userassignments u 
-     inner join assignments a on a.id =u.assignmentsId 
-     INNER join studentdetails s on s.user_id =u.userId 
+      select a.id ,a.lastDate ,a.subCourseId ,u.status,s.user_id ,s.email ,s.name,u2.fileName  
+      FROM userassignments u 
+      inner join assignments a on a.id =u.assignmentsId 
+      INNER join studentdetails s on s.user_id =u.userId 
+      inner join uploaddata u2 on u2.id =u.uploadPathId 
      where u.status ='Pending' and s.isDelete =FALSE and a.isDelete =FALSE and 
      u.isDelete =FALSE and u.userId = ${userId}
 `,
@@ -302,15 +310,15 @@ const assignmentInsert = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-     select DISTINCT (a.instituteId ) as instituteId, a.id ,a.assignmentsPaths ,a.courseId ,
-     a.subCourseId ,us.user_id  from usercourses u 
-     inner join usersubcourses us on us.course_id =u.course_id
-     inner join assignments a on a.courseId =us.course_id and a.subCourseId =us.subcourses_id 
-     INNER join studentdetails s on s.user_id =us.user_id 
-     WHERE a.isDelete =FALSE and us.isDelete =FALSE and u.isDelete =false and s.role='Student' and 
-     (a.id,a.instituteId,a.courseId,a.subCourseId,us.user_id) not in 
-     (select ua.assignmentsId as id,ua.instituteId ,ua.courseId ,ua.subCourseId ,ua.userId as user_id
-     FROM userassignments ua where ua.isDelete =FALSE) 
+      select DISTINCT (a.instituteId ) as instituteId, a.id ,a.assignmentsPathsId  ,a.courseId ,
+      a.subCourseId ,us.user_id  from usercourses u 
+      inner join usersubcourses us on us.course_id =u.course_id
+      inner join assignments a on a.courseId =us.course_id and a.subCourseId =us.subcourses_id 
+      INNER join studentdetails s on s.user_id =us.user_id 
+      WHERE a.isDelete =FALSE and us.isDelete =FALSE and u.isDelete =false and s.role='Student' and 
+      (a.id,a.instituteId,a.courseId,a.subCourseId,us.user_id) not in 
+      (select ua.assignmentsId as id,ua.instituteId ,ua.courseId ,ua.subCourseId ,ua.userId as user_id
+      FROM userassignments ua where ua.isDelete =FALSE) 
      `,
       {
         type: QueryTypes.SELECT,
@@ -324,7 +332,7 @@ const assignmentInsert = async (req, res) => {
         status: "Created",
         subCourseId: userData[i].subCourseId,
         userId: userData[i].user_id,
-        assignmentPaths: userData[i].assignmentsPaths,
+        assignmentPathsId: userData[i].assignmentsPathsId,
         instituteId: userData[i].instituteId,
         courseId: userData[i].courseId,
       };

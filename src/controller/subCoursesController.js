@@ -44,8 +44,9 @@ const getsubCoursesAll = async (req, res) => {
   try {
     const getData = await db.sequelize.query(
       `select s.subcourses_id ,s.InstituteId ,s.courseId ,s.subcourses ,s.startTime ,s.endTime,
-      s.startDate ,s.endDate    
+      s.startDate ,s.endDate,s.rating ,s.subCoursesImageId  ,u.fileName  
       from subcourses s 
+      inner join uploaddata u on u.id =s.subCoursesImageId 
       where s.isDelete =false `,
       {
         //&& ad.date=${date}
@@ -66,11 +67,12 @@ const getsubCourses = async (req, res) => {
   try {
     const getData = await db.sequelize.query(
       `select s.subcourses_id,s.subcourses ,s.courseId ,c.course,s.InstituteId,i.InstituteName,
-        s.startTime ,s.endTime,s.startDate ,s.endDate   
-        from subcourses s 
-        inner join courses c on c.course_id =s.courseId 
-        inner join institutes i on i.institute_id =s.InstituteId  
-        where s.InstituteId=${req.query.InstituteId} && s.isDelete=false `,
+      s.startTime ,s.endTime,s.startDate ,s.endDate ,s.rating ,s.subCoursesImageId ,u.fileName  
+      from subcourses s 
+      inner join courses c on c.course_id =s.courseId 
+      inner join institutes i on i.institute_id =s.InstituteId 
+      inner join uploaddata u on u.id =s.subCoursesImageId 
+      where s.InstituteId=${req.query.InstituteId} && s.isDelete=false `,
       {
         //&& ad.date=${date}
         type: QueryTypes.SELECT,
@@ -91,11 +93,12 @@ const getsubCoursesById = async (req, res) => {
   try {
     const getData = await db.sequelize.query(
       `select s.subcourses_id,s.subcourses ,s.courseId ,c.course,s.InstituteId,i.InstituteName,
-        s.startTime ,s.endTime,s.startDate ,s.endDate   
-        from subcourses s 
-        inner join courses c on c.course_id =s.courseId 
-        inner join institutes i on i.institute_id =s.InstituteId 
-        where s.subcourses_id=${subcourses_id} && s.isDelete=false  `,
+      s.startTime ,s.endTime,s.startDate ,s.endDate  ,s.rating ,s.subCoursesImageId ,u.fileName ,u.fileData  
+      from subcourses s 
+      inner join courses c on c.course_id =s.courseId 
+      inner join institutes i on i.institute_id =s.InstituteId 
+      inner join uploaddata u on u.id =s.subCoursesImageId 
+      where s.subcourses_id=${subcourses_id} && s.isDelete=false  `,
       {
         //&& ad.date=${date}
         type: QueryTypes.SELECT,

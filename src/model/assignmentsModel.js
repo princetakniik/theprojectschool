@@ -10,12 +10,9 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       assignmentsName: {
         type: DataTypes.STRING,
       },
-      assignmentsPaths: {
-        type: DataTypes.STRING(1000),
+      assignmentsPathsId: {
+        type: DataTypes.INTEGER,
       },
-      filedata: {
-        type: DataTypes.BLOB("long")
-    },
       lastDate: {
         type: DataTypes.DATEONLY,
         field: "lastDate",

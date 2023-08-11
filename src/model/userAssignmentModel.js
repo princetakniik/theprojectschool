@@ -7,9 +7,6 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      assignmentPaths: {
-        type: DataTypes.STRING(1000),
-      },
       assignmentsId: {
         type: DataTypes.INTEGER,
       },
@@ -35,13 +32,10 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       status: {
         type: DataTypes.ENUM("Created", "Pending", "Submitted"),
       },
-      uploadPath: {
-        type: DataTypes.STRING(1000),
+      uploadPathId: {
+        type: DataTypes.INTEGER,
       },
-     
-      filedata: {
-          type: DataTypes.BLOB("long")
-      },
+   
       token: {
         type: DataTypes.STRING(1000),
       },

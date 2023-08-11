@@ -7,13 +7,13 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      videosPaths: {
-        type: DataTypes.STRING(1000),
+      videosPathsId: {
+        type: DataTypes.INTEGER,
       },
-      filename: {
+      fileName: {
         type: DataTypes.STRING,
       },
-      filedata: {
+      fileData: {
           type: DataTypes.BLOB("long")
       },
       videoImage: {

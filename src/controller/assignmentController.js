@@ -7,7 +7,7 @@ const inserAssignment = async (req, res) => {
   try {
     const assignmentData = await assignment.create({
       assignmentsName: rest.assignmentsName,
-      assignmentsPaths:rest.assignmentsPaths,
+      assignmentsPathsId: rest.assignmentsPathsId,
       lastDate: rest.lastDate,
       instituteId: rest.instituteId,
       courseId: rest.courseId,
@@ -28,10 +28,11 @@ const getAllAssignment = async (req, res) => {
   try {
     const assignmentData = await db.sequelize.query(
       `
-      select a.id ,a.assignmentsName ,a.assignmentsPaths ,a.lastDate ,a.instituteId ,a.courseId ,
-      a.subCourseId ,a.userId  ,c.course 
+      select a.id ,a.assignmentsName ,a.assignmentsPathsId ,a.lastDate ,a.instituteId ,a.courseId ,
+      a.subCourseId ,a.userId  ,c.course ,u.fileName 
       from assignments a 
-      inner join courses c on c.course_id =a.courseId  
+      inner join courses c on c.course_id =a.courseId 
+      inner join uploaddata u on u.id =a.assignmentsPathsId 
       where  a.isDelete =false && c.isDelete =FALSE 
 `,
       {
@@ -52,10 +53,11 @@ const getAssignmentById = async (req, res) => {
   try {
     const assignmentData = await db.sequelize.query(
       `
-      select a.id ,a.assignmentsName ,a.assignmentsPaths ,a.lastDate ,a.instituteId ,a.courseId ,
-      a.subCourseId ,a.userId  ,c.course 
+      select a.id ,a.assignmentsName ,a.assignmentsPathsId ,a.lastDate ,a.instituteId ,a.courseId ,
+      a.subCourseId ,a.userId  ,c.course ,u.fileName ,u.fileData 
       from assignments a 
-      inner join courses c on c.course_id =a.courseId  
+      inner join courses c on c.course_id =a.courseId 
+      inner join uploaddata u on u.id =a.assignmentsPathsId  
       where  a.isDelete =false && c.isDelete =FALSE  && id=${id}
 
 `,
@@ -78,7 +80,7 @@ const updateAssignment = async (req, res) => {
   try {
     const data = {
       assignmentsName: rest.assignmentsName,
-      assignmentsPaths:rest.assignmentsPaths,
+      assignmentsPathsId: rest.assignmentsPathsId,
       lastDate: rest.lastDate,
       instituteId: rest.instituteId,
       courseId: rest.courseId,
@@ -110,7 +112,9 @@ const deleteAssignment = async (req, res) => {
         id: id,
       },
     });
-    res.status(200).json({msg:`Assignment data are deleted...`,data:deleteData})
+    res
+      .status(200)
+      .json({ msg: `Assignment data are deleted...`, data: deleteData });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `Assignment are not deleted...`, err });
@@ -122,5 +126,5 @@ module.exports = {
   getAllAssignment,
   getAssignmentById,
   updateAssignment,
-  deleteAssignment
+  deleteAssignment,
 };
