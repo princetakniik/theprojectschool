@@ -10,8 +10,8 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       assignmentsName: {
         type: DataTypes.STRING,
       },
-      assignmentsPathsId: {
-        type: DataTypes.INTEGER,
+      assignmentsPathsUrl: {
+        type: DataTypes.STRING(1000),
       },
       lastDate: {
         type: DataTypes.DATEONLY,

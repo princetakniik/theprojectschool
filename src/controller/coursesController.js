@@ -42,9 +42,8 @@ const getCoursesAll = async (req, res) => {
   try {
     const getData = await db.sequelize.query(`
     select c.course_id ,c.Institute ,c.course ,c.startDate ,c.endDate ,c.startTime ,c.endTime ,
-    c.rating ,c.coursesImageId ,u.fileName 
+    c.grading ,c.coursesImageUrl 
     from courses c 
-    inner join uploaddata u on u.id =c.coursesImageId 
     where c.isDelete =false 
     `,{type:QueryTypes.SELECT})
     res
@@ -61,9 +60,8 @@ const getCourses = async (req, res) => {
   try {
     const getData = await db.sequelize.query(`
     select c.course_id ,c.Institute ,c.course ,c.startDate ,c.endDate ,c.startTime ,c.endTime ,
-    c.rating ,c.coursesImageId ,u.fileName  
+    c.grading ,c.coursesImageUrl 
     from courses c 
-    inner join uploaddata u on u.id =c.coursesImageId
     where c.isDelete =false and c.Institute =${Institute}
     `,{type:QueryTypes.SELECT})
     res
@@ -80,9 +78,8 @@ const getCoursesById = async (req, res) => {
   try {
     const getData = await db.sequelize.query(`
     select c.course_id ,c.Institute ,c.course ,c.startDate ,c.endDate ,c.startTime ,c.endTime ,
-    c.rating ,c.coursesImageId ,u.fileName ,u.fileData 
+    c.grading ,c.coursesImageUrl 
     from courses c 
-    inner join uploaddata u on u.id =c.coursesImageId
     where c.isDelete =false and c.course_id =${course_id} 
     `,{type:QueryTypes.SELECT})
     res.status(200).json({

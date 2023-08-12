@@ -7,13 +7,12 @@ const insertVideo = async (req, res) => {
   console.log("rest", rest);
   try {
     const videoUpload = await uploadvideo.create({
-      videosPathsId:rest.videosPathsId,
-      fileName:rest.fileName,
-      fileData: rest.fileData,
+      videosPathsUrl: rest.videosPathsUrl,
+      fileName: rest.fileName,
       videoImage: rest.videoImage,
       instituteId: rest.instituteId,
       courseId: rest.courseId,
-      subCourseId: rest.subCourseId
+      subCourseId: rest.subCourseId,
     });
     res
       .status(200)
@@ -27,13 +26,12 @@ const insertVideo = async (req, res) => {
 const getVideos = async (req, res) => {
   try {
     const getVideos = await db.sequelize.query(
-      `select u.id ,u.videosPathsId ,u.videoImage ,u.instituteId ,u.courseId  ,u.subCourseId ,
-       s.subcourses ,c.course ,u2.fileName 
-      from uploadvideos u 
-      inner join subcourses s on s.subcourses_id =u.subCourseId 
-      inner join courses c on c.course_id =u.courseId 
-      inner join uploaddata u2 on u2.id =u.videosPathsId 
-      where u.isDelete =false  `,
+      `select u.id ,u.videosPathsUrl ,u.fileName ,u.videoImage ,u.instituteId ,u.courseId  ,u.subCourseId ,
+      s.subcourses ,c.course 
+     from uploadvideos u 
+     inner join subcourses s on s.subcourses_id =u.subCourseId 
+     inner join courses c on c.course_id =u.courseId 
+     where u.isDelete =false  `,
       {
         type: QueryTypes.SELECT,
       }
@@ -51,12 +49,11 @@ const getVideoById = async (req, res) => {
   const { id } = req.query;
   try {
     const videoData = await db.sequelize.query(`
-    select u.id ,u.videosPathsId ,u.videoImage ,u.instituteId ,u.courseId  ,u.subCourseId ,
-    s.subcourses ,c.course ,u2.fileName ,u2.fileData 
-    from uploadvideos u 
-    inner join subcourses s on s.subcourses_id =u.subCourseId 
-    inner join courses c on c.course_id =u.courseId 
-    inner join uploaddata u2 on u2.id =u.videosPathsId 
+    select u.id ,u.videosPathsUrl ,u.fileName ,u.videoImage ,u.instituteId ,u.courseId  ,u.subCourseId ,
+      s.subcourses ,c.course 
+      from uploadvideos u 
+      inner join subcourses s on s.subcourses_id =u.subCourseId 
+      inner join courses c on c.course_id =u.courseId 
     where u.id =${id} && u.isDelete =false 
 `);
     res.status(200).json({ msg: `get video by id ....`, data: videoData });
@@ -70,10 +67,9 @@ const getAllVideoModuleWise = async (req, res) => {
   try {
     const videoData = await db.sequelize.query(
       `
-      select u.id ,u.videosPathsId ,u.videoImage ,u2.fileName ,u.courseId ,u.instituteId,c.course 
+      select u.id ,u.videosPathsUrl ,u.videoImage ,u.fileName ,u.courseId ,u.instituteId,c.course 
       from uploadvideos u 
       inner join courses c on c.course_id =u.courseId 
-      inner join uploaddata u2 on u2.id =u.videosPathsId 
       where u.isDelete =false && c.isDelete =false 
 `,
       {
@@ -92,10 +88,9 @@ const getVideoModuleWise = async (req, res) => {
   try {
     const videoData = await db.sequelize.query(
       `
-      select u.id ,u.videosPathsId ,u.videoImage ,u2.fileName ,u.courseId ,u.instituteId,c.course 
+      select u.id ,u.videosPathsUrl ,u.videoImage ,u.fileName ,u.courseId ,u.instituteId,c.course 
       from uploadvideos u 
       inner join courses c on c.course_id =u.courseId 
-      inner join uploaddata u2 on u2.id =u.videosPathsId 
       where u.isDelete =false && c.isDelete =false && c.course_id =${courseId}
 `,
       {
@@ -152,5 +147,5 @@ module.exports = {
   updateVideo,
   deleteVideo,
   getAllVideoModuleWise,
-  getVideoModuleWise
+  getVideoModuleWise,
 };

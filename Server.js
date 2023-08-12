@@ -43,7 +43,7 @@ app.get("/", (req, res) => {
 app.use("/profile", express.static("upload"));
 //app.use("/qrcode", express.static("upload"));
 require("./src/middleware/fileUpload")(app);
-require('./src/middleware/uploadVideosMulter')(app)
+//require('./src/middleware/uploadVideosMulter')(app)
 app.use("/profile", express.static("videos"));
 require("./src/middleware/AwsUpload")(app);
 require("./Router")(app);

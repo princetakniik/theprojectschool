@@ -7,7 +7,7 @@ const inserAssignment = async (req, res) => {
   try {
     const assignmentData = await assignment.create({
       assignmentsName: rest.assignmentsName,
-      assignmentsPathsId: rest.assignmentsPathsId,
+      assignmentsPathsUrl: rest.assignmentsPathsUrl,
       lastDate: rest.lastDate,
       instituteId: rest.instituteId,
       courseId: rest.courseId,
@@ -28,11 +28,10 @@ const getAllAssignment = async (req, res) => {
   try {
     const assignmentData = await db.sequelize.query(
       `
-      select a.id ,a.assignmentsName ,a.assignmentsPathsId ,a.lastDate ,a.instituteId ,a.courseId ,
-      a.subCourseId  ,c.course ,u.fileName 
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
+      a.subCourseId  ,c.course 
       from assignments a 
       inner join courses c on c.course_id =a.courseId 
-      inner join uploaddata u on u.id =a.assignmentsPathsId 
       where  a.isDelete =false && c.isDelete =FALSE 
 `,
       {
@@ -53,11 +52,10 @@ const getAssignmentById = async (req, res) => {
   try {
     const assignmentData = await db.sequelize.query(
       `
-      select a.id ,a.assignmentsName ,a.assignmentsPathsId ,a.lastDate ,a.instituteId ,a.courseId ,
-      a.subCourseId  ,c.course ,u.fileName ,u.fileData  
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
+      a.subCourseId  ,c.course 
       from assignments a 
       inner join courses c on c.course_id =a.courseId 
-      inner join uploaddata u on u.id =a.assignmentsPathsId 
       where  a.isDelete =false && c.isDelete =FALSE  && a.id=${id}
            `,
       {
@@ -79,7 +77,7 @@ const updateAssignment = async (req, res) => {
   try {
     const data = {
       assignmentsName: rest.assignmentsName,
-      assignmentsPathsId: rest.assignmentsPathsId,
+      assignmentsPathsUrl: rest.assignmentsPathsUrl,
       lastDate: rest.lastDate,
       instituteId: rest.instituteId,
       courseId: rest.courseId,

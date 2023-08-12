@@ -2,6 +2,7 @@ const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 const Config = require("../Config/config");
+
 module.exports = (app) => {
   let filestorageEngine = multer.diskStorage({
     destination: "upload",
@@ -11,30 +12,19 @@ module.exports = (app) => {
     },
   });
   const upload = multer({ storage: filestorageEngine });
-  
-  
-  
-  
+
   app.post("/uploads", upload.array("file", 4), async (req, res) => {
     let base_url = Config.basePort;
     //console.log('url',base_url);
     let doc_url = req.files
       ? req.files.map((i) => `${base_url}/profile/${i.filename}`)
       : [];
-   // return doc_url;
-   return res.json({ status: "suceess",message:"data upload sucessfully", url: doc_url });
+    // return doc_url;
+    return res.json({
+      status: "suceess",
+      message: "data upload sucessfully",
+      url: doc_url,
+    });
   });
-}
+};
 
-
-
-// export const uploadImage = upload.array("file", 4), async (req, res) => {
-//   let base_url = Config.basePort;
-//   //console.log('url',base_url);
-//   let doc_url = req.files
-//     ? req.files.map((i) => `${base_url}/qrcode/${i.filename}`)
-//     : [];
- 
-
-//  return res.json({ status: "suceess",message:"data upload sucessfully", url: doc_url });
-// }

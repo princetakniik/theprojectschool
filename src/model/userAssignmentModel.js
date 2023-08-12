@@ -10,6 +10,9 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       assignmentsId: {
         type: DataTypes.INTEGER,
       },
+      assignmentPaths:{
+        type: DataTypes.STRING(1000),
+      },
       submitDate: {
         type: DataTypes.DATEONLY,
         field: "submitDate",
@@ -32,8 +35,8 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       status: {
         type: DataTypes.ENUM("Created", "Pending", "Submitted"),
       },
-      uploadPathId: {
-        type: DataTypes.INTEGER,
+      uploadPathUrl: {
+        type: DataTypes.STRING(1000),
       },
    
       token: {

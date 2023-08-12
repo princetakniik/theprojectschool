@@ -8,12 +8,13 @@ const inserUserAssignment = async (req, res) => {
   try {
     const insertData = await userassignment.create({
       assignmentsId: rest.assignmentsId,
+      assignmentPaths: rest.assignmentPaths,
       submitDate: rest.submitDate,
       instituteId: rest.instituteId,
       courseId: rest.courseId,
       subCourseId: rest.subCourseId,
       userId: rest.userId,
-      uploadPathId: rest.uploadPathId,
+      uploadPathUrl: rest.uploadPathUrl,
       status: rest.status,
       marks: rest.marks,
     });
@@ -31,11 +32,10 @@ const getUserAssignment = async (req, res) => {
     const getUserData = await db.sequelize.query(
       `
       select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate 
-      ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPathId ,u.status ,u2.fileName ,
+      ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPathUrl ,u.status ,u.uploadPathUrl,
       case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
       inner join assignments a on a.id =u.assignmentsId
-      inner join uploaddata u2 on u2.id =u.uploadPathId 
       where u.isDelete =false && a.isDelete =false 
       ORDER BY u.id DESC
           `,
@@ -56,11 +56,10 @@ const getUserAssignmentByUserId = async (req, res) => {
     const getUserData = await db.sequelize.query(
       `
       select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate 
-      ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPathId ,u.status ,u2.fileName ,u2.fileData ,
+      ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPathUrl ,u.status ,u.uploadPathUrl,
       case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
       inner join assignments a on a.id =u.assignmentsId
-      inner join uploaddata u2 on u2.id =u.uploadPathId
       where u.isDelete =false && a.isDelete =false and u.userId =${userId} 
 `,
       {
@@ -80,12 +79,11 @@ const getUserAssignmentById = async (req, res) => {
     const getUserData = await db.sequelize.query(
       `
       select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate 
-      ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPathId ,u.status ,u2.fileName ,u2.fileData ,
+      ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPathUrl ,u.status ,u.uploadPathUrl,
       case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
       inner join assignments a on a.id =u.assignmentsId
-      inner join uploaddata u2 on u2.id =u.uploadPathId
-        where u.isDelete =false && a.isDelete =false && u.userId =${userId} && u.assignmentsId =${assignmentsId}
+      where u.isDelete =false && a.isDelete =false && u.userId =${userId} && u.assignmentsId =${assignmentsId}
   `,
       {
         type: QueryTypes.SELECT,
@@ -112,7 +110,7 @@ const updateUserAssignment = async (req, res) => {
       userId: rest.userId,
       marks: rest.marks,
       status: rest.status,
-      uploadPath: rest.uploadPath,
+      uploadPathUrl: rest.uploadPathUrl,
     };
     const updateData = await userassignment.update(data, {
       where: {
@@ -159,10 +157,10 @@ const assignmentNotUploadUser = async (req, res) => {
     const userData = await db.sequelize.query(
       `
       select s.user_id ,a.id as assignmentsId,a.assignmentsName ,a.lastDate ,a.instituteId ,
-      a.subCourseId ,u2.fileName 
+      a.subCourseId ,u2.assignmentPaths ,u2.uploadPathUrl ,u2.submitDate
       from studentdetails s 
      inner join assignments a on a.instituteId =s.institutionId 
-     inner join uploaddata u2 on u2.id =a.assignmentsPathsId 
+     inner join userassignments u2 on u2.assignmentsId =a.id 
      where a.isDelete =false  && s.role='Student' && a.instituteId =${instituteId} && a.subCourseId =${subCourseId} 
      && (a.id,s.user_id) not in (select u.assignmentsId as id ,u.userId as user_id  from userassignments u 
      where u.isDelete=false && u.instituteId=${instituteId} && u.subCourseId=${subCourseId})
@@ -186,10 +184,9 @@ const assignmentNotsubmitte = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-      select s.user_id ,s.name ,s.email ,a.assignmentsName ,a.id ,a.lastDate ,a.subCourseId ,u2.fileName 
+      select s.user_id ,s.name ,s.email ,a.assignmentsName ,a.id ,a.lastDate ,a.subCourseId ,a.assignmentsPathsUrl 
       from studentdetails s 
-      inner join assignments a on a.instituteId =s.institutionId 
-      inner join uploaddata u2 on u2.id =a.assignmentsPathsId 
+      inner join assignments a on a.instituteId =s.institutionId
       where s.role='Student' && s.isDelete =false && a.isDelete =false && a.lastDate<current_date()  
       && (a.id,s.user_id) not in 
       (select u.assignmentsId as id ,u.userId as user_id  from userassignments u 
@@ -212,11 +209,10 @@ const assignmentPending = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-      select a.id ,a.lastDate ,a.subCourseId ,u.status,s.user_id ,s.email ,s.name,u2.fileName  
+      select a.id ,a.lastDate ,a.subCourseId ,u.status,s.user_id ,s.email ,s.name,u.assignmentPaths ,u.uploadPathUrl 
       FROM userassignments u 
       inner join assignments a on a.id =u.assignmentsId 
       INNER join studentdetails s on s.user_id =u.userId 
-      inner join uploaddata u2 on u2.id =u.uploadPathId 
       where u.status ='Pending' and s.isDelete =FALSE and a.isDelete =FALSE and u.isDelete =FALSE 
 `,
       {
@@ -237,11 +233,10 @@ const assignmentPendingByUser = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-      select a.id ,a.lastDate ,a.subCourseId ,u.status,s.user_id ,s.email ,s.name,u2.fileName  
+      select a.id ,a.lastDate ,a.subCourseId ,u.status,s.user_id ,s.email ,s.name,u.assignmentPaths ,u.uploadPathUrl  
       FROM userassignments u 
       inner join assignments a on a.id =u.assignmentsId 
       INNER join studentdetails s on s.user_id =u.userId 
-      inner join uploaddata u2 on u2.id =u.uploadPathId 
      where u.status ='Pending' and s.isDelete =FALSE and a.isDelete =FALSE and 
      u.isDelete =FALSE and u.userId = ${userId}
 `,

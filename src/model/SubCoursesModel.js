@@ -29,11 +29,11 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     endTime: {
       type: DataTypes.TIME,
     },
-    rating: {
+    grading: {
       type: DataTypes.INTEGER,
     },
-    subCoursesImageId: {
-      type: DataTypes.INTEGER,
+    subCoursesImageUrl: {
+      type: DataTypes.STRING(1000),
     },
     isDelete: {
       type: DataTypes.BOOLEAN,
