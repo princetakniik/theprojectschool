@@ -32,7 +32,7 @@ const getUserAssignment = async (req, res) => {
     const getUserData = await db.sequelize.query(
       `
       select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate 
-      ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPathUrl ,u.status ,u.uploadPathUrl,
+      ,u.userId ,u.subCourseId ,u.instituteId ,a.assignmentsPathsUrl ,u.status ,u.uploadPathUrl,
       case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
       inner join assignments a on a.id =u.assignmentsId
@@ -56,7 +56,7 @@ const getUserAssignmentByUserId = async (req, res) => {
     const getUserData = await db.sequelize.query(
       `
       select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate 
-      ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPathUrl ,u.status ,u.uploadPathUrl,
+      ,u.userId ,u.subCourseId ,u.instituteId ,a.assignmentsPathsUrl ,u.status ,u.uploadPathUrl,
       case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
       inner join assignments a on a.id =u.assignmentsId
@@ -79,7 +79,7 @@ const getUserAssignmentById = async (req, res) => {
     const getUserData = await db.sequelize.query(
       `
       select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate 
-      ,u.userId ,u.subCourseId ,u.instituteId ,u.uploadPathUrl ,u.status ,u.uploadPathUrl,
+      ,u.userId ,u.subCourseId ,u.instituteId ,a.assignmentsPathsUrl ,u.status ,u.uploadPathUrl,
       case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
       inner join assignments a on a.id =u.assignmentsId
@@ -305,7 +305,7 @@ const assignmentInsert = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-      select DISTINCT (a.instituteId ) as instituteId, a.id ,a.assignmentsPathsId  ,a.courseId ,
+      select DISTINCT (a.instituteId ) as instituteId, a.id ,a.assignmentsPathsUrl ,a.courseId ,
       a.subCourseId ,us.user_id  from usercourses u 
       inner join usersubcourses us on us.course_id =u.course_id
       inner join assignments a on a.courseId =us.course_id and a.subCourseId =us.subcourses_id 
@@ -327,7 +327,7 @@ const assignmentInsert = async (req, res) => {
         status: "Created",
         subCourseId: userData[i].subCourseId,
         userId: userData[i].user_id,
-        assignmentPathsId: userData[i].assignmentsPathsId,
+        assignmentPaths: userData[i].assignmentsPathsUrl,
         instituteId: userData[i].instituteId,
         courseId: userData[i].courseId,
       };
