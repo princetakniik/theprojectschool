@@ -28,4 +28,5 @@ module.exports = (app) => {
   require("./src/api-route/studentLimitRoute")(app);
   require("./src/api-route/middlewareRoute")(app);
   require('./src/api-route/uploadDataRoute')(app)
+  require('./src/api-route/adminRoute')(app)
 };

@@ -191,7 +191,7 @@ const Verify = async (req, res, next) => {
       const user = await db.sequelize.query(
         `select s.user_id ,s.email ,s.name ,s.profilePhoto ,s.role,s.phone 
         from studentdetails s
-        where s.user_id =${userDetails.user_id}  `,
+        where s.user_id =${userDetails.user_id} and s.role ='Admin' `,
         {
           //&& ad.date=${date}
           type: QueryTypes.SELECT,
