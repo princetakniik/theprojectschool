@@ -104,16 +104,16 @@ const Verify = async (req, res, next) => {
         u.course_id,
         c.course,
         c.coursesImageUrl,
-        c.grading as CourseGrading,
+        c.grading AS CourseGrading,
         JSON_ARRAYAGG(distinct_subcourses.subcourses_id) AS subcourses_id,
         JSON_ARRAYAGG(distinct_subcourses.subcourses) AS subcourses,
-        s.subCoursesImageUrl,
-        s.grading as subCourseGrading
+        JSON_ARRAYAGG(distinct_subcourses.subCoursesImageUrl) AS subCoursesImageUrl
     FROM (
         SELECT DISTINCT
             u2.subcourses_id,
             u.course_id,
-            s.subcourses  -- Include the subcourses column
+            s.subcourses,
+            s.subCoursesImageUrl -- Include the subCoursesImageUrl column
         FROM
             usercourses u 
         INNER JOIN
@@ -128,10 +128,10 @@ const Verify = async (req, res, next) => {
     INNER JOIN
         courses c ON c.course_id = u.course_id
     INNER JOIN
-        subcourses s ON s.subcourses_id = distinct_subcourses.subcourses_id
+        subcourses s ON s.subcourses_id = distinct_subcourses.subcourses_id   
         where u.user_id =${userDetails.user_id} && u.isDelete =false  && s.isDelete =FALSE && c.isDelete=FALSE  
         GROUP BY
-        u.course_id, c.course, c.coursesImageUrl, c.grading, s.subCoursesImageUrl, s.grading;  `,
+        u.course_id, c.course, c.coursesImageUrl, c.grading;  `,
         {
           //&& ad.date=${date}
           type: QueryTypes.SELECT,
@@ -161,16 +161,16 @@ const Verify = async (req, res, next) => {
         u.course_id,
         c.course,
         c.coursesImageUrl,
-        c.grading as CourseGrading,
+        c.grading AS CourseGrading,
         JSON_ARRAYAGG(distinct_subcourses.subcourses_id) AS subcourses_id,
         JSON_ARRAYAGG(distinct_subcourses.subcourses) AS subcourses,
-        s.subCoursesImageUrl,
-        s.grading as subCourseGrading
+        JSON_ARRAYAGG(distinct_subcourses.subCoursesImageUrl) AS subCoursesImageUrl
     FROM (
         SELECT DISTINCT
             u2.subcourses_id,
             u.course_id,
-            s.subcourses  -- Include the subcourses column
+            s.subcourses,
+            s.subCoursesImageUrl -- Include the subCoursesImageUrl column
         FROM
             usercourses u 
         INNER JOIN
@@ -185,11 +185,11 @@ const Verify = async (req, res, next) => {
     INNER JOIN
         courses c ON c.course_id = u.course_id
     INNER JOIN
-        subcourses s ON s.subcourses_id = distinct_subcourses.subcourses_id
+        subcourses s ON s.subcourses_id = distinct_subcourses.subcourses_id 
         where u.user_id =${userDetails.user_id} && u.isDelete =false && u2.isDelete =false 
         && c.isDelete =FALSE && s.isDelete =FALSE 
         GROUP BY
-        u.course_id, c.course, c.coursesImageUrl, c.grading, s.subCoursesImageUrl, s.grading;  `,
+        u.course_id, c.course, c.coursesImageUrl, c.grading;  `,
         {
           //&& ad.date=${date}
           type: QueryTypes.SELECT,
