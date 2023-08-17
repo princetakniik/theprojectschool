@@ -100,14 +100,38 @@ const Verify = async (req, res, next) => {
         }
       );
       const course_enrolled = await db.sequelize.query(
-        `select u.course_id,c.course ,JSON_ARRAYAGG( u2.subcourses_id) as subcourses_id,
-        JSON_ARRAYAGG(s.subcourses) as subcourses 
-        from usercourses u 
-        inner join usersubcourses u2 on u2.course_id =u.course_id 
-        inner join courses c on c.course_id =u.course_id
-        inner join subcourses s on s.subcourses_id =u2.subcourses_id 
+        `SELECT
+        u.course_id,
+        c.course,
+        c.coursesImageUrl,
+        c.grading as CourseGrading,
+        JSON_ARRAYAGG(distinct_subcourses.subcourses_id) AS subcourses_id,
+        JSON_ARRAYAGG(distinct_subcourses.subcourses) AS subcourses,
+        s.subCoursesImageUrl,
+        s.grading as subCourseGrading
+    FROM (
+        SELECT DISTINCT
+            u2.subcourses_id,
+            u.course_id,
+            s.subcourses  -- Include the subcourses column
+        FROM
+            usercourses u 
+        INNER JOIN
+            usersubcourses u2 ON u2.course_id = u.course_id
+        INNER JOIN
+            courses c ON c.course_id = u.course_id
+        INNER JOIN
+            subcourses s ON s.subcourses_id = u2.subcourses_id
+    ) AS distinct_subcourses
+    INNER JOIN
+        usercourses u ON distinct_subcourses.course_id = u.course_id
+    INNER JOIN
+        courses c ON c.course_id = u.course_id
+    INNER JOIN
+        subcourses s ON s.subcourses_id = distinct_subcourses.subcourses_id
         where u.user_id =${userDetails.user_id} && u.isDelete =false  && s.isDelete =FALSE && c.isDelete=FALSE  
-        group by u.course_id  `,
+        GROUP BY
+        u.course_id, c.course, c.coursesImageUrl, c.grading, s.subCoursesImageUrl, s.grading;  `,
         {
           //&& ad.date=${date}
           type: QueryTypes.SELECT,
@@ -133,15 +157,39 @@ const Verify = async (req, res, next) => {
       );
 
       const course_enrolled = await db.sequelize.query(
-        `select u.course_id,c.course ,JSON_ARRAYAGG( u2.subcourses_id) as subcourses_id,
-        JSON_ARRAYAGG(s.subcourses) as subcourses 
-        from usercourses u 
-        inner join usersubcourses u2 on u2.course_id =u.course_id 
-        inner join courses c on c.course_id =u.course_id
-        inner join subcourses s on s.subcourses_id =u2.subcourses_id 
+        `SELECT
+        u.course_id,
+        c.course,
+        c.coursesImageUrl,
+        c.grading as CourseGrading,
+        JSON_ARRAYAGG(distinct_subcourses.subcourses_id) AS subcourses_id,
+        JSON_ARRAYAGG(distinct_subcourses.subcourses) AS subcourses,
+        s.subCoursesImageUrl,
+        s.grading as subCourseGrading
+    FROM (
+        SELECT DISTINCT
+            u2.subcourses_id,
+            u.course_id,
+            s.subcourses  -- Include the subcourses column
+        FROM
+            usercourses u 
+        INNER JOIN
+            usersubcourses u2 ON u2.course_id = u.course_id
+        INNER JOIN
+            courses c ON c.course_id = u.course_id
+        INNER JOIN
+            subcourses s ON s.subcourses_id = u2.subcourses_id
+    ) AS distinct_subcourses
+    INNER JOIN
+        usercourses u ON distinct_subcourses.course_id = u.course_id
+    INNER JOIN
+        courses c ON c.course_id = u.course_id
+    INNER JOIN
+        subcourses s ON s.subcourses_id = distinct_subcourses.subcourses_id
         where u.user_id =${userDetails.user_id} && u.isDelete =false && u2.isDelete =false 
         && c.isDelete =FALSE && s.isDelete =FALSE 
-        group by u.course_id  `,
+        GROUP BY
+        u.course_id, c.course, c.coursesImageUrl, c.grading, s.subCoursesImageUrl, s.grading;  `,
         {
           //&& ad.date=${date}
           type: QueryTypes.SELECT,
