@@ -13,7 +13,7 @@ const inserAssignment = async (req, res) => {
       courseId: rest.courseId,
       subCourseId: rest.subCourseId,
       userId: rest.userId,
-     status:rest.status
+      status: rest.status,
     });
     res.status(200).json({
       msg: `assignmentData insert successfully`,
@@ -33,7 +33,7 @@ const getAllAssignment = async (req, res) => {
       a.subCourseId  ,c.course 
       from assignments a 
       inner join courses c on c.course_id =a.courseId 
-      where  a.isDelete =false && c.isDelete =false and a.status ='0' 
+      where  a.isDelete =false && c.isDelete =false 
 `,
       {
         type: QueryTypes.SELECT,
@@ -84,7 +84,7 @@ const updateAssignment = async (req, res) => {
       courseId: rest.courseId,
       subCourseId: rest.subCourseId,
       userId: rest.userId,
-      status:rest.status
+      status: rest.status,
     };
     const updateData = await assignment.update(data, {
       where: {
@@ -123,7 +123,7 @@ const courseAssignment = async (req, res) => {
 };
 
 const courseAssignmentById = async (req, res) => {
-  const {id}=req.query
+  const { id } = req.query;
   try {
     const assignmentData = await db.sequelize.query(
       `
@@ -147,7 +147,7 @@ const courseAssignmentById = async (req, res) => {
 };
 
 const AssignmentByCourseId = async (req, res) => {
-  const {courseId}=req.query
+  const { courseId } = req.query;
   try {
     const assignmentData = await db.sequelize.query(
       `
@@ -174,11 +174,12 @@ const subCourseAssignment = async (req, res) => {
   try {
     const assignmentData = await db.sequelize.query(
       `
-      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
-      c.course 
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,a.subCourseId ,
+      c.course ,s.subcourses 
       from assignments a 
-      inner join courses c on c.course_id =a.courseId 
-      where  a.isDelete =false && c.isDelete =false and a.status ='0' 
+      inner join courses c on c.course_id = a.courseId 
+      inner join subcourses s on s.subcourses_id =a.subCourseId 
+      where  a.isDelete =false && c.isDelete =false and a.status ='1'
 `,
       {
         type: QueryTypes.SELECT,
@@ -193,6 +194,80 @@ const subCourseAssignment = async (req, res) => {
   }
 };
 
+const subCourseAssignmentById = async (req, res) => {
+  const { id } = req.query;
+  try {
+    const assignmentData = await db.sequelize.query(
+      `
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,a.subCourseId ,
+      c.course ,s.subcourses 
+      from assignments a 
+      inner join courses c on c.course_id = a.courseId 
+      inner join subcourses s on s.subcourses_id =a.subCourseId 
+      where  a.isDelete =false && c.isDelete =false and a.status ='1' && a.id=${id}
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `all assignmentData are ....`, data: assignmentData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `Assignment data not found...`, err });
+  }
+};
+
+const subCourseAssignmentByCourseId = async (req, res) => {
+  const { CourseId } = req.query;
+  try {
+    const assignmentData = await db.sequelize.query(
+      `
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,a.subCourseId ,
+      c.course ,s.subcourses 
+      from assignments a 
+      inner join courses c on c.course_id = a.courseId 
+      inner join subcourses s on s.subcourses_id =a.subCourseId 
+      where  a.isDelete =false && c.isDelete =false and a.status ='1' && a.courseId=${CourseId}
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `all assignmentData are ....`, data: assignmentData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `Assignment data not found...`, err });
+  }
+};
+
+const AssignmentBysubCourseId = async (req, res) => {
+  const { subCourseId } = req.query;
+  try {
+    const assignmentData = await db.sequelize.query(
+      `
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
+      a.subCourseId , c.course ,s.subcourses 
+      from assignments a 
+      inner join courses c on c.course_id = a.courseId 
+      inner join subcourses s on s.subcourses_id =a.subCourseId 
+      where  a.isDelete =false && c.isDelete =false and a.status ='1' && a.subCourseId=${subCourseId}
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `all assignmentData are ....`, data: assignmentData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `Assignment data not found...`, err });
+  }
+};
 
 const deleteAssignment = async (req, res) => {
   const { id } = req.query;
@@ -223,5 +298,9 @@ module.exports = {
   deleteAssignment,
   courseAssignment,
   courseAssignmentById,
-  AssignmentByCourseId
+  AssignmentByCourseId,
+  subCourseAssignment,
+  subCourseAssignmentById,
+  subCourseAssignmentByCourseId,
+  AssignmentBysubCourseId,
 };
