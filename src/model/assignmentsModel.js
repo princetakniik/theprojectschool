@@ -29,6 +29,9 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       userId: {
         type: DataTypes.INTEGER,
       },
+      status: {
+        type: DataTypes.ENUM("0", "1"),
+      },
       token: {
         type: DataTypes.STRING(1000),
       },

@@ -13,6 +13,7 @@ const inserAssignment = async (req, res) => {
       courseId: rest.courseId,
       subCourseId: rest.subCourseId,
       userId: rest.userId,
+     status:rest.status
     });
     res.status(200).json({
       msg: `assignmentData insert successfully`,
@@ -32,7 +33,7 @@ const getAllAssignment = async (req, res) => {
       a.subCourseId  ,c.course 
       from assignments a 
       inner join courses c on c.course_id =a.courseId 
-      where  a.isDelete =false && c.isDelete =FALSE 
+      where  a.isDelete =false && c.isDelete =false and a.status ='0' 
 `,
       {
         type: QueryTypes.SELECT,
@@ -83,6 +84,7 @@ const updateAssignment = async (req, res) => {
       courseId: rest.courseId,
       subCourseId: rest.subCourseId,
       userId: rest.userId,
+      status:rest.status
     };
     const updateData = await assignment.update(data, {
       where: {
@@ -96,6 +98,101 @@ const updateAssignment = async (req, res) => {
     res.status(500).json({ msg: `Assignment data id not update....`, err });
   }
 };
+
+const courseAssignment = async (req, res) => {
+  try {
+    const assignmentData = await db.sequelize.query(
+      `
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
+      c.course 
+      from assignments a 
+      inner join courses c on c.course_id =a.courseId 
+      where  a.isDelete =false && c.isDelete =false and a.status ='0' 
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `all assignmentData are ....`, data: assignmentData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `Assignment data not found...`, err });
+  }
+};
+
+const courseAssignmentById = async (req, res) => {
+  const {id}=req.query
+  try {
+    const assignmentData = await db.sequelize.query(
+      `
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
+      c.course 
+      from assignments a 
+      inner join courses c on c.course_id =a.courseId 
+      where  a.isDelete =false && c.isDelete =false and a.status ='0'  && a.id=${id}
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `all assignmentData are ....`, data: assignmentData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `Assignment data not found...`, err });
+  }
+};
+
+const AssignmentByCourseId = async (req, res) => {
+  const {courseId}=req.query
+  try {
+    const assignmentData = await db.sequelize.query(
+      `
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
+      c.course 
+      from assignments a 
+      inner join courses c on c.course_id =a.courseId 
+      where  a.isDelete =false && c.isDelete =false and a.status ='0'  && a.courseId=${courseId}
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `all assignmentData are ....`, data: assignmentData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `Assignment data not found...`, err });
+  }
+};
+
+const subCourseAssignment = async (req, res) => {
+  try {
+    const assignmentData = await db.sequelize.query(
+      `
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
+      c.course 
+      from assignments a 
+      inner join courses c on c.course_id =a.courseId 
+      where  a.isDelete =false && c.isDelete =false and a.status ='0' 
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `all assignmentData are ....`, data: assignmentData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `Assignment data not found...`, err });
+  }
+};
+
 
 const deleteAssignment = async (req, res) => {
   const { id } = req.query;
@@ -124,4 +221,7 @@ module.exports = {
   getAssignmentById,
   updateAssignment,
   deleteAssignment,
+  courseAssignment,
+  courseAssignmentById,
+  AssignmentByCourseId
 };
