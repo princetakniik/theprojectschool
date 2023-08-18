@@ -348,7 +348,7 @@ const courseUserAssignment = async (req, res) => {
   try {
     const getUserData = await db.sequelize.query(
       `
-      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course 
+      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course ,u.courseId 
       ,u.userId ,u.instituteId ,a.assignmentsPathsUrl ,u.status ,u.uploadPathUrl,
       case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
@@ -373,7 +373,7 @@ const courseUserAssignmentById = async (req, res) => {
   try {
     const getUserData = await db.sequelize.query(
       `
-      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course 
+      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course ,u.courseId 
       ,u.userId ,u.instituteId ,a.assignmentsPathsUrl ,u.status ,u.uploadPathUrl,
       case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
@@ -398,7 +398,7 @@ const userAssignmentByCourseId = async (req, res) => {
   try {
     const getUserData = await db.sequelize.query(
       `
-      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course 
+      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course ,u.courseId 
       ,u.userId ,u.instituteId ,a.assignmentsPathsUrl ,u.status ,u.uploadPathUrl,
       case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
@@ -423,7 +423,7 @@ const courseAssignmentByUserId = async (req, res) => {
   try {
     const getUserData = await db.sequelize.query(
       `
-      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course 
+      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course ,u.courseId 
       ,u.userId ,u.instituteId ,a.assignmentsPathsUrl ,u.status ,u.uploadPathUrl,
       case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
