@@ -16,6 +16,7 @@ const inserUserAssignment = async (req, res) => {
       userId: rest.userId,
       uploadPathUrl: rest.uploadPathUrl,
       status: rest.status,
+      upstatus: rest.upstatus,
       marks: rest.marks,
     });
     res
@@ -110,6 +111,7 @@ const updateUserAssignment = async (req, res) => {
       userId: rest.userId,
       marks: rest.marks,
       status: rest.status,
+      upstatus: rest.upstatus,
       uploadPathUrl: rest.uploadPathUrl,
     };
     const updateData = await userassignment.update(data, {
@@ -342,6 +344,234 @@ const assignmentInsert = async (req, res) => {
   }
 };
 
+const courseUserAssignment = async (req, res) => {
+  try {
+    const getUserData = await db.sequelize.query(
+      `
+      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course 
+      ,u.userId ,u.instituteId ,a.assignmentsPathsUrl ,u.status ,u.uploadPathUrl,
+      case when u.marks is not null then u.marks else '0' end as marks 
+      from userassignments u 
+      inner join assignments a on a.id =u.assignmentsId and a.status =u.upstatus 
+      INNER join courses c on c.course_id =u.courseId 
+      where u.isDelete =false && a.isDelete =false and u.upstatus ='0' 
+      ORDER BY u.id DESC
+          `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({ msg: `UserAssignment are`, data: getUserData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `UserAssignment are not found ...`, err });
+  }
+};
+
+const courseUserAssignmentById = async (req, res) => {
+  const { id } = req.query;
+  try {
+    const getUserData = await db.sequelize.query(
+      `
+      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course 
+      ,u.userId ,u.instituteId ,a.assignmentsPathsUrl ,u.status ,u.uploadPathUrl,
+      case when u.marks is not null then u.marks else '0' end as marks 
+      from userassignments u 
+      inner join assignments a on a.id =u.assignmentsId and a.status =u.upstatus 
+      INNER join courses c on c.course_id =u.courseId 
+      where u.isDelete =false && a.isDelete =false and u.upstatus ='0' and u.id=${id}
+      ORDER BY u.id DESC
+          `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({ msg: `UserAssignment are`, data: getUserData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `UserAssignment are not found ...`, err });
+  }
+};
+
+const userAssignmentByCourseId = async (req, res) => {
+  const { courseId } = req.query;
+  try {
+    const getUserData = await db.sequelize.query(
+      `
+      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course 
+      ,u.userId ,u.instituteId ,a.assignmentsPathsUrl ,u.status ,u.uploadPathUrl,
+      case when u.marks is not null then u.marks else '0' end as marks 
+      from userassignments u 
+      inner join assignments a on a.id =u.assignmentsId and a.status =u.upstatus 
+      INNER join courses c on c.course_id =u.courseId 
+      where u.isDelete =false && a.isDelete =false and u.upstatus ='0' and u.courseId = ${courseId}
+      ORDER BY u.id DESC
+          `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({ msg: `UserAssignment are`, data: getUserData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `UserAssignment are not found ...`, err });
+  }
+};
+
+const courseAssignmentByUserId = async (req, res) => {
+  const { userId } = req.query;
+  try {
+    const getUserData = await db.sequelize.query(
+      `
+      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course 
+      ,u.userId ,u.instituteId ,a.assignmentsPathsUrl ,u.status ,u.uploadPathUrl,
+      case when u.marks is not null then u.marks else '0' end as marks 
+      from userassignments u 
+      inner join assignments a on a.id =u.assignmentsId and a.status =u.upstatus 
+      INNER join courses c on c.course_id =u.courseId 
+      where u.isDelete =false && a.isDelete =false and u.upstatus ='0' and u.userId = ${userId}
+      ORDER BY u.id DESC
+          `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({ msg: `UserAssignment are`, data: getUserData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `UserAssignment are not found ...`, err });
+  }
+};
+
+const subCourseUserAssignment = async (req, res) => {
+  try {
+    const getUserData = await db.sequelize.query(
+      `
+      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course ,
+      u.courseId ,u.subCourseId ,s.subcourses ,u.userId ,u.instituteId ,a.assignmentsPathsUrl 
+      ,u.status ,u.uploadPathUrl , case when u.marks is not null then u.marks else '0' end as marks
+      from userassignments u 
+      inner join assignments a on a.subCourseId =u.subCourseId and a.status =u.upstatus 
+      INNER join courses c on c.course_id =u.courseId 
+      inner join subcourses s on s.subcourses_id =u.subCourseId 
+      where u.isDelete =false && a.isDelete =false and u.upstatus ='1' 
+      ORDER BY u.id DESC
+          `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({ msg: `UserAssignment are`, data: getUserData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `UserAssignment are not found ...`, err });
+  }
+};
+
+const subCourseUserAssignmentById = async (req, res) => {
+  const { id } = req.query;
+  try {
+    const getUserData = await db.sequelize.query(
+      `
+      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course ,
+      u.courseId ,u.subCourseId ,s.subcourses ,u.userId ,u.instituteId ,a.assignmentsPathsUrl 
+      ,u.status ,u.uploadPathUrl , case when u.marks is not null then u.marks else '0' end as marks
+      from userassignments u 
+      inner join assignments a on a.subCourseId =u.subCourseId and a.status =u.upstatus 
+      INNER join courses c on c.course_id =u.courseId 
+      inner join subcourses s on s.subcourses_id =u.subCourseId 
+      where u.isDelete =false && a.isDelete =false and u.upstatus ='1' and u.id=${id}
+      ORDER BY u.id DESC
+          `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({ msg: `UserAssignment are`, data: getUserData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `UserAssignment are not found ...`, err });
+  }
+};
+
+const subCourseUserAssignmentByCourseId = async (req, res) => {
+  const { courseId } = req.query;
+  try {
+    const getUserData = await db.sequelize.query(
+      `
+      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course ,
+      u.courseId ,u.subCourseId ,s.subcourses ,u.userId ,u.instituteId ,a.assignmentsPathsUrl 
+      ,u.status ,u.uploadPathUrl , case when u.marks is not null then u.marks else '0' end as marks
+      from userassignments u 
+      inner join assignments a on a.subCourseId =u.subCourseId and a.status =u.upstatus 
+      INNER join courses c on c.course_id =u.courseId 
+      inner join subcourses s on s.subcourses_id =u.subCourseId 
+      where u.isDelete =false && a.isDelete =false and u.upstatus ='1' and u.courseId=${courseId}
+      ORDER BY u.id DESC
+          `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({ msg: `UserAssignment are`, data: getUserData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `UserAssignment are not found ...`, err });
+  }
+};
+
+const UserAssignmentBysubCourseId = async (req, res) => {
+  const { subCourseId } = req.query;
+  try {
+    const getUserData = await db.sequelize.query(
+      `
+      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course ,
+      u.courseId ,u.subCourseId ,s.subcourses ,u.userId ,u.instituteId ,a.assignmentsPathsUrl 
+      ,u.status ,u.uploadPathUrl , case when u.marks is not null then u.marks else '0' end as marks
+      from userassignments u 
+      inner join assignments a on a.subCourseId =u.subCourseId and a.status =u.upstatus 
+      INNER join courses c on c.course_id =u.courseId 
+      inner join subcourses s on s.subcourses_id =u.subCourseId 
+      where u.isDelete =false && a.isDelete =false and u.upstatus ='1' and u.subCourseId=${subCourseId}
+      ORDER BY u.id DESC
+          `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({ msg: `UserAssignment are`, data: getUserData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `UserAssignment are not found ...`, err });
+  }
+};
+
+const subCourseUserAssignmentByuserId = async (req, res) => {
+  const { userId } = req.query;
+  try {
+    const getUserData = await db.sequelize.query(
+      `
+      select u.id ,u.assignmentsId ,a.assignmentsName ,a.lastDate ,u.submitDate ,c.course ,
+      u.courseId ,u.subCourseId ,s.subcourses ,u.userId ,u.instituteId ,a.assignmentsPathsUrl 
+      ,u.status ,u.uploadPathUrl , case when u.marks is not null then u.marks else '0' end as marks
+      from userassignments u 
+      inner join assignments a on a.subCourseId =u.subCourseId and a.status =u.upstatus 
+      INNER join courses c on c.course_id =u.courseId 
+      inner join subcourses s on s.subcourses_id =u.subCourseId 
+      where u.isDelete =false && a.isDelete =false and u.upstatus ='1' and u.userId=${userId}
+      ORDER BY u.id DESC
+          `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({ msg: `UserAssignment are`, data: getUserData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `UserAssignment are not found ...`, err });
+  }
+};
+
 module.exports = {
   inserUserAssignment,
   getUserAssignment,
@@ -353,4 +583,13 @@ module.exports = {
   assignmentNotsubmitte,
   assignmentPending,
   assignmentPendingByUser,
+  courseUserAssignment,
+  courseUserAssignmentById,
+  userAssignmentByCourseId,
+  courseAssignmentByUserId,
+  subCourseUserAssignment,
+  subCourseUserAssignmentById,
+  subCourseUserAssignmentByCourseId,
+  UserAssignmentBysubCourseId,
+  subCourseUserAssignmentByuserId,
 };

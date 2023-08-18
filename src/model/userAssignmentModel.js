@@ -10,7 +10,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       assignmentsId: {
         type: DataTypes.INTEGER,
       },
-      assignmentPaths:{
+      assignmentPaths: {
         type: DataTypes.STRING(1000),
       },
       submitDate: {
@@ -38,7 +38,9 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       uploadPathUrl: {
         type: DataTypes.STRING(1000),
       },
-   
+      upstatus: {
+        type: DataTypes.ENUM("0", "1"),
+      },
       token: {
         type: DataTypes.STRING(1000),
       },
