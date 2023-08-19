@@ -14,6 +14,7 @@ const inserAssignment = async (req, res) => {
       subCourseId: rest.subCourseId,
       userId: rest.userId,
       status: rest.status,
+      assignmentId:rest.assignmentId
     });
     res.status(200).json({
       msg: `assignmentData insert successfully`,
@@ -85,6 +86,7 @@ const updateAssignment = async (req, res) => {
       subCourseId: rest.subCourseId,
       userId: rest.userId,
       status: rest.status,
+      assignmentId:rest.assignmentId
     };
     const updateData = await assignment.update(data, {
       where: {
