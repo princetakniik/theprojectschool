@@ -176,9 +176,10 @@ const subCourseAssignment = async (req, res) => {
   try {
     const assignmentData = await db.sequelize.query(
       `
-      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,a.subCourseId ,
-      c.course ,s.subcourses 
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
+      a.subCourseId ,a.assignmentId , c.course ,s.subcourses 
       from assignments a 
+      inner join assignments a2 on a2.id =a.assignmentId 
       inner join courses c on c.course_id = a.courseId 
       inner join subcourses s on s.subcourses_id =a.subCourseId 
       where  a.isDelete =false && c.isDelete =false and a.status ='1'
@@ -204,6 +205,7 @@ const subCourseAssignmentById = async (req, res) => {
       select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,a.subCourseId ,
       c.course ,s.subcourses 
       from assignments a 
+      inner join assignments a2 on a2.id =a.assignmentId
       inner join courses c on c.course_id = a.courseId 
       inner join subcourses s on s.subcourses_id =a.subCourseId 
       where  a.isDelete =false && c.isDelete =false and a.status ='1' && a.id=${id}
@@ -226,9 +228,10 @@ const subCourseAssignmentByCourseId = async (req, res) => {
   try {
     const assignmentData = await db.sequelize.query(
       `
-      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,a.subCourseId ,
-      c.course ,s.subcourses 
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
+      a.subCourseId ,a.assignmentId ,c.course ,s.subcourses 
       from assignments a 
+      inner join assignments a2 on a2.id =a.assignmentId
       inner join courses c on c.course_id = a.courseId 
       inner join subcourses s on s.subcourses_id =a.subCourseId 
       where  a.isDelete =false && c.isDelete =false and a.status ='1' && a.courseId=${CourseId}
@@ -252,8 +255,9 @@ const AssignmentBysubCourseId = async (req, res) => {
     const assignmentData = await db.sequelize.query(
       `
       select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
-      a.subCourseId , c.course ,s.subcourses 
+      a.subCourseId ,a.assignmentId , c.course ,s.subcourses 
       from assignments a 
+      inner join assignments a2 on a2.id =a.assignmentId
       inner join courses c on c.course_id = a.courseId 
       inner join subcourses s on s.subcourses_id =a.subCourseId 
       where  a.isDelete =false && c.isDelete =false and a.status ='1' && a.subCourseId=${subCourseId}
