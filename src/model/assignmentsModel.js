@@ -32,6 +32,9 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       status: {
         type: DataTypes.ENUM("0", "1"),
       },
+      assignmentId: {
+        type: DataTypes.INTEGER,
+      },
       token: {
         type: DataTypes.STRING(1000),
       },
