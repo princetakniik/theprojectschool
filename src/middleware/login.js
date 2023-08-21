@@ -186,7 +186,7 @@ const Verify = async (req, res, next) => {
         courses c ON c.course_id = u.course_id
     INNER JOIN
         subcourses s ON s.subcourses_id = distinct_subcourses.subcourses_id 
-        where u.user_id =${userDetails.user_id} && u.isDelete =false && u2.isDelete =false 
+        where u.user_id =${userDetails.user_id} && u.isDelete =false 
         && c.isDelete =FALSE && s.isDelete =FALSE 
         GROUP BY
         u.course_id, c.course, c.coursesImageUrl, c.grading;  `,
