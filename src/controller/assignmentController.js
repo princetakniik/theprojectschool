@@ -180,7 +180,7 @@ const subCourseAssignment = async (req, res) => {
       a.subCourseId ,a.assignmentId  
       from assignments a 
       inner join assignments a2 on a2.id =a.assignmentId 
-      where  a.isDelete =false  and a.status ='1'
+      where  a.isDelete =false  
 `,
       {
         type: QueryTypes.SELECT,
@@ -204,7 +204,7 @@ const subCourseAssignmentById = async (req, res) => {
       a.subCourseId ,a.assignmentId  
       from assignments a 
       inner join assignments a2 on a2.id =a.assignmentId 
-      where  a.isDelete =false  and a.status ='1' && a.id=${id}
+      where  a.isDelete =false  && a.id=${id}
 `,
       {
         type: QueryTypes.SELECT,
@@ -227,8 +227,8 @@ const subCourseAssignmentByCourseId = async (req, res) => {
       select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
       a.subCourseId ,a.assignmentId  
       from assignments a 
-      inner join assignments a2 on a2.id =a.assignmentId
-      where  a.isDelete =false  and a.status ='1' && a.courseId=${CourseId}
+      inner join assignments a2 on a2.id =a.assignmentId 
+      where  a.isDelete =false   && a.courseId=${CourseId}
 `,
       {
         type: QueryTypes.SELECT,
@@ -251,8 +251,8 @@ const AssignmentBysubCourseId = async (req, res) => {
       select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
       a.subCourseId ,a.assignmentId  
       from assignments a 
-      inner join assignments a2 on a2.id =a.assignmentId
-      where  a.isDelete =false  and a.status ='1' && a.subCourseId=${subCourseId}
+      inner join assignments a2 on a2.id =a.assignmentId 
+      where  a.isDelete =false   && a.subCourseId=${subCourseId}
 `,
       {
         type: QueryTypes.SELECT,
