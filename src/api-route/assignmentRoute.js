@@ -11,12 +11,17 @@ const {
   subCourseAssignmentById,
   subCourseAssignmentByCourseId,
   AssignmentBysubCourseId,
+  instituteAllAssignment,
+  AllAssignmentByInstituteId,
 } = require("../controller/assignmentController");
 
 module.exports = (app) => {
   app.post("/inserAssignment", (req, res) => inserAssignment(req, res));
   app.get("/getAllAssignment", (req, res) => getAllAssignment(req, res));
   app.get("/getAssignmentById", (req, res) => getAssignmentById(req, res));
+  //Institute
+  app.get('/instituteAllAssignment',(req,res)=>instituteAllAssignment(req,res))
+  app.get('/AllAssignmentByInstituteId',(req,res)=>AllAssignmentByInstituteId(req,res))
   //course
   app.get("/courseAssignment", (req, res) => courseAssignment(req, res));
   app.get("/courseAssignmentById", (req, res) => courseAssignmentById(req, res));

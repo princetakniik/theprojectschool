@@ -14,7 +14,7 @@ const inserAssignment = async (req, res) => {
       subCourseId: rest.subCourseId,
       userId: rest.userId,
       status: rest.status,
-      assignmentId:rest.assignmentId
+      assignmentId: rest.assignmentId,
     });
     res.status(200).json({
       msg: `assignmentData insert successfully`,
@@ -35,7 +35,7 @@ const getAllAssignment = async (req, res) => {
       from assignments a 
       inner join courses c on c.course_id =a.courseId 
       where  a.isDelete =false && c.isDelete =false 
-`,
+      `,
       {
         type: QueryTypes.SELECT,
       }
@@ -43,6 +43,61 @@ const getAllAssignment = async (req, res) => {
     res
       .status(200)
       .json({ msg: `all assignmentData are ....`, data: assignmentData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `Assignment data not found...`, err });
+  }
+};
+
+const instituteAllAssignment = async (req, res) => {
+  try {
+    const assignmentData = await db.sequelize.query(
+      `
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
+      a.subCourseId  ,c.course,i.InstituteName  
+      from assignments a 
+      inner join courses c on c.course_id =a.courseId 
+      inner join institutes i on i.institute_id =a.instituteId 
+      where  a.isDelete =false && c.isDelete =false and i.isDelete =FALSE 
+      `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({
+        msg: `all assignmentData instituteId are ....`,
+        data: assignmentData,
+      });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `Assignment data not found...`, err });
+  }
+};
+
+const AllAssignmentByInstituteId = async (req, res) => {
+  const { instituteId } = req.query;
+  try {
+    const assignmentData = await db.sequelize.query(
+      `
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
+      a.subCourseId  ,c.course,i.InstituteName  
+      from assignments a 
+      inner join courses c on c.course_id =a.courseId 
+      inner join institutes i on i.institute_id =a.instituteId 
+      where  a.isDelete =false && c.isDelete =false and i.isDelete =FALSE and i.institute_id =${instituteId} 
+      `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({
+        msg: `all assignmentData by instituteId ....`,
+        data: assignmentData,
+      });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `Assignment data not found...`, err });
@@ -59,7 +114,7 @@ const getAssignmentById = async (req, res) => {
       from assignments a 
       inner join courses c on c.course_id =a.courseId 
       where  a.isDelete =false && c.isDelete =FALSE  && a.id=${id}
-           `,
+      `,
       {
         type: QueryTypes.SELECT,
       }
@@ -86,7 +141,7 @@ const updateAssignment = async (req, res) => {
       subCourseId: rest.subCourseId,
       userId: rest.userId,
       status: rest.status,
-      assignmentId:rest.assignmentId
+      assignmentId: rest.assignmentId,
     };
     const updateData = await assignment.update(data, {
       where: {
@@ -110,10 +165,11 @@ const courseAssignment = async (req, res) => {
       from assignments a 
       inner join courses c on c.course_id =a.courseId 
       where  a.isDelete =false && c.isDelete =false and a.status ='0' 
-`,
+      `,
       {
         type: QueryTypes.SELECT,
       }
+      // a.status IS NOT NULL;
     );
     res
       .status(200)
@@ -134,7 +190,7 @@ const courseAssignmentById = async (req, res) => {
       from assignments a 
       inner join courses c on c.course_id =a.courseId 
       where  a.isDelete =false && c.isDelete =false and a.status ='0'  && a.id=${id}
-`,
+      `,
       {
         type: QueryTypes.SELECT,
       }
@@ -158,7 +214,7 @@ const AssignmentByCourseId = async (req, res) => {
       from assignments a 
       inner join courses c on c.course_id =a.courseId 
       where  a.isDelete =false && c.isDelete =false and a.status ='0'  && a.courseId=${courseId}
-`,
+      `,
       {
         type: QueryTypes.SELECT,
       }
@@ -181,7 +237,7 @@ const subCourseAssignment = async (req, res) => {
       from assignments a 
       inner join assignments a2 on a2.id =a.assignmentId 
       where  a.isDelete =false  
-`,
+      `,
       {
         type: QueryTypes.SELECT,
       }
@@ -205,7 +261,7 @@ const subCourseAssignmentById = async (req, res) => {
       from assignments a 
       inner join assignments a2 on a2.id =a.assignmentId 
       where  a.isDelete =false  && a.id=${id}
-`,
+      `,
       {
         type: QueryTypes.SELECT,
       }
@@ -229,7 +285,7 @@ const subCourseAssignmentByCourseId = async (req, res) => {
       from assignments a 
       inner join assignments a2 on a2.id =a.assignmentId 
       where  a.isDelete =false   && a.courseId=${CourseId}
-`,
+      `,
       {
         type: QueryTypes.SELECT,
       }
@@ -253,7 +309,7 @@ const AssignmentBysubCourseId = async (req, res) => {
       from assignments a 
       inner join assignments a2 on a2.id =a.assignmentId 
       where  a.isDelete =false   && a.subCourseId=${subCourseId}
-`,
+      `,
       {
         type: QueryTypes.SELECT,
       }
@@ -301,4 +357,6 @@ module.exports = {
   subCourseAssignmentById,
   subCourseAssignmentByCourseId,
   AssignmentBysubCourseId,
+  instituteAllAssignment,
+  AllAssignmentByInstituteId,
 };
