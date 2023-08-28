@@ -157,7 +157,7 @@ const courseAssignment = async (req, res) => {
     const assignmentData = await db.sequelize.query(
       `
       select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
-      c.course ,i.InstituteName
+      c.course ,i.InstituteName,a.subCourseId 
       from assignments a 
       inner join courses c on c.course_id =a.courseId 
       inner join institutes i on i.institute_id =a.instituteId 
@@ -183,7 +183,7 @@ const courseAssignmentById = async (req, res) => {
     const assignmentData = await db.sequelize.query(
       `
       select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
-      c.course ,i.InstituteName
+      c.course ,i.InstituteName,a.subCourseId 
       from assignments a 
       inner join courses c on c.course_id =a.courseId 
       inner join institutes i on i.institute_id =a.instituteId 
@@ -208,7 +208,7 @@ const AssignmentByCourseId = async (req, res) => {
     const assignmentData = await db.sequelize.query(
       `
       select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
-      c.course 
+      c.course ,a.subCourseId 
       from assignments a 
       inner join courses c on c.course_id =a.courseId 
       where  a.isDelete =false && c.isDelete =false and a.status ='0'  && a.courseId=${courseId}
@@ -260,8 +260,8 @@ const subCourseAssignmentById = async (req, res) => {
       a2.subCourseId ,a.assignmentId ,a2.instituteId  
       from assignments a 
       inner join assignments a2 on a2.id =a.assignmentId 
-       INNER JOIN subcourses s on s.subcourses_id =a2.subCourseId 
-       inner join institutes i on i.institute_id =a2.instituteId 
+      INNER JOIN subcourses s on s.subcourses_id =a2.subCourseId 
+      inner join institutes i on i.institute_id =a2.instituteId 
       where  a.isDelete =false AND a2.isDelete =FALSE and a.status ='1' and a.id=${id}
       `,
       {
