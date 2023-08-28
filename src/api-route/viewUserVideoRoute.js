@@ -19,7 +19,9 @@ module.exports = (app) => {
     getAllViewVideoModule(req, res)
   );
   app.get("/getViewVideoModule", (req, res) => getViewVideoModule(req, res));
-  app.get('/videoNotViewUserModule',(req,res)=>videoNotViewUserModule(req,res))
+  app.get("/videoNotViewUserModule", (req, res) =>
+    videoNotViewUserModule(req, res)
+  );
   app.put("/updateViewData", (req, res) => updateViewData(req, res));
   app.delete("/deleteViewData", (req, res) => deleteViewData(req, res));
 };

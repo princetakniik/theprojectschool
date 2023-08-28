@@ -5,12 +5,12 @@ const insertSkill = async (req, res) => {
   try {
     const skillData = await skill.findOne({
       where: {
-        skillName:rest.skillName ,
-        isDelete:false
+        skillName: rest.skillName,
+        isDelete: false,
       },
     });
-    if (skillData !=null) {
-      res.status(400).json({msg:`allready persent  ${rest.skillName}`})
+    if (skillData != null) {
+      res.status(400).json({ msg: `allready persent  ${rest.skillName}` });
     } else {
       const insert = await skill.create(req.body);
       res
@@ -44,12 +44,13 @@ const getSkillById = async (req, res) => {
     const getData = await skill.findOne({
       where: {
         isDelete: false,
-        id: req.query.id
+        id: req.query.id,
       },
     });
-    res
-      .status(200)
-      .json({ msg: `get skillData By Id successfully ${req.query.id}`, data: getData });
+    res.status(200).json({
+      msg: `get skillData By Id successfully ${req.query.id}`,
+      data: getData,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "data not found successfully By Id", err });
@@ -58,17 +59,18 @@ const getSkillById = async (req, res) => {
 
 const updateSkillById = async (req, res) => {
   const { ...rest } = req.body;
-console.log('rest',rest);
+  console.log("rest", rest);
   try {
     const updateData = await skill.update(rest, {
       where: {
         isDelete: false,
-       id: req.query.id,
+        id: req.query.id,
       },
     });
-    res
-      .status(200)
-      .json({ msg: `update skillData successfully ${req.query.id}`, data: updateData });
+    res.status(200).json({
+      msg: `update skillData successfully ${req.query.id}`,
+      data: updateData,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "data not update successfully By Id", err });

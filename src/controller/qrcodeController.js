@@ -87,11 +87,14 @@ const instituteQr = async (req, res) => {
         institutionId: instituteDetails[i].InstituteId,
         subCoursesId: instituteDetails[i].subcourses_id,
         date: instituteDetails[i].date,
-        updatedAt:instituteDetails[i].updatedAt,
-        token:instituteDetails[i].token
+        updatedAt: instituteDetails[i].updatedAt,
+        token: instituteDetails[i].token,
       };
- 
-      if (moment(anusaran.updatedAt).format("YYYY-MM-DD") == anusaran.date && anusaran.token !=null) {
+
+      if (
+        moment(anusaran.updatedAt).format("YYYY-MM-DD") == anusaran.date &&
+        anusaran.token != null
+      ) {
         const token = anusaran.token;
         var Anusaran = {
           application: "Anusaran",
@@ -107,12 +110,12 @@ const instituteQr = async (req, res) => {
           res.json({ msg: `QR code get successfull`, data: url });
         });
       } else {
-        let data={
+        let data = {
           application: "Anusaran",
           institutionId: instituteDetails[i].InstituteId,
           subCoursesId: instituteDetails[i].subcourses_id,
           date: instituteDetails[i].date,
-        }
+        };
         const token = jwt.sign(data, Config.JWT_SECRET);
 
         var Anusaran = {

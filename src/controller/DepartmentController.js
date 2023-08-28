@@ -58,25 +58,26 @@ const updateDepartmentById = async (req, res) => {
   const { ...rest } = req.body;
   const id = req.query.id;
   try {
-    const departmentName=await department.findOne({
-      where:{
-        departmentName:rest.departmentName,
-        isDelete:false
-      }
-    })
-    if(departmentName===null){
-    const updateData = await department.update(rest, {
+    const departmentName = await department.findOne({
       where: {
+        departmentName: rest.departmentName,
         isDelete: false,
-        id: id,
       },
     });
-    res
-      .status(200)
-      .json({ msg: `update department successfully ${id}`, data: updateData });
-  }else{
-    res.status(401).json({msg:`all ready persent this department`})
-  }
+    if (departmentName === null) {
+      const updateData = await department.update(rest, {
+        where: {
+          isDelete: false,
+          id: id,
+        },
+      });
+      res.status(200).json({
+        msg: `update department successfully ${id}`,
+        data: updateData,
+      });
+    } else {
+      res.status(401).json({ msg: `all ready persent this department` });
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "data update not successfully By Id", err });

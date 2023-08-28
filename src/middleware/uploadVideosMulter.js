@@ -30,7 +30,7 @@ module.exports = (app) => {
       res.status(500).json({ error: "Failed to upload files" });
     }
   });
-//update Data 
+  //update Data
 
   app.put("/updateData/:id", upload.single("file"), async (req, res) => {
     const id = req.params.id;

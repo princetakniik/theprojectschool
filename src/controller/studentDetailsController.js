@@ -23,7 +23,7 @@ const createStudentsDetails = async (req, res) => {
         const data = {
           user_id: userRegister.user_id,
           email: userRegister.email,
-          name: userRegister.fname + ''+userRegister.lname,
+          name: userRegister.fname + "" + userRegister.lname,
           profilePhoto: rest.profilePhoto,
           phone: userRegister.phone,
           institutionId: rest.institutionId,
@@ -206,7 +206,7 @@ const updateDetailsSt = async (req, res) => {
       where: {
         user_id: req.query.user_id,
         role: "Student",
-        isDelete:false
+        isDelete: false,
       },
     });
     res.status(200).json({ msg: "update data successfully", data: updateData });
@@ -225,7 +225,7 @@ const updateProfilePic = async (req, res) => {
     const profilePic = await studentdetails.update(data, {
       where: {
         user_id: req.query.user_id,
-        isDelete:false
+        isDelete: false,
       },
     });
     res.status(200).json({
@@ -249,7 +249,7 @@ const deteteDetailsSt = async (req, res) => {
       where: {
         user_id,
         role: "Student",
-        isDelete:false
+        isDelete: false,
       },
     });
     res

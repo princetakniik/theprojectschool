@@ -39,7 +39,7 @@ const userCoursesUpdate = async (req, res) => {
       course_id: rest.course_id,
       Institute_id: rest.Institute_id,
       teacher_id: rest.teacher_id,
-      rating:rest.rating
+      rating: rest.rating,
     };
     const updateCourses = await usercourses.update(data, {
       where: {

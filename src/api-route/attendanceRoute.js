@@ -40,7 +40,6 @@ module.exports = (app) => {
     getAttendanceByInstituteCourse(req, res)
   );
   app.get("/getAttendanceByInstituteCourseTe", (req, res) =>
-  getAttendanceByInstituteCourseTe(req, res)
+    getAttendanceByInstituteCourseTe(req, res)
   );
-  
 };

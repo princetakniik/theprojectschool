@@ -13,8 +13,8 @@ const {
 
 module.exports = (app) => {
   app.get("/getDistance", (req, res) => getDistance(req, res));
-  app.post("/geoLocation", (req, res) => geoLocation(req, res))
-  app.get("/getLocation", (req, res) => getLocation(req, res))
+  app.post("/geoLocation", (req, res) => geoLocation(req, res));
+  app.get("/getLocation", (req, res) => getLocation(req, res));
   app.get("/getLocationById", (req, res) => getLocationById(req, res));
   app.put("/updateLocation", (req, res) => updateLocation(req, res));
   app.delete("/deleteLocation", (req, res) => deleteLocation(req, res));

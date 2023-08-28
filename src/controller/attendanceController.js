@@ -432,5 +432,6 @@ module.exports = {
   getAttendanceSummeryMonthly,
   getAttendanceBetweenMonth,
   getAttendanceSubCourses,
-  getAttendanceByInstituteCourse,getAttendanceByInstituteCourseTe
+  getAttendanceByInstituteCourse,
+  getAttendanceByInstituteCourseTe,
 };

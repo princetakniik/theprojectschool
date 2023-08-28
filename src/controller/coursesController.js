@@ -40,12 +40,15 @@ const insertCourses = async (req, res) => {
 
 const getCoursesAll = async (req, res) => {
   try {
-    const getData = await db.sequelize.query(`
+    const getData = await db.sequelize.query(
+      `
     select c.course_id ,c.Institute ,c.course ,c.startDate ,c.endDate ,c.startTime ,c.endTime ,
     c.grading ,c.coursesImageUrl 
     from courses c 
     where c.isDelete =false 
-    `,{type:QueryTypes.SELECT})
+    `,
+      { type: QueryTypes.SELECT }
+    );
     res
       .status(200)
       .json({ msg: "get courses successfully all ", data: getData });
@@ -56,14 +59,17 @@ const getCoursesAll = async (req, res) => {
 };
 
 const getCourses = async (req, res) => {
-  const {Institute}=req.query
+  const { Institute } = req.query;
   try {
-    const getData = await db.sequelize.query(`
+    const getData = await db.sequelize.query(
+      `
     select c.course_id ,c.Institute ,c.course ,c.startDate ,c.endDate ,c.startTime ,c.endTime ,
     c.grading ,c.coursesImageUrl 
     from courses c 
     where c.isDelete =false and c.Institute =${Institute}
-    `,{type:QueryTypes.SELECT})
+    `,
+      { type: QueryTypes.SELECT }
+    );
     res
       .status(200)
       .json({ msg: "get courses successfully all ", data: getData });
@@ -76,12 +82,15 @@ const getCourses = async (req, res) => {
 const getCoursesById = async (req, res) => {
   const { course_id, Institute } = req.query;
   try {
-    const getData = await db.sequelize.query(`
+    const getData = await db.sequelize.query(
+      `
     select c.course_id ,c.Institute ,c.course ,c.startDate ,c.endDate ,c.startTime ,c.endTime ,
     c.grading ,c.coursesImageUrl 
     from courses c 
     where c.isDelete =false and c.course_id =${course_id} 
-    `,{type:QueryTypes.SELECT})
+    `,
+      { type: QueryTypes.SELECT }
+    );
     res.status(200).json({
       msg: `get courses By Id successfully ${course_id}`,
       data: getData,

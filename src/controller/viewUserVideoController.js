@@ -30,7 +30,7 @@ const viewUser = async (req, res) => {
         videoMin: rest.videoMin,
         videoSawMin: rest.videoSawMin,
         status: rest.status,
-        videoUrl:rest.videoUrl
+        videoUrl: rest.videoUrl,
       };
       const userData = await viewvideo.update(data, {
         where: {
@@ -51,7 +51,7 @@ const viewUser = async (req, res) => {
         videoMin: rest.videoMin,
         videoSawMin: rest.videoSawMin,
         status: rest.status,
-        videoUrl:rest.videoUrl
+        videoUrl: rest.videoUrl,
       });
       res.status(200).json({ msg: `user saw this video...`, data: userData });
     }
@@ -136,7 +136,7 @@ const getViewVideoModule = async (req, res) => {
   const { id } = req.query;
   try {
     const viewData = await db.sequelize.query(
-    `SELECT v.id ,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoMin ,v.videoSawMin ,
+      `SELECT v.id ,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoMin ,v.videoSawMin ,
     v.status ,u.videosPathsUrl ,u.videoImage ,s.subcourses ,c.course 
     FROM viewvideos v 
     inner join uploadvideos u on u.id =v.videoId 
@@ -224,7 +224,7 @@ const updateViewData = async (req, res) => {
       videoMin: rest.videoMin,
       videoSawMin: rest.videoSawMin,
       status: rest.status,
-      videoUrl:rest.videoUrl
+      videoUrl: rest.videoUrl,
     };
     const userData = await viewvideo.update(data, {
       where: {

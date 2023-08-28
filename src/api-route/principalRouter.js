@@ -3,7 +3,7 @@ const {
   principalAllData,
   principalDataById,
   updatePrincipal,
-  deletePrincipal
+  deletePrincipal,
 } = require("../controller/principalController");
 
 module.exports = (app) => {
@@ -11,5 +11,5 @@ module.exports = (app) => {
   app.get("/principalAllData", (req, res) => principalAllData(req, res));
   app.get("/principalDataById", (req, res) => principalDataById(req, res));
   app.put("/updatePrincipal", (req, res) => updatePrincipal(req, res));
-  app.delete('/deletePrincipal',(req,res)=>deletePrincipal(req,res));
+  app.delete("/deletePrincipal", (req, res) => deletePrincipal(req, res));
 };

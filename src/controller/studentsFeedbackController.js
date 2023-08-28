@@ -175,7 +175,7 @@ const studentFeedbackSubById = async (req, res) => {
 };
 
 const studentFeedbackByInstitute = async (req, res) => {
-  const { institutionId} = req.query;
+  const { institutionId } = req.query;
   try {
     const feedbackData = await db.sequelize.query(
       `
