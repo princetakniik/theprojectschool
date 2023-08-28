@@ -38,7 +38,7 @@ const getUserAssignment = async (req, res) => {
       from userassignments u 
       inner join assignments a on a.id =u.assignmentsId
       INNER join studentdetails s on s.user_id =u.userId 
-      where u.isDelete =false && a.isDelete =false and s.role ='Student'
+      where u.isDelete =false && a.isDelete =false and s.role ='Student' and a.status ='1'
       ORDER BY u.id DESC
           `,
       {
@@ -64,6 +64,7 @@ const getUserAssignmentByUserId = async (req, res) => {
       inner join assignments a on a.id =u.assignmentsId
       INNER join studentdetails s on s.user_id =u.userId 
       where u.isDelete =false && a.isDelete =false and u.userId =${userId} and s.role ='Student'
+      and a.status ='1'
 `,
       {
         type: QueryTypes.SELECT,
@@ -88,7 +89,7 @@ const getUserAssignmentById = async (req, res) => {
       inner join assignments a on a.id =u.assignmentsId
       INNER join studentdetails s on s.user_id =u.userId 
       where u.isDelete =false && a.isDelete =false && u.userId =${userId} and 
-      u.assignmentsId =${assignmentsId} and s.role ='Student'
+      u.assignmentsId =${assignmentsId} and s.role ='Student' and a.status ='1'
   `,
       {
         type: QueryTypes.SELECT,
@@ -193,10 +194,8 @@ const assignmentNotsubmitte = async (req, res) => {
       select s.user_id ,s.name ,s.email ,a.assignmentsName ,a.id ,a.lastDate ,a.subCourseId ,a.assignmentsPathsUrl 
       from studentdetails s 
       inner join assignments a on a.instituteId =s.institutionId
-      where s.role='Student' && s.isDelete =false && a.isDelete =false && a.lastDate<current_date()  
-      && (a.id,s.user_id) not in 
-      (select u.assignmentsId as id ,u.userId as user_id  from userassignments u 
-        where u.isDelete=false)
+      INNER join userassignments u on u.assignmentsId =a.id 
+      where a.status ='1' and u.status !='Submitted'
      `,
       {
         type: QueryTypes.SELECT,
@@ -219,7 +218,7 @@ const assignmentPending = async (req, res) => {
       FROM userassignments u 
       inner join assignments a on a.id =u.assignmentsId 
       INNER join studentdetails s on s.user_id =u.userId 
-      where u.status ='Pending' and s.isDelete =FALSE and a.isDelete =FALSE and u.isDelete =FALSE 
+      where u.status ='Pending' and s.isDelete =FALSE and a.isDelete =FALSE and u.isDelete =FALSE and a.status ='1'
 `,
       {
         type: QueryTypes.SELECT,
@@ -267,12 +266,12 @@ const assignmentPendingInsert = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-    select a.id ,a.lastDate ,a.subCourseId ,u.status,s.user_id ,s.email ,s.name 
-    FROM userassignments u 
-    inner join assignments a on a.id =u.assignmentsId 
-    INNER join studentdetails s on s.user_id =u.userId 
-    where u.status ='Created' and s.isDelete =FALSE and a.isDelete =FALSE and 
-    u.isDelete =FALSE and a.lastDate = CURRENT_DATE()
+      select a.id ,a.lastDate ,a.subCourseId ,u.status,s.user_id ,s.email ,s.name 
+      FROM userassignments u 
+      inner join assignments a on a.id =u.assignmentsId 
+      INNER join studentdetails s on s.user_id =u.userId 
+      where  a.status='1' and s.isDelete =FALSE and a.isDelete =FALSE and 
+      u.isDelete =FALSE and u.status ='Created' and a.lastDate = CURRENT_DATE() 
     `,
       {
         type: QueryTypes.SELECT,
@@ -311,15 +310,18 @@ const assignmentInsert = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-      select DISTINCT (a.instituteId ) as instituteId, a.id ,a.assignmentsPathsUrl ,a.courseId ,
-      a.subCourseId ,us.user_id  from usercourses u 
-      inner join usersubcourses us on us.course_id =u.course_id
-      inner join assignments a on a.courseId =us.course_id and a.subCourseId =us.subcourses_id 
-      INNER join studentdetails s on s.user_id =us.user_id 
-      WHERE a.isDelete =FALSE and us.isDelete =FALSE and u.isDelete =false and s.role='Student' and 
-      (a.id,a.instituteId,a.courseId,a.subCourseId,us.user_id) not in 
+      select DISTINCT (a2.instituteId ) as instituteId, a.id ,a.assignmentsPathsUrl ,a2.courseId ,
+      a2.subCourseId ,u.user_id 
+      from assignments a 
+      inner join assignments a2 on a2.id =a.assignmentId 
+       INNER JOIN subcourses s on s.subcourses_id =a2.subCourseId 
+       inner join institutes i on i.institute_id =a2.instituteId 
+       INNER join usersubcourses u on u.course_id =a2.courseId 
+       inner JOIN studentdetails s2 on s2.user_id =u.user_id 
+      where  a.isDelete =false AND a2.isDelete =FALSE and a.status ='1' and s2.role='Student' and 
+      (a.id,a2.instituteId,a2.courseId,a2.subCourseId,u.user_id) not in 
       (select ua.assignmentsId as id,ua.instituteId ,ua.courseId ,ua.subCourseId ,ua.userId as user_id
-      FROM userassignments ua where ua.isDelete =FALSE) 
+      FROM userassignments ua where ua.isDelete =FALSE)
      `,
       {
         type: QueryTypes.SELECT,
@@ -356,9 +358,9 @@ const courseUserAssignment = async (req, res) => {
       ,u.userId ,u.instituteId ,a.assignmentsPathsUrl ,u.status ,u.uploadPathUrl,
       case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
-      inner join assignments a on a.id =u.assignmentsId and a.status =u.upstatus 
+      inner join assignments a on a.id =u.assignmentsId 
       INNER join courses c on c.course_id =u.courseId 
-      where u.isDelete =false && a.isDelete =false and u.upstatus ='0' 
+      where u.isDelete =false && a.isDelete =false and a.status ='1'
       ORDER BY u.id DESC
           `,
       {
@@ -381,9 +383,9 @@ const courseUserAssignmentById = async (req, res) => {
       ,u.userId ,u.instituteId ,a.assignmentsPathsUrl ,u.status ,u.uploadPathUrl,
       case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
-      inner join assignments a on a.id =u.assignmentsId and a.status =u.upstatus 
+      inner join assignments a on a.id =u.assignmentsId 
       INNER join courses c on c.course_id =u.courseId 
-      where u.isDelete =false && a.isDelete =false and u.upstatus ='0' and u.id=${id}
+      where u.isDelete =false && a.isDelete =false and a.status ='1' and u.id=${id}
       ORDER BY u.id DESC
           `,
       {
@@ -406,9 +408,9 @@ const userAssignmentByCourseId = async (req, res) => {
       ,u.userId ,u.instituteId ,a.assignmentsPathsUrl ,u.status ,u.uploadPathUrl,
       case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
-      inner join assignments a on a.id =u.assignmentsId and a.status =u.upstatus 
+      inner join assignments a on a.id =u.assignmentsId  
       INNER join courses c on c.course_id =u.courseId 
-      where u.isDelete =false && a.isDelete =false and u.upstatus ='0' and u.courseId = ${courseId}
+      where u.isDelete =false && a.isDelete =false and a.status ='1' and u.courseId = ${courseId}
       ORDER BY u.id DESC
           `,
       {
@@ -431,9 +433,9 @@ const courseAssignmentByUserId = async (req, res) => {
       ,u.userId ,u.instituteId ,a.assignmentsPathsUrl ,u.status ,u.uploadPathUrl,
       case when u.marks is not null then u.marks else '0' end as marks 
       from userassignments u 
-      inner join assignments a on a.id =u.assignmentsId and a.status =u.upstatus 
+      inner join assignments a on a.id =u.assignmentsId  
       INNER join courses c on c.course_id =u.courseId 
-      where u.isDelete =false && a.isDelete =false and u.upstatus ='0' and u.userId = ${userId}
+      where u.isDelete =false && a.isDelete =false and a.status ='1' and u.userId = ${userId}
       ORDER BY u.id DESC
           `,
       {
