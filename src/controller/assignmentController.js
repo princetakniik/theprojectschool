@@ -30,7 +30,7 @@ const getAllAssignment = async (req, res) => {
   try {
     const assignmentData = await db.sequelize.query(
       `
-      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
+      select a.id ,a.assignmentsName ,a.lastDate ,a.instituteId ,a.courseId ,
       a.subCourseId  ,c.course 
       from assignments a 
       inner join courses c on c.course_id =a.courseId 
@@ -230,12 +230,13 @@ const subCourseAssignment = async (req, res) => {
   try {
     const assignmentData = await db.sequelize.query(
       `
-      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
-      a.subCourseId ,a.assignmentId  ,i.InstituteName
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a2.instituteId ,a2.courseId ,
+      a2.subCourseId ,a.assignmentId ,a2.instituteId  
       from assignments a 
-      inner join institutes i on i.institute_id =a.instituteId 
       inner join assignments a2 on a2.id =a.assignmentId 
-      where  a.isDelete =false and i.isDelete =FALSE  
+       INNER JOIN subcourses s on s.subcourses_id =a2.subCourseId 
+       inner join institutes i on i.institute_id =a2.instituteId 
+      where  a.isDelete =false AND a2.isDelete =FALSE and a.status ='1'
       `,
       {
         type: QueryTypes.SELECT,
@@ -255,12 +256,13 @@ const subCourseAssignmentById = async (req, res) => {
   try {
     const assignmentData = await db.sequelize.query(
       `
-      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
-      a.subCourseId ,a.assignmentId  ,i.InstituteName
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a2.instituteId ,a2.courseId ,
+      a2.subCourseId ,a.assignmentId ,a2.instituteId  
       from assignments a 
-       inner join institutes i on i.institute_id =a.instituteId 
       inner join assignments a2 on a2.id =a.assignmentId 
-      where  a.isDelete =false  && a.id=${id} and i.isDelete =FALSE
+       INNER JOIN subcourses s on s.subcourses_id =a2.subCourseId 
+       inner join institutes i on i.institute_id =a2.instituteId 
+      where  a.isDelete =false AND a2.isDelete =FALSE and a.status ='1' and a.id=${id}
       `,
       {
         type: QueryTypes.SELECT,
@@ -280,12 +282,13 @@ const subCourseAssignmentByCourseId = async (req, res) => {
   try {
     const assignmentData = await db.sequelize.query(
       `
-      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
-      a.subCourseId ,a.assignmentId  ,i.InstituteName
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a2.instituteId ,a2.courseId ,
+      a2.subCourseId ,a.assignmentId ,a2.instituteId  
       from assignments a 
-      inner join institutes i on i.institute_id =a.instituteId 
       inner join assignments a2 on a2.id =a.assignmentId 
-      where  a.isDelete =false   && a.courseId=${CourseId} and i.isDelete =FALSE
+       INNER JOIN subcourses s on s.subcourses_id =a2.subCourseId 
+       inner join institutes i on i.institute_id =a2.instituteId 
+      where  a.isDelete =false AND a2.isDelete =FALSE and a.status ='1' and a2.courseId=${CourseId}
       `,
       {
         type: QueryTypes.SELECT,
@@ -305,12 +308,13 @@ const AssignmentBysubCourseId = async (req, res) => {
   try {
     const assignmentData = await db.sequelize.query(
       `
-      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a.instituteId ,a.courseId ,
-      a.subCourseId ,a.assignmentId  ,i.InstituteName
+      select a.id ,a.assignmentsName ,a.assignmentsPathsUrl ,a.lastDate ,a2.instituteId ,a2.courseId ,
+      a2.subCourseId ,a.assignmentId ,a2.instituteId  
       from assignments a 
-      inner join institutes i on i.institute_id =a.instituteId 
       inner join assignments a2 on a2.id =a.assignmentId 
-      where  a.isDelete =false   && a.subCourseId=${subCourseId} and i.isDelete =FALSE
+       INNER JOIN subcourses s on s.subcourses_id =a2.subCourseId 
+       inner join institutes i on i.institute_id =a2.instituteId 
+      where  a.isDelete =false AND a2.isDelete =FALSE and a.status ='1' and a2.subCourseId=${subCourseId}
       `,
       {
         type: QueryTypes.SELECT,
