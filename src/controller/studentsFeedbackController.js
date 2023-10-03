@@ -27,7 +27,8 @@ const studentFeedbackAll = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-      select DISTINCT u.id ,u.userId ,s.email ,s.name ,u.name as feedbackName ,u.feedback ,u.courseId ,u.rating,c.course  
+      select DISTINCT u.id ,u.userId ,s.email ,s.name ,s.profilePhoto ,u.name as feedbackName ,
+      u.feedback ,u.courseId ,u.rating,c.course ,u.institutionId,u.subCourseId  
       from userfeedbacks u 
       inner join studentdetails s on s.user_id =u.userId and s.institutionId =u.institutionId 
       inner join courses c on c.course_id =u.courseId and c.Institute =u.institutionId
@@ -51,7 +52,8 @@ const studentFeedbackById = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-      select DISTINCT u.id ,u.userId ,s.email ,s.name ,u.name as feedbackName ,u.feedback ,u.courseId ,u.rating,c.course  
+      select DISTINCT u.id ,u.userId ,s.email ,s.name ,s.profilePhoto ,u.name as feedbackName ,
+      u.feedback ,u.courseId ,u.rating,c.course ,u.institutionId,u.subCourseId  
       from userfeedbacks u 
       inner join studentdetails s on s.user_id =u.userId and s.institutionId =u.institutionId 
       inner join courses c on c.course_id =u.courseId and c.Institute =u.institutionId
@@ -118,75 +120,20 @@ const deleteFeedbackByStu = async (req, res) => {
   }
 };
 
-const studentFeedbackSubAll = async (req, res) => {
-  try {
-    const userData = await db.sequelize.query(
-      `
-      select u.id ,u.userId ,s.email ,s.name ,u.name as feedbackName ,u.feedback ,u.courseId ,u.rating,c.course,u.subCourseId ,s2.subcourses  
-      from userfeedbacks u 
-      inner join studentdetails s on s.user_id =u.userId and s.institutionId =u.institutionId 
-      inner join courses c on c.course_id =u.courseId and c.Institute =u.institutionId
-      inner join subcourses s2 on s2.subcourses_id =u.subCourseId and s2.InstituteId =u.institutionId 
-      where s.isDelete =false and u.isDelete =false  and s.role='Student'
-      order by u.id desc
-        `,
-      {
-        type: QueryTypes.SELECT,
-      }
-    );
-    res.status(200).json({
-      msg: `student Feedback Subcourses all data are...`,
-      data: userData,
-    });
-  } catch (err) {
-    console.log(err);
-    res
-      .status(500)
-      .json({ msg: `student Feedback Subcourse all data not found ...`, err });
-  }
-};
-
-const studentFeedbackSubById = async (req, res) => {
-  const { id } = req.query;
-  try {
-    const userData = await db.sequelize.query(
-      `
-      select u.id ,u.userId ,s.email ,s.name ,u.name as feedbackName ,u.feedback ,u.courseId ,
-      u.rating,c.course,u.subCourseId ,s2.subcourses  
-      from userfeedbacks u 
-      inner join studentdetails s on s.user_id =u.userId and s.institutionId =u.institutionId 
-      inner join courses c on c.course_id =u.courseId and c.Institute =u.institutionId
-      inner join subcourses s2 on s2.subcourses_id =u.subCourseId and s2.InstituteId =u.institutionId 
-      where s.isDelete =false and u.isDelete =false  and s.role='Student' and u.id =${id}
-       `,
-      {
-        type: QueryTypes.SELECT,
-      }
-    );
-    res
-      .status(200)
-      .json({ msg: `student Feedback Subcourse By Id are...`, data: userData });
-  } catch (err) {
-    console.log(err);
-    res
-      .status(200)
-      .json({ msg: `student Feedback Subcourse By Id not found `, err });
-  }
-};
-
 const studentFeedbackByInstitute = async (req, res) => {
   const { institutionId } = req.query;
   try {
     const feedbackData = await db.sequelize.query(
       `
       SELECT DISTINCT u.id ,u.userId ,s.email ,s.name ,u.name as feedbackName ,u.feedback ,
-      u.courseId ,u.rating,c.course,u.institutionId 
+      s.profilePhoto ,u.courseId ,u.rating,c.course,u.institutionId,u.subCourseId ,i.InstituteName  
       from userfeedbacks u 
       inner join studentdetails s on s.user_id =u.userId 
       inner join institutes i on u.institutionId =i.institute_id 
       INNER join courses c on c.course_id =u.courseId 
-      where u.isDelete =FALSE and s.isDelete =FALSE and i.isDelete =FALSE and c.isDelete =false and s.role='Student' and 
-      u.institutionId=${institutionId}
+      where u.isDelete =FALSE and s.isDelete =FALSE and i.isDelete =FALSE and c.isDelete =false and 
+      s.role='Student' and u.institutionId=${institutionId}
+      order by u.id desc
       `,
       {
         type: QueryTypes.SELECT,
@@ -207,13 +154,76 @@ const studentFeedbackByInstitute = async (req, res) => {
   }
 };
 
+const studentFeedbackByCourses = async (req, res) => {
+  const {courseId}=req.query
+  try {
+    const userData = await db.sequelize.query(
+      `
+      SELECT DISTINCT u.id ,u.userId ,s.email ,s.name ,u.name as feedbackName ,u.feedback ,s.profilePhoto ,
+      u.courseId ,u.rating,c.course,u.institutionId,u.subCourseId ,i.InstituteName  
+      from userfeedbacks u 
+      inner join studentdetails s on s.user_id =u.userId 
+      inner join institutes i on u.institutionId =i.institute_id 
+      INNER join courses c on c.course_id =u.courseId 
+      where u.isDelete =FALSE and s.isDelete =FALSE and i.isDelete =FALSE and c.isDelete =false and s.role='Student' and 
+      u.courseId =${courseId}
+      order by u.id desc
+        `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res.status(200).json({
+      msg: `student Feedback Subcourses all data are...`,
+      data: userData,
+    });
+  } catch (err) {
+    console.log(err);
+    res
+      .status(500)
+      .json({ msg: `student Feedback Subcourse all data not found ...`, err });
+  }
+};
+
+const studentFeedbackBySubcourses = async (req, res) => {
+  const { subCourseId } = req.query;
+  try {
+    const userData = await db.sequelize.query(
+      `
+      SELECT DISTINCT u.id ,u.userId ,s.email ,s.name ,u.name as feedbackName ,u.feedback ,
+      s.profilePhoto ,u.courseId ,u.rating,c.course,u.institutionId,u.subCourseId ,i.InstituteName  
+      from userfeedbacks u 
+      inner join studentdetails s on s.user_id =u.userId 
+      inner join institutes i on u.institutionId =i.institute_id 
+      INNER join courses c on c.course_id =u.courseId 
+      where u.isDelete =FALSE and s.isDelete =FALSE and i.isDelete =FALSE and c.isDelete =false and 
+      s.role='Student' and u.subCourseId =${subCourseId}
+      order by u.id desc
+      `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({ msg: `student Feedback Subcourse By Id are...`, data: userData });
+  } catch (err) {
+    console.log(err);
+    res
+      .status(200)
+      .json({ msg: `student Feedback Subcourse By Id not found `, err });
+  }
+};
+
+
+
 module.exports = {
   insertFeedbackByStu,
   studentFeedbackAll,
   studentFeedbackById,
   updateFeedbackByStu,
   deleteFeedbackByStu,
-  studentFeedbackSubAll,
-  studentFeedbackSubById,
+  studentFeedbackByCourses,
+  studentFeedbackBySubcourses,
   studentFeedbackByInstitute,
 };

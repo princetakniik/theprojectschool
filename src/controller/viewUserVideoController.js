@@ -4,6 +4,7 @@ const db = require("../Config/dbConnection");
 
 const viewUser = async (req, res) => {
   const { ...rest } = req.body;
+  console.log('viewUser api data....',rest);
   try {
     const uploadData = await uploadvideo.findOne({
       where: {
@@ -65,11 +66,11 @@ const getViewUser = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-      SELECT v.id ,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoMin ,v.videoSawMin ,
+      SELECT v.id ,v.instituteId ,v.courseId ,u.subCourseId ,v.userId ,v.videoMin ,v.videoSawMin ,
       v.status ,u.videosPathsUrl ,u.videoImage ,s.subcourses 
       FROM viewvideos v 
       inner join uploadvideos u on u.id =v.videoId 
-      INNER join subcourses s on s.subcourses_id =v.subCourseId 
+      INNER join subcourses s on s.subcourses_id =u.subCourseId 
       where u.isDelete=false && v.isDelete =false  
 `,
       {
@@ -88,11 +89,11 @@ const getViewUserById = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-      SELECT v.id ,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoMin ,v.videoSawMin ,
+      SELECT v.id ,v.instituteId ,v.courseId ,u.subCourseId ,v.userId ,v.videoMin ,v.videoSawMin ,
       v.status ,u.videosPathsUrl ,u.videoImage ,s.subcourses 
       FROM viewvideos v 
       inner join uploadvideos u on u.id =v.videoId 
-      INNER join subcourses s on s.subcourses_id =v.subCourseId 
+      INNER join subcourses s on s.subcourses_id =u.subCourseId 
       where u.isDelete=false && v.isDelete =false  && v.id =${id}
 `,
       {
@@ -108,15 +109,43 @@ const getViewUserById = async (req, res) => {
   }
 };
 
+const getViewUserByUserId = async (req, res) => {
+  const { userId } = req.query;
+  try {
+    const userData = await db.sequelize.query(
+      `
+      SELECT v.id ,v.instituteId ,v.courseId ,u.subCourseId ,v.userId ,v.videoMin ,v.videoSawMin ,
+      v.status ,u.videosPathsUrl ,u.videoImage ,s.subcourses 
+      FROM viewvideos v 
+      inner join uploadvideos u on u.id =v.videoId 
+      INNER join subcourses s on s.subcourses_id =u.subCourseId 
+      where u.isDelete=false && v.isDelete =false  and v.userId =${userId}
+`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    res
+      .status(200)
+      .json({
+        msg: `user data found by userId :${userId} ....`,
+        data: userData,
+      });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `user data not found...`, err });
+  }
+};
+
 const getAllViewVideoModule = async (req, res) => {
   try {
     const userData = await db.sequelize.query(
       `
-      SELECT v.id ,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoMin ,v.videoSawMin ,
+      SELECT v.id ,v.instituteId ,v.courseId ,u.subCourseId ,v.userId ,v.videoMin ,v.videoSawMin ,
       v.status ,u.videosPathsUrl ,u.videoImage ,s.subcourses 
       FROM viewvideos v 
       inner join uploadvideos u on u.id =v.videoId 
-      INNER join subcourses s on s.subcourses_id =v.subCourseId 
+      INNER join subcourses s on s.subcourses_id =u.subCourseId 
       where u.isDelete=false && v.isDelete =false 
 `,
       {
@@ -136,12 +165,12 @@ const getViewVideoModule = async (req, res) => {
   const { id } = req.query;
   try {
     const viewData = await db.sequelize.query(
-      `SELECT v.id ,v.instituteId ,v.courseId ,v.subCourseId ,v.userId ,v.videoMin ,v.videoSawMin ,
+      `SELECT v.id ,v.instituteId ,v.courseId ,u.subCourseId ,v.userId ,v.videoMin ,v.videoSawMin ,
     v.status ,u.videosPathsUrl ,u.videoImage ,s.subcourses ,c.course 
     FROM viewvideos v 
     inner join uploadvideos u on u.id =v.videoId 
     inner join courses c on c.course_id =u.courseId 
-    INNER join subcourses s on s.subcourses_id =v.subCourseId   
+    INNER join subcourses s on s.subcourses_id =u.subCourseId   
      where u.isDelete=false && v.isDelete =false && c.isDelete =false  && v.id =${id}
 `,
       {
@@ -260,6 +289,7 @@ module.exports = {
   viewUser,
   getViewUser,
   getViewUserById,
+  getViewUserByUserId,
   getAllViewVideoModule,
   getViewVideoModule,
   videoNotViewUser,

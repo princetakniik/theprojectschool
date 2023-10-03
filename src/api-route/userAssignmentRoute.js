@@ -1,21 +1,18 @@
 const {
   inserUserAssignment,
   getUserAssignment,
+  getUserAssignmentByUserId,
   getUserAssignmentById,
   updateUserAssignment,
   deleteUserAssignment,
-  assignmentNotUploadUser,
-  assignmentNotsubmitte,
-  getUserAssignmentByUserId,
-  courseUserAssignment,
-  courseUserAssignmentById,
-  userAssignmentByCourseId,
-  courseAssignmentByUserId,
-  subCourseUserAssignment,
-  subCourseUserAssignmentById,
-  subCourseUserAssignmentByCourseId,
-  UserAssignmentBysubCourseId,
-  subCourseUserAssignmentByuserId,
+  assignmentSubmitted,
+  assignmentSubmittedByAssignmentsId,
+  assignmentSubmittedByUserId,
+  assignmentPending,
+  assignmentPendingByAssignmentsId,
+  assignmentPendingByUserId,
+  assignmentInsert,
+  
 } = require("../controller/userAssignmentController");
 
 module.exports = (app) => {
@@ -33,39 +30,14 @@ module.exports = (app) => {
   app.delete("/deleteUserAssignment", (req, res) =>
     deleteUserAssignment(req, res)
   );
-  app.get("/assignmentNotUploadUser", (req, res) =>
-    assignmentNotUploadUser(req, res)
-  );
-  app.get("/assignmentNotsubmitte", (req, res) =>
-    assignmentNotsubmitte(req, res)
-  );
-  // course
-  app.get("/courseUserAssignment", (req, res) =>
-    courseUserAssignment(req, res)
-  );
-  app.get("/courseUserAssignmentById", (req, res) =>
-    courseUserAssignmentById(req, res)
-  );
-  app.get("/userAssignmentByCourseId", (req, res) =>
-    userAssignmentByCourseId(req, res)
-  );
-  app.get("/courseAssignmentByUserId", (req, res) =>
-    courseAssignmentByUserId(req, res)
-  );
-  //subcourse
-  app.get("/subCourseUserAssignment", (req, res) =>
-    subCourseUserAssignment(req, res)
-  );
-  app.get("/subCourseUserAssignmentById", (req, res) =>
-    subCourseUserAssignmentById(req, res)
-  );
-  app.get("/subCourseUserAssignmentByCourseId", (req, res) =>
-    subCourseUserAssignmentByCourseId(req, res)
-  );
-  app.get("/UserAssignmentBysubCourseId", (req, res) =>
-    UserAssignmentBysubCourseId(req, res)
-  );
-  app.get("/subCourseUserAssignmentByuserId", (req, res) =>
-    subCourseUserAssignmentByuserId(req, res)
-  );
+ //assignmentSubmitted
+ app.get('/assignmentSubmitted',(req,res)=>assignmentSubmitted(req,res))
+ app.get('/assignmentSubmittedByAssignmentsId',(req,res)=>assignmentSubmittedByAssignmentsId(req,res))
+ app.get('/assignmentSubmittedByUserId',(req,res)=>assignmentSubmittedByUserId(req,res))
+ 
+ //assignmentPending
+ app.get('/assignmentPending',(req,res)=>assignmentPending(req,res))
+ app.get('/assignmentPendingByAssignmentsId',(req,res)=>assignmentPendingByAssignmentsId(req,res))
+ app.get('/assignmentPendingByUserId',(req,res)=>assignmentPendingByUserId(req,res))
+ app.get('/assignmentInsert',(req,res)=>assignmentInsert(req,res))
 };

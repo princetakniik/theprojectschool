@@ -8,12 +8,14 @@ const {
   getAllViewVideoModule,
   getViewVideoModule,
   videoNotViewUserModule,
+  getViewUserByUserId,
 } = require("../controller/viewUserVideoController");
 
 module.exports = (app) => {
   app.post("/viewUser", (req, res) => viewUser(req, res));
   app.get("/getViewUser", (req, res) => getViewUser(req, res));
   app.get("/getViewUserById", (req, res) => getViewUserById(req, res));
+  app.get("/getViewUserByUserId", (req, res) => getViewUserByUserId(req, res));
   app.get("/videoNotViewUser", (req, res) => videoNotViewUser(req, res));
   app.get("/getAllViewVideoModule", (req, res) =>
     getAllViewVideoModule(req, res)

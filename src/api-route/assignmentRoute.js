@@ -4,15 +4,10 @@ const {
   getAssignmentById,
   updateAssignment,
   deleteAssignment,
-  courseAssignment,
-  courseAssignmentById,
-  AssignmentByCourseId,
-  subCourseAssignment,
-  subCourseAssignmentById,
-  subCourseAssignmentByCourseId,
-  AssignmentBysubCourseId,
-  instituteAllAssignment,
   AllAssignmentByInstituteId,
+  AssignmentByCourseId,
+  AssignmentBysubCourseId,
+  
 } = require("../controller/assignmentController");
 
 module.exports = (app) => {
@@ -20,28 +15,14 @@ module.exports = (app) => {
   app.get("/getAllAssignment", (req, res) => getAllAssignment(req, res));
   app.get("/getAssignmentById", (req, res) => getAssignmentById(req, res));
   //Institute
-  app.get("/instituteAllAssignment", (req, res) =>
-    instituteAllAssignment(req, res)
-  );
   app.get("/AllAssignmentByInstituteId", (req, res) =>
     AllAssignmentByInstituteId(req, res)
   );
   //course
-  app.get("/courseAssignment", (req, res) => courseAssignment(req, res));
-  app.get("/courseAssignmentById", (req, res) =>
-    courseAssignmentById(req, res)
-  );
   app.get("/AssignmentByCourseId", (req, res) =>
     AssignmentByCourseId(req, res)
   );
   //subCourse
-  app.get("/subCourseAssignment", (req, res) => subCourseAssignment(req, res));
-  app.get("/subCourseAssignmentById", (req, res) =>
-    subCourseAssignmentById(req, res)
-  );
-  app.get("/subCourseAssignmentByCourseId", (req, res) =>
-    subCourseAssignmentByCourseId(req, res)
-  );
   app.get("/AssignmentBysubCourseId", (req, res) =>
     AssignmentBysubCourseId(req, res)
   );
